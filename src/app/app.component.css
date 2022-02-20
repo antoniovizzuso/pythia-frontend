@@ -43,14 +43,6 @@
     text-transform: uppercase;
   }
 
-  .content {
-    margin: 2rem auto;
-    padding: 0 16px;
-    max-width: 1140px;
-    flex-direction: column;
-    align-items: center;
-  }
-
   svg.material-icons {
     height: 24px;
     width: auto;
