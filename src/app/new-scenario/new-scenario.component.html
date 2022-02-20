@@ -1,0 +1,55 @@
+<div class="card mt-3">
+  <div class="card-body">
+    <h5>Dataset</h5>
+    <h6>Import data from an existing CSV file</h6>
+    <div class="d-flex">
+      <input
+        class="form-control load-csv"
+        type="file"
+        id="formFile"
+        placeholder="No file chosen"
+        (change)="handleFileInput($event)"
+      />
+      <button
+        [disabled]="!fileToUpload"
+        type="button"
+        class="btn btn-light btn-load mr-3"
+        (click)="uploadFile()"
+      >
+        Upload
+      </button>
+    </div>
+    <div *ngIf="data" class="row table-dataset">
+      <div class="col-md-12">
+        <div class="panel panel-success pt-2">
+          <div class="panel-heading">
+            <h5 class="panel-title mt-3">Table Preview</h5>
+            <h6 class="card-subtitle mb-2 text-muted">
+              (only first 10 rows are shown)
+            </h6>
+          </div>
+          <app-datagrid [data]="data"></app-datagrid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="data" class="card mt-3">
+  <div class="card-body">
+    <div class="panel panel-success pt-2">
+      <div class="panel-heading">
+        <h5 class="panel-title mt-3">Metadata</h5>
+        <h6 class="card-subtitle mb-2 text-muted">
+          Define metadata of the project used to generate predictions
+        </h6>
+        <h6 class="card-subtitle mb-2">
+          Functional dependencies, keys and composite keys can be automatically
+          find using profiling techniques.
+        </h6>
+      </div>
+      <app-primary-keys [data]="data"></app-primary-keys>
+      <app-composite-keys [data]="data" ></app-composite-keys>
+    </div>
+  </div>
+</div>

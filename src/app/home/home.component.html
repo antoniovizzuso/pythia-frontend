@@ -1,0 +1,88 @@
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button
+      class="nav-link active"
+      id="home-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#home"
+      type="button"
+      role="tab"
+      aria-controls="home"
+      aria-selected="true"
+    >
+      Scenario definition
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button
+      class="nav-link"
+      id="profile-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#profile"
+      type="button"
+      role="tab"
+      aria-controls="profile"
+      aria-selected="false"
+      [disabled]="!fileToUpload"
+    >
+      Output
+    </button>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <!-- Scenario -->
+  <div
+    class="tab-pane fade show active"
+    id="home"
+    role="tabpanel"
+    aria-labelledby="home-tab"
+  >
+    <div class="card mt-3">
+      <div class="card-body">
+        <h5>Scenario Name</h5>
+        <h6>Load or create a new scenario</h6>
+        <div class="d-flex">
+          <select
+            class="form-select form-btn"
+            aria-label="Default select example"
+          >
+            <option selected>Select an existing scenario...</option>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+          </select>
+          <button
+            (click)="loadScenario()"
+            type="button"
+            class="btn btn-light btn-load mr-3"
+          >
+            Load
+          </button>
+          <button (click)="newScenario()" type="button" class="btn btn-primary">
+            New Scenario
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="idScenarioSelected == 1" class="card mt-3">
+      <div class="card-body">
+        <h5>Table preview</h5>
+      </div>
+    </div>
+
+    <div *ngIf="idScenarioSelected == 2">
+      <app-new-scenario (fileUploadEvent)="loadFile($event)"></app-new-scenario>
+    </div>
+  </div>
+
+  <!-- Output -->
+  <div
+    class="tab-pane fade"
+    id="profile"
+    role="tabpanel"
+    aria-labelledby="profile-tab"
+  >
+    <app-output-view [file]="fileToUpload" ></app-output-view>
+  </div>
+</div>
