@@ -14,6 +14,13 @@ import { HttpService } from './httpservice.service';
 import { OutputViewComponent } from './output-view/output-view.component';
 import { PrimaryKeysComponent } from './primary-keys/primary-keys.component';
 import { CompositeKeysComponent } from './composite-keys/composite-keys.component';
+import { JwtModule } from '@auth0/angular-jwt';
+import { LoginComponent } from './login/login.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+export function tokenGetter() {
+  return localStorage.getItem('access_token');
+}
 
 @NgModule({
   declarations: [
@@ -25,15 +32,25 @@ import { CompositeKeysComponent } from './composite-keys/composite-keys.componen
     SplitPipe,
     OutputViewComponent,
     PrimaryKeysComponent,
-    CompositeKeysComponent
+    CompositeKeysComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgbModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains: ['localhost:8080'],
+        disallowedRoutes: ['http://localhost:8080/auth/login'],
+      },
+    }),
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

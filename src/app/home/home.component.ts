@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Entry } from '../models/entry.model';
 import {Router, NavigationEnd,ActivatedRoute} from '@angular/router';
+import { JwtService } from '../jwt.service';
 
 @Component({
   selector: 'app-home',
@@ -13,7 +14,7 @@ export class HomeComponent implements OnInit {
   entries: Entry[] = new Array();
   fileToUpload: File | null = null;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private jwtService: JwtService) {}
 
   ngOnInit(): void {
   }

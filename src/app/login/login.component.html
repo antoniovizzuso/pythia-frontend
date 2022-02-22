@@ -1,0 +1,73 @@
+<section class="h-100">
+  <div class="container h-100">
+    <div class="row justify-content-sm-center h-100">
+      <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
+        <div class="text-center my-4">
+          <i class="fas fa-hat-wizard text-primary" style="font-size: 3em"></i>
+          <h2 class="text-primary">Pythia</h2>
+        </div>
+        <div class="card shadow-lg">
+          <div class="card-body p-5">
+            <h1 class="fs-4 card-title fw-bold mb-4">Login</h1>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+              <div class="mb-3">
+                <label class="mb-2 text-muted" for="email"
+                  >E-Mail Address</label
+                >
+                <input
+                  type="text"
+                  formControlName="username"
+                  class="form-control"
+                />
+                <div class="invalid-feedback d-block" *ngIf="submitted && username?.hasError('required')"> Username is required</div>
+              </div>
+
+              <div class="mb-3">
+                <div class="mb-2 w-100">
+                  <label class="text-muted" for="password">Password</label>
+                  <a href="forgot.html" class="float-end"> Forgot Password? </a>
+                </div>
+                <input
+                  type="password"
+                  formControlName="password"
+                  class="form-control"
+                />
+                <div class="invalid-feedback d-block" *ngIf="submitted && password?.hasError('required')"> Password is required</div>
+              </div>
+
+              <div class="d-flex align-items-center">
+                <div class="form-check">
+                  <input
+                    type="checkbox"
+                    name="remember"
+                    id="remember"
+                    class="form-check-input"
+                  />
+                  <label for="remember" class="form-check-label"
+                    >Remember Me</label
+                  >
+                </div>
+                <button [disabled]="loading" class="btn btn-primary ms-auto">
+                  <span
+                    *ngIf="loading"
+                    class="spinner-border spinner-border-sm mr-1"
+                  ></span>
+                  Login
+                </button>
+              </div>
+            </form>
+          </div>
+          <div class="card-footer py-3 border-0">
+            <div class="text-center">
+              Don't have an account?
+              <a href="register.html" class="text-dark">Create One</a>
+            </div>
+          </div>
+        </div>
+        <!-- 					<div class="text-center mt-5 text-muted">
+                    Copyright &copy; 2017-2021 &mdash; Your Company 
+                </div> -->
+      </div>
+    </div>
+  </div>
+</section>

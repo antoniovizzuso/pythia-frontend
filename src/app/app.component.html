@@ -1,14 +1,21 @@
-<!-- Toolbar -->
-<div class="toolbar navbar" role="banner">
-  <a class="navbar-brand" href="#">
-    <i class="fas fa-hat-wizard"></i>
-    Pythia
-  </a>
-  <div class="spacer"></div>
-</div>
-
 <div role="main">
-  <app-home></app-home>
+  <div *ngIf="this.jwtService.loggedIn">
+    <!-- Toolbar -->
+    <div class="toolbar navbar" role="banner">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-hat-wizard"></i>
+        Pythia
+      </a>
+      <div>
+        <i class="fas fa-user text-white mr-1"></i>
+        <span *ngIf="this.username" class="text-white">Hi, {{ username | async }}</span>
+      </div>
+    </div>
+    <app-home></app-home>
+  </div>
+  <div *ngIf="!this.jwtService.loggedIn">
+    <app-login></app-login>
+  </div>
 </div>
 
 <router-outlet></router-outlet>
