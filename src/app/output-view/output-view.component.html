@@ -3,31 +3,47 @@
     <h5>Sentence generator</h5>
     <h6>Generate contraddicting sentences based on the follow configuration</h6>
     <div class="row my-1 align-items-center">
-      <p class="col nowrap">Structure Type</p>
-      <select class="col form-select" aria-label="Default select example">
-        <option selected>Select query template...</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
-      </select>
-      <p class="col nowrap">Sentences per A-Query</p>
-      <select class="col form-select" aria-label="Default select example">
-        <option selected>Select query template...</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
-      </select>
+      <div class="col-6 input-group">
+        <p class="col-sm-4 nowrap col-form-label">Structure Type</p>
+        <select class="form-select" aria-label="Default select example">
+          <option
+            *ngFor="let s of structures | keyvalue"
+            value="s.key"
+            [selected]="s.key === 'attribute'"
+          >
+            {{ s.value }}
+          </option>
+        </select>
+      </div>
+      <div class="col-6 input-group">
+        <p class="col-sm-6 nowrap col-form-label">Sentences per A-Query</p>
+        <input
+          class="form-control"
+          type="number"
+          placeholder="number of results"
+        />
+      </div>
     </div>
     <div class="row my-1 align-items-center">
-      <p class="col nowrap">Strategy</p>
-      <select class="col form-select" aria-label="Default select example">
-        <option selected>Select query template...</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
-      </select>
-      <div class="col">
-        <button type="button" (click)="generate()" class="btn btn-primary">
+      <div class="col-6 input-group">
+        <p class="col-sm-4 nowrap col-form-label">Strategy</p>
+        <select class="form-select" aria-label="Default select example">
+          <option
+            *ngFor="let s of strategies | keyvalue"
+            value="s.key"
+            [selected]="s.key === 'contradicting'"
+          >
+            {{ s.value }}
+          </option>
+        </select>
+      </div>
+      <div class="col-1"></div>
+      <div class="col input-group">
+        <button
+          type="button"
+          (click)="generate()"
+          class="btn btn-primary w-100"
+        >
           Generate
         </button>
       </div>
@@ -57,9 +73,12 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let row of results" class="hide row-amb r-1">
+              <tr
+                *ngFor="let row of results[0][2]; let indexOfelement = index"
+                class="hide row-amb r-1"
+              >
                 <td>
-                  <span class="r-1-a">{{ row }}</span>
+                  <span class="r-1-a">{{ row[0] }}</span>
                 </td>
                 <td>
                   <button
@@ -74,8 +93,8 @@
                 <td>
                   <button
                     class="btn btn-outline-primary btn-sm w-100"
-                    onclick="javascript:hide_element('card-details');javascript:show_element('card-details-r1')"
                     type="button"
+                    (click)="onClickView(indexOfelement)"
                   >
                     View
                   </button>
@@ -85,6 +104,22 @@
           </table>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="selectedResult" class="card mt-3 card-details" id="card-details-r1">
+  <div class="card-body">
+    <h5 class="card-title">Sentence Details</h5>
+    <h6 class="card-subtitle mb-2 text-muted">
+      Selected: ""
+    </h6>
+    <h6 class="card-subtitle mb-2 text-muted">
+      A-Query (from template "Attribute Ambiguity")
+    </h6>
+    <div class="row">
+      <pre id="highlighting" class="m-2 language-sql" aria-hidden="true">
+      <code class="language-sql" id="highlighting-content">{{selectedResult[0]}}</code></pre>
     </div>
   </div>
 </div>

@@ -11,7 +11,7 @@
         (change)="handleFileInput($event)"
       />
       <button
-        [disabled]="!fileToUpload"
+        [disabled]="!file"
         type="button"
         class="btn btn-light btn-load mr-3"
         (click)="uploadFile()"
@@ -19,7 +19,7 @@
         Upload
       </button>
     </div>
-    <div *ngIf="data" class="row table-dataset">
+    <div *ngIf="showTable" class="row table-dataset">
       <div class="col-md-12">
         <div class="panel panel-success pt-2">
           <div class="panel-heading">
@@ -29,13 +29,26 @@
             </h6>
           </div>
           <app-datagrid [data]="data"></app-datagrid>
+          <nav *ngIf="pages" aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+              <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">Previous</a>
+              </li>
+              <li *ngFor="let i of pages" class="page-item">
+                <a class="page-link" href="#">{{ i }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div *ngIf="data" class="card mt-3">
+<div *ngIf="showTable" class="card mt-3">
   <div class="card-body">
     <div class="panel panel-success pt-2">
       <div class="panel-heading">
@@ -47,9 +60,17 @@
           Functional dependencies, keys and composite keys can be automatically
           find using profiling techniques.
         </h6>
+        <div class="d-grid gap-2 col-2 ms-auto">
+          <button
+            class="btn btn-outline-primary btn-sm btn-cust"
+            (click)="getMetadata()"
+            type="button"
+          >
+            Find
+          </button>
+        </div>
       </div>
-      <app-primary-keys [data]="data"></app-primary-keys>
-      <app-composite-keys [data]="data" ></app-composite-keys>
+      <app-metadata [headers]="data?._headers" [metadata]="metadata"></app-metadata>
     </div>
   </div>
 </div>

@@ -13,11 +13,10 @@ import { Entry } from '../models/entry.model';
 })
 export class DatagridComponent implements OnInit {
 
-  @Input() data: DTModel = new DTModel();
+  @Input() data: DTModel | null = null
 
   constructor() {}
 
   ngOnInit(): void {
-    
   }
 }

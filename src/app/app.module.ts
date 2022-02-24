@@ -8,15 +8,15 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DatagridComponent } from './datagrid/datagrid.component';
 import { NewScenarioComponent } from './new-scenario/new-scenario.component';
 import { FileInputDirective } from './file-input.directive';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SplitPipe } from './split.pipe';
 import { HttpService } from './httpservice.service';
 import { OutputViewComponent } from './output-view/output-view.component';
-import { PrimaryKeysComponent } from './primary-keys/primary-keys.component';
-import { CompositeKeysComponent } from './composite-keys/composite-keys.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { LoginComponent } from './login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { JwtInterceptor } from './_utils/jwt.interceptor';
+import { MetadataComponent } from './metadata/metadata.component';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -31,9 +31,8 @@ export function tokenGetter() {
     FileInputDirective,
     SplitPipe,
     OutputViewComponent,
-    PrimaryKeysComponent,
-    CompositeKeysComponent,
     LoginComponent,
+    MetadataComponent
   ],
   imports: [
     BrowserModule,
@@ -50,7 +49,9 @@ export function tokenGetter() {
       },
     }),
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

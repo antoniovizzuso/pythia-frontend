@@ -14,26 +14,41 @@ import { HttpResponse } from '../models/httpresponse.model';
 export class NewScenarioComponent implements OnInit {
 
   @Output() fileUploadEvent = new EventEmitter<File | null>();
-  fileToUpload: File | null = null;
+  file: File | null = null;
   data: DTModel | null = null;
+  pages: string[] = new Array();
+  selectedPage: number = 1;
+  rowsPerPage: number = 10;
+  metadata: [Array<string>, Array<string>, Array<string>];
+  showTable: boolean = false;
 
   constructor(public http: HttpClient) { }
 
   ngOnInit(): void {
-    this.fileToUpload = null;
+    this.file = null;
     this.data = null;
   }
 
   handleFileInput(event: Event) {
-    this.fileToUpload = (<HTMLInputElement>event.target).files!.item(0);
-    this.fileUploadEvent.emit(this.fileToUpload);
+    this.file = (<HTMLInputElement>event.target).files!.item(0);
+    this.fileUploadEvent.emit(this.file);
   }
 
   uploadFile() {
     try {
       const formData = new FormData();
-      formData.append('file', this.fileToUpload as Blob, this.fileToUpload?.name);
+      formData.append('file', this.file as Blob, this.file?.name);
       this.http.post<HttpResponse>("http://127.0.0.1:8080/api/scenario/uploadFile/", formData).subscribe(val => this.showData(val.content));
+    } catch(error) {
+      console.log(error)
+    }
+  }
+
+  getMetadata() {
+    try {
+      const formData = new FormData();
+      formData.append('file', this.file as Blob, this.file?.name);
+      this.http.post<HttpResponse>("http://127.0.0.1:8080/api/getmetadata/", formData).subscribe(val => this.metadata = val.content as [Array<string>, Array<string>, Array<string>]);
     } catch(error) {
       console.log(error)
     }
@@ -41,6 +56,27 @@ export class NewScenarioComponent implements OnInit {
 
   showData(content: Object) {
     this.data = content as DTModel;
+    console.log(this.data._headers)
+    this.getPages(this.data._count);
+    this.showTable = true;
+  }
+
+  getPages(rowsCount: number) {
+    let visiblePages = 8;
+    let total = Math.round(rowsCount / this.rowsPerPage);
+    this.pages.push((1).toString());
+
+    if(this.selectedPage > visiblePages/2) {
+      this.pages.push('...');
+    }
+
+    if(this.selectedPage < total - visiblePages/2) {
+      this.pages.push('...');
+    }
+
+    if (rowsCount > this.rowsPerPage) {
+      this.pages.push(total.toString());
+    }
   }
 
 

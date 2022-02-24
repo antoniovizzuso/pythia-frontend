@@ -1,5 +1,6 @@
 <div role="main">
   <div *ngIf="this.jwtService.loggedIn">
+    <div *ngIf="spinnerLoaderService.isLoading$ | async" class="loader loader-default is-active" id="loader"></div>
     <!-- Toolbar -->
     <div class="toolbar navbar" role="banner">
       <a class="navbar-brand" href="#">

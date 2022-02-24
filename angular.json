@@ -28,9 +28,12 @@
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/prism.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/prism.js"
+            ]
           },
           "configurations": {
             "production": {

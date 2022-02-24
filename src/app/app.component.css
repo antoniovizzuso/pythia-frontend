@@ -36,7 +36,7 @@
   }
 
   .navbar-brand {
-    color: #fff;
+    color: #fff !important;
     padding-top: 0.5rem;
     font-size: inherit;
     font-weight: 500;

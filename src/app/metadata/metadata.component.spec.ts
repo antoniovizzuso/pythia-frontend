@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PrimaryKeysComponent } from './primary-keys.component';
+import { MetadataComponent } from './metadata.component';
 
-describe('PrimaryKeysComponent', () => {
-  let component: PrimaryKeysComponent;
-  let fixture: ComponentFixture<PrimaryKeysComponent>;
+describe('MetadataComponent', () => {
+  let component: MetadataComponent;
+  let fixture: ComponentFixture<MetadataComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PrimaryKeysComponent ]
+      declarations: [ MetadataComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PrimaryKeysComponent);
+    fixture = TestBed.createComponent(MetadataComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
