@@ -1,0 +1,68 @@
+<div class="card mt-3">
+    <div class="card-body">
+      <div *ngIf="showTable" class="row table-dataset">
+        <div class="col-md-12">
+          <div class="panel panel-success pt-2">
+            <div class="panel-heading">
+              <h5 class="panel-title mt-3">Table Preview</h5>
+              <h6 class="card-subtitle mb-2 text-muted">
+                (only first 10 rows are shown)
+              </h6>
+            </div>
+            <app-datagrid [data]="data"></app-datagrid>
+            <nav *ngIf="pages" aria-label="Page navigation example">
+              <ul class="pagination justify-content-center">
+                <li class="page-item disabled">
+                  <a class="page-link" href="#" tabindex="-1">Previous</a>
+                </li>
+                <li *ngFor="let i of pages" class="page-item">
+                  <a class="page-link" href="#">{{ i }}</a>
+                </li>
+                <li class="page-item"> 
+                  <a class="page-link" href="#">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div *ngIf="showTable" class="card mt-3">
+    <div class="card-body">
+      <div class="panel panel-success pt-2">
+        <div class="panel-heading">
+          <h5 class="panel-title mt-3">Metadata</h5>
+          <h6 class="card-subtitle mb-2 text-muted">
+            Define metadata of the project used to generate predictions
+          </h6>
+          <h6 class="card-subtitle mb-2">
+            Functional dependencies, keys and composite keys can be automatically
+            find using profiling techniques.
+          </h6>
+          <div class="d-grid gap-2 col-2 ms-auto">
+            <button
+              class="btn btn-outline-primary btn-sm btn-cust"
+              (click)="getMetadata()"
+              type="button"
+            >
+              Find
+            </button>
+          </div>
+        </div>
+        <app-metadata [headers]="data?._headers" 
+      [metadata]="data?._metadata" 
+      (metaEvent)="loadMeta($event)"></app-metadata>
+        <div class="d-grid gap-2 col-2 ms-auto">
+          <button
+            class="btn btn-outline-primary btn-sm btn-cust"
+            (click)="save()"
+            type="button"
+          >
+            Salva
+          </button>
+      </div>
+    </div>
+  </div>
+  

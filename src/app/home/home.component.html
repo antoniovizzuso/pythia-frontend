@@ -52,11 +52,17 @@
             <select
               class="form-select form-btn"
               aria-label="Default select example"
+              (change)="onScenarioSelected($event)"
             >
-              <option selected>Select an existing scenario...</option>
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
+              <option [ngValue]="null" selected disabled>
+                Select an existing scenario...
+              </option>
+              <option
+                *ngFor="let s of listScenarios | keyvalue"
+                [value]="s.value"
+              >
+                {{ s.value }}
+              </option>
             </select>
             <button
               (click)="loadScenario()"
@@ -77,9 +83,7 @@
       </div>
 
       <div *ngIf="idScenarioSelected == 1" class="card mt-3">
-        <div class="card-body">
-          <h5>Table preview</h5>
-        </div>
+        <app-load-scenario [scenarioName]="scenarioName"></app-load-scenario>
       </div>
 
       <div *ngIf="idScenarioSelected == 2">

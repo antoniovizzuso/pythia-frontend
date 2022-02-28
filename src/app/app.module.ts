@@ -17,6 +17,7 @@ import { LoginComponent } from './login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { JwtInterceptor } from './_utils/jwt.interceptor';
 import { MetadataComponent } from './metadata/metadata.component';
+import { LoadScenarioComponent } from './load-scenario/load-scenario.component';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -32,7 +33,8 @@ export function tokenGetter() {
     SplitPipe,
     OutputViewComponent,
     LoginComponent,
-    MetadataComponent
+    MetadataComponent,
+    LoadScenarioComponent
   ],
   imports: [
     BrowserModule,

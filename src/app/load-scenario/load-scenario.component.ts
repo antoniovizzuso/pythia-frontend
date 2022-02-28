@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DTModel } from '../models/dtmodel.model';
 import { DTRow } from '../models/dtrow.model';
 import { HttpService } from '../httpservice.service';
@@ -8,14 +8,12 @@ import { HttpResponse } from '../models/httpresponse.model';
 import { MetadataDataSet } from '../models/metadatadataset.model';
 
 @Component({
-  selector: 'app-new-scenario',
-  templateUrl: './new-scenario.component.html',
-  styleUrls: ['./new-scenario.component.css']
+  selector: 'app-load-scenario',
+  templateUrl: './load-scenario.component.html',
+  styleUrls: ['./load-scenario.component.css']
 })
-export class NewScenarioComponent implements OnInit {
-
-  @Output() fileUploadEvent = new EventEmitter<File | null>();
-  file: File | null = null;
+export class LoadScenarioComponent implements OnInit {
+  @Input() scenarioName: string | null = null;
   data: DTModel | null = null;
   pages: string[] = new Array();
   selectedPage: number = 1;
@@ -25,20 +23,8 @@ export class NewScenarioComponent implements OnInit {
   constructor(public http: HttpClient) { }
 
   ngOnInit(): void {
-    this.file = null;
-    this.data = null;
-  }
-
-  handleFileInput(event: Event) {
-    this.file = (<HTMLInputElement>event.target).files!.item(0);
-    this.fileUploadEvent.emit(this.file);
-  }
-
-  uploadFile() {
     try {
-      const formData = new FormData();
-      formData.append('file', this.file as Blob, this.file?.name);
-      this.http.post<HttpResponse>("http://127.0.0.1:8080/api/scenario/uploadFile/", formData).subscribe(val => this.showData(val.content));
+      this.http.get<HttpResponse>("http://127.0.0.1:8080/api/loadscenario/" + this.scenarioName).subscribe(val => this.showData(val.content));
     } catch(error) {
       console.log(error)
     }
@@ -47,7 +33,7 @@ export class NewScenarioComponent implements OnInit {
   getMetadata() {
     try {
       const formData = new FormData();
-      formData.append('file', this.file as Blob, this.file?.name);
+      //formData.append('file', this.file as Blob, this.file?.name);
       this.http.post<HttpResponse>("http://127.0.0.1:8080/api/getmetadata/", formData).subscribe(val => this.data!._metadata = val.content as MetadataDataSet);
     } catch(error) {
       console.log(error)
@@ -86,7 +72,7 @@ export class NewScenarioComponent implements OnInit {
   save() {
     try {
       const formData = new FormData();
-      formData.append('file', this.file as Blob, this.file?.name);
+      //formData.append('file', this.file as Blob, this.file?.name);
       formData.append('metadata', JSON.stringify(this.data?._metadata));
       this.http.post<HttpResponse>("http://127.0.0.1:8080/api/scenario/save/", formData).subscribe(val => this.showData(val.content));
     } catch(error) {

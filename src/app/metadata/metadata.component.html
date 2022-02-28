@@ -1,128 +1,134 @@
-<!-- Primary keys -->
-<div class="row table-dataset">
-  <h5 class="panel-title mt-3 card-text">Primary Keys</h5>
-  <div class="col-md-12">
-    <table
-      style="table-layout: fixed"
-      border="1"
-      class="table table-sm table-striped table-bordered table-hover text-center"
-    >
-      <thead>
-        <tr>
-          <th class="column-id">#</th>
-          <th *ngFor="let h of headers" scope="col">{{ h }}</th>
-          <th class="column-id"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="row-pk">
-          <td>PK1</td>
-          <td *ngFor="let h of headers"></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td></td>
-          <td *ngFor="let h of headers">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              value="{{ h }}"
-              [checked]="primaryKeys?.includes(h)"
-            />
-          </td>
-          <td>
-            <button class="btn btn-outline-secondary btn-sm" type="button">
-              Add
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+<form [formGroup]="form" novalidate>
+  <!-- Primary keys -->
+  <div class="row table-dataset">
+    <h5 class="panel-title mt-3 card-text">Primary Keys</h5>
+    <div class="col-md-12">
+      <table
+        style="table-layout: fixed"
+        border="1"
+        class="table table-sm table-striped table-bordered table-hover text-center"
+      >
+        <thead>
+          <tr>
+            <th class="column-id">#</th>
+            <th *ngFor="let h of headers" scope="col">{{ h }}</th>
+            <th class="column-id"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-pk">
+            <td>PK1</td>
+            <td *ngFor="let h of headers"></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td *ngFor="let h of headers">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                [value]="h"
+                [checked]="primaryKeys?.includes(h)"
+                formArrayName="selectedPk"
+                (change)="onPkChange($event)"
+              />
+            </td>
+            <td>
+              <button class="btn btn-outline-secondary btn-sm" type="button">
+                Add
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
 
-<!-- Composite Keys -->
-<div class="row table-dataset">
-  <h5 class="panel-title mt-3 card-text">Composite Keys</h5>
-  <div class="col-md-12">
-    <table
-      style="table-layout: fixed"
-      border="1"
-      class="table table-sm table-striped table-bordered table-hover text-center"
-    >
-      <thead>
-        <tr>
-          <th class="column-id">#</th>
-          <th *ngFor="let h of headers" scope="col">{{ h }}</th>
-          <th class="column-id"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="row-pk">
-          <td>PK1</td>
-          <td *ngFor="let h of headers"></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td></td>
-          <td *ngFor="let h of headers">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              value="{{ h }}"
-              [checked]="compositeKeys?.includes(h)"
-            />
-          </td>
-          <td>
-            <button class="btn btn-outline-secondary btn-sm" type="button">
-              Add
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <!-- Composite Keys -->
+  <div class="row table-dataset">
+    <h5 class="panel-title mt-3 card-text">Composite Keys</h5>
+    <div class="col-md-12">
+      <table
+        style="table-layout: fixed"
+        border="1"
+        class="table table-sm table-striped table-bordered table-hover text-center"
+      >
+        <thead>
+          <tr>
+            <th class="column-id">#</th>
+            <th *ngFor="let h of headers" scope="col">{{ h }}</th>
+            <th class="column-id"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-pk">
+            <td>PK1</td>
+            <td *ngFor="let h of headers"></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td *ngFor="let h of headers">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                [value]="h"
+                [checked]="compositeKeys?.includes(h)"
+                formArrayName="selectedCompositeKeys"
+                (change)="onCkChange($event)"
+              />
+            </td>
+            <td>
+              <button class="btn btn-outline-secondary btn-sm" type="button">
+                Add
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
 
-<!-- Functional dependencies -->
-<div class="row table-dataset">
-  <h5 class="panel-title mt-3 card-text">Functional dependencies</h5>
-  <div class="col-md-12">
-    <table
-      style="table-layout: fixed"
-      border="1"
-      class="table table-sm table-striped table-bordered table-hover text-center"
-    >
-      <thead>
-        <tr>
-          <th class="column-id">#</th>
-          <th *ngFor="let h of headers" scope="col">{{ h }}</th>
-          <th class="column-id"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="row-pk">
-          <td>PK1</td>
-          <td *ngFor="let h of headers"></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td></td>
-          <td *ngFor="let h of headers">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              value="{{ h }}"
-              [checked]="functionalDependencies?.includes(h)"
-            />
-          </td>
-          <td>
-            <button class="btn btn-outline-secondary btn-sm" type="button">
-              Add
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <!-- Functional dependencies -->
+  <div class="row table-dataset">
+    <h5 class="panel-title mt-3 card-text">Functional dependencies</h5>
+    <div class="col-md-12">
+      <table
+        style="table-layout: fixed"
+        border="1"
+        class="table table-sm table-striped table-bordered table-hover text-center"
+      >
+        <thead>
+          <tr>
+            <th class="column-id">#</th>
+            <th *ngFor="let h of headers" scope="col">{{ h }}</th>
+            <th class="column-id"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-pk">
+            <td>PK1</td>
+            <td *ngFor="let h of headers"></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td *ngFor="let h of headers">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="{{ h }}"
+                [checked]="functionalDependencies?.includes(h)"
+              />
+            </td>
+            <td>
+              <button class="btn btn-outline-secondary btn-sm" type="button">
+                Add
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
+</form>
