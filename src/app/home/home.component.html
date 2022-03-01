@@ -88,6 +88,8 @@
 
       <div *ngIf="idScenarioSelected == 2">
         <app-new-scenario
+          [scenarioName]="scenarioName"
+          (scenarioSetEvent)="loadScenarioName($event)"
           (fileUploadEvent)="loadFile($event)"
         ></app-new-scenario>
       </div>

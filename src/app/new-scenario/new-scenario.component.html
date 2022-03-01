@@ -70,13 +70,12 @@
           </button>
         </div>
       </div>
-      <app-metadata [headers]="data?._headers" 
-      [metadata]="data?._metadata" 
+      <app-metadata [metadata]="data?._metadata" 
       (metaEvent)="loadMeta($event)"></app-metadata>
       <div class="d-grid gap-2 col-2 ms-auto">
         <button
           class="btn btn-outline-primary btn-sm btn-cust"
-          (click)="save()"
+          (click)="save($event)"
           type="button"
         >
           Salva

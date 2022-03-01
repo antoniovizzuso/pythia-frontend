@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DTModel } from '../models/dtmodel.model';
 import { DTRow } from '../models/dtrow.model';
 import { HttpService } from '../httpservice.service';
@@ -13,8 +13,8 @@ import { MetadataDataSet } from '../models/metadatadataset.model';
   styleUrls: ['./new-scenario.component.css']
 })
 export class NewScenarioComponent implements OnInit {
-
   @Output() fileUploadEvent = new EventEmitter<File | null>();
+  @Output() scenarioSetEvent = new EventEmitter<string>();
   file: File | null = null;
   data: DTModel | null = null;
   pages: string[] = new Array();
@@ -48,7 +48,7 @@ export class NewScenarioComponent implements OnInit {
     try {
       const formData = new FormData();
       formData.append('file', this.file as Blob, this.file?.name);
-      this.http.post<HttpResponse>("http://127.0.0.1:8080/api/getmetadata/", formData).subscribe(val => this.data!._metadata = val.content as MetadataDataSet);
+      this.http.post<HttpResponse>("http://127.0.0.1:8080/api/getmetadata/", formData).subscribe(val => this.showData(val.content));
     } catch(error) {
       console.log(error)
     }
@@ -61,6 +61,7 @@ export class NewScenarioComponent implements OnInit {
   }
 
   getPages(rowsCount: number) {
+    this.pages = new Array();
     let visiblePages = 8;
     let total = Math.round(rowsCount / this.rowsPerPage);
     this.pages.push((1).toString());
@@ -80,15 +81,17 @@ export class NewScenarioComponent implements OnInit {
 
   loadMeta(meta: MetadataDataSet) {
     this.data!._metadata = meta;
-    console.log();
   }
 
-  save() {
+  save(event: any) {
     try {
       const formData = new FormData();
       formData.append('file', this.file as Blob, this.file?.name);
       formData.append('metadata', JSON.stringify(this.data?._metadata));
-      this.http.post<HttpResponse>("http://127.0.0.1:8080/api/scenario/save/", formData).subscribe(val => this.showData(val.content));
+      this.http.post<HttpResponse>("http://127.0.0.1:8080/api/scenario/save/", formData).subscribe(val => {
+        this.showData(val.content);
+        this.scenarioSetEvent.emit((val.content as DTModel)._name);
+      });
     } catch(error) {
       console.log(error)
     }

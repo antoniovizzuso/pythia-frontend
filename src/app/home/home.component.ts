@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import { Entry } from '../models/entry.model';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { JwtService } from '../jwt.service';
@@ -53,6 +53,10 @@ export class HomeComponent implements OnInit {
 
   loadFile(file: File | null) {
     this.fileToUpload = file;
+  }
+
+  loadScenarioName(name: string) {
+    this.scenarioName = name;
   }
 
   refreshComponent() {

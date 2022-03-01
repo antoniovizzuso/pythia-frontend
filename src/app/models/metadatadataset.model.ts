@@ -1,5 +1,5 @@
 export class MetadataDataSet {
-    headers: string[] = [];
+    headers: [string, string];
     pks: string[] = [];
     cks: string[] = [];
     fds: string[] = [];
