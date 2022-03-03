@@ -17,6 +17,7 @@ export class HomeComponent implements OnInit {
   fileToUpload: File | null = null;
   scenarioName: string | null = null;
   listScenarios: Map<string, string> = new Map<string, string>();
+  errorMessage: string = "";
 
   constructor(
     private router: Router,
@@ -32,7 +33,9 @@ export class HomeComponent implements OnInit {
 
   loadListScenarios(): void {
     try {
-      this.http.get<HttpResponse>("http://127.0.0.1:8080/api/getscenarios/").subscribe(val => this.listScenarios = val.content as Map<string, string>);
+      this.http.get<HttpResponse>("http://127.0.0.1:8080/api/getscenarios/").subscribe(val => {
+        this.listScenarios = val.content as Map<string, string>;
+      });
     } catch (error) {
       console.log(error);
     }
@@ -43,7 +46,12 @@ export class HomeComponent implements OnInit {
   }
 
   loadScenario(): void {
-    this.idScenarioSelected = 1;
+    this.errorMessage = "";
+    if (this.scenarioName) {
+      this.idScenarioSelected = 1;
+    } else {
+      this.errorMessage = "select a scenario";
+    }
   }
 
   newScenario(): void {

@@ -26,7 +26,7 @@
           role="tab"
           aria-controls="profile"
           aria-selected="false"
-          [disabled]="!fileToUpload"
+          [disabled]="!scenarioName"
         >
           <i class="fas fa-table"></i>
           Output
@@ -57,10 +57,7 @@
               <option [ngValue]="null" selected disabled>
                 Select an existing scenario...
               </option>
-              <option
-                *ngFor="let s of listScenarios | keyvalue"
-                [value]="s.value"
-              >
+              <option *ngFor="let s of listScenarios | keyvalue" [value]="s.value">
                 {{ s.value }}
               </option>
             </select>
@@ -79,10 +76,13 @@
               New Scenario
             </button>
           </div>
+          <div class="invalid-feedback d-block" *ngIf="errorMessage">
+            {{ errorMessage }}
+          </div>
         </div>
       </div>
 
-      <div *ngIf="idScenarioSelected == 1" class="card mt-3">
+      <div *ngIf="idScenarioSelected == 1">
         <app-load-scenario [scenarioName]="scenarioName"></app-load-scenario>
       </div>
 
@@ -102,7 +102,7 @@
       role="tabpanel"
       aria-labelledby="profile-tab"
     >
-      <app-output-view [file]="fileToUpload"></app-output-view>
+      <app-output-view [scenarioName]="scenarioName"></app-output-view>
     </div>
   </div>
 </div>

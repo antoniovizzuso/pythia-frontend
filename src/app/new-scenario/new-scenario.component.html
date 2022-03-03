@@ -1,23 +1,28 @@
 <div class="card mt-3">
   <div class="card-body">
-    <h5>Dataset</h5>
-    <h6>Import data from an existing CSV file</h6>
-    <div class="d-flex">
-      <input
-        class="form-control load-csv"
-        type="file"
-        id="formFile"
-        placeholder="No file chosen"
-        (change)="handleFileInput($event)"
-      />
-      <button
-        [disabled]="!file"
-        type="button"
-        class="btn btn-light btn-load mr-3"
-        (click)="uploadFile()"
-      >
-        Upload
-      </button>
+    <div>
+      <h5>Dataset</h5>
+      <h6>Import data from an existing CSV file</h6>
+      <div class="d-flex">
+        <input
+          class="form-control load-csv"
+          type="file"
+          id="formFile"
+          placeholder="No file chosen"
+          (change)="handleFileInput($event)"
+        />
+        <button
+          [disabled]="!file"
+          type="button"
+          class="btn btn-light btn-load mr-3"
+          (click)="submitFile()"
+        >
+          Upload
+        </button>
+      </div>
+      <div class="invalid-feedback d-block" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
     </div>
     <div *ngIf="showTable" class="row table-dataset">
       <div class="col-md-12">
@@ -48,38 +53,9 @@
   </div>
 </div>
 
-<div *ngIf="showTable" class="card mt-3">
-  <div class="card-body">
-    <div class="panel panel-success pt-2">
-      <div class="panel-heading">
-        <h5 class="panel-title mt-3">Metadata</h5>
-        <h6 class="card-subtitle mb-2 text-muted">
-          Define metadata of the project used to generate predictions
-        </h6>
-        <h6 class="card-subtitle mb-2">
-          Functional dependencies, keys and composite keys can be automatically
-          find using profiling techniques.
-        </h6>
-        <div class="d-grid gap-2 col-2 ms-auto">
-          <button
-            class="btn btn-outline-primary btn-sm btn-cust"
-            (click)="getMetadata()"
-            type="button"
-          >
-            Find
-          </button>
-        </div>
-      </div>
-      <app-metadata [metadata]="data?._metadata" 
-      (metaEvent)="loadMeta($event)"></app-metadata>
-      <div class="d-grid gap-2 col-2 ms-auto">
-        <button
-          class="btn btn-outline-primary btn-sm btn-cust"
-          (click)="save($event)"
-          type="button"
-        >
-          Salva
-        </button>
-    </div>
-  </div>
+<div *ngIf="showTable">
+  <app-metadata
+        [metadata]="data?._metadata"
+        (metaEvent)="loadMeta($event)"
+      ></app-metadata>
 </div>

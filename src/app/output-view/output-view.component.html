@@ -5,11 +5,11 @@
     <div class="row my-1 align-items-center">
       <div class="col-6 input-group">
         <p class="col-sm-4 nowrap col-form-label">Structure Type</p>
-        <select class="form-select" aria-label="Default select example">
+        <select class="form-select" (change)="onSelectStructure($event)" aria-label="Default select example">
           <option
             *ngFor="let s of structures | keyvalue"
-            value="s.key"
-            [selected]="s.key === 'attribute'"
+            [value]="s.key"
+            [selected]="s.key === selectedStructure"
           >
             {{ s.value }}
           </option>
@@ -27,11 +27,11 @@
     <div class="row my-1 align-items-center">
       <div class="col-6 input-group">
         <p class="col-sm-4 nowrap col-form-label">Strategy</p>
-        <select class="form-select" aria-label="Default select example">
+        <select class="form-select" (change)="onSelectStrategy($event)" aria-label="Default select example">
           <option
             *ngFor="let s of strategies | keyvalue"
-            value="s.key"
-            [selected]="s.key === 'contradicting'"
+            [value]="s.key"
+            [selected]="s.key === selectedStrategy"
           >
             {{ s.value }}
           </option>
@@ -73,7 +73,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr
+              <!-- <tr
                 *ngFor="let row of results[0][2]; let indexOfelement = index"
                 class="hide row-amb r-1"
               >
@@ -99,7 +99,7 @@
                     View
                   </button>
                 </td>
-              </tr>
+              </tr> -->
             </tbody>
           </table>
         </div>

@@ -10,7 +10,7 @@ import { MetadataDataSet } from '../models/metadatadataset.model';
 @Component({
   selector: 'app-load-scenario',
   templateUrl: './load-scenario.component.html',
-  styleUrls: ['./load-scenario.component.css']
+  styleUrls: ['./load-scenario.component.css'],
 })
 export class LoadScenarioComponent implements OnInit {
   @Input() scenarioName: string | null = null;
@@ -20,13 +20,17 @@ export class LoadScenarioComponent implements OnInit {
   rowsPerPage: number = 10;
   showTable: boolean = false;
 
-  constructor(public http: HttpClient) { }
+  constructor(public http: HttpClient) {}
 
   ngOnInit(): void {
     try {
-      this.http.get<HttpResponse>("http://127.0.0.1:8080/api/loadscenario/" + this.scenarioName).subscribe(val => this.showData(val.content));
-    } catch(error) {
-      console.log(error)
+      this.http
+        .get<HttpResponse>(
+          'http://127.0.0.1:8080/api/loadscenario/' + this.scenarioName
+        )
+        .subscribe((val) => this.showData(val.content));
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -34,9 +38,13 @@ export class LoadScenarioComponent implements OnInit {
     try {
       const formData = new FormData();
       //formData.append('file', this.file as Blob, this.file?.name);
-      this.http.post<HttpResponse>("http://127.0.0.1:8080/api/getmetadata/", formData).subscribe(val => this.data!._metadata = val.content as MetadataDataSet);
-    } catch(error) {
-      console.log(error)
+      this.http
+        .post<HttpResponse>('http://127.0.0.1:8080/api/getmetadata/', formData)
+        .subscribe(
+          (val) => (this.data!._metadata = val.content as MetadataDataSet)
+        );
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -51,11 +59,11 @@ export class LoadScenarioComponent implements OnInit {
     let total = Math.round(rowsCount / this.rowsPerPage);
     this.pages.push((1).toString());
 
-    if(this.selectedPage > visiblePages/2) {
+    if (this.selectedPage > visiblePages / 2) {
       this.pages.push('...');
     }
 
-    if(this.selectedPage < total - visiblePages/2) {
+    if (this.selectedPage < total - visiblePages / 2) {
       this.pages.push('...');
     }
 
@@ -66,19 +74,22 @@ export class LoadScenarioComponent implements OnInit {
 
   loadMeta(meta: MetadataDataSet) {
     this.data!._metadata = meta;
-    console.log();
+    console.log(this.data!._metadata)
   }
 
   save() {
     try {
       const formData = new FormData();
-      //formData.append('file', this.file as Blob, this.file?.name);
+      formData.append('name', this.scenarioName as string);
       formData.append('metadata', JSON.stringify(this.data?._metadata));
-      this.http.post<HttpResponse>("http://127.0.0.1:8080/api/scenario/save/", formData).subscribe(val => this.showData(val.content));
-    } catch(error) {
-      console.log(error)
+      this.http
+        .post<HttpResponse>(
+          'http://127.0.0.1:8080/api/scenario/update/',
+          formData
+        )
+        .subscribe((val) => this.showData(val.content));
+    } catch (error) {
+      console.log(error);
     }
   }
-
-
 }

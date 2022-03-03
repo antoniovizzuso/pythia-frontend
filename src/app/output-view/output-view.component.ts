@@ -9,13 +9,16 @@ import { DTModel } from '../models/dtmodel.model';
   styleUrls: ['./output-view.component.css'],
 })
 export class OutputViewComponent implements OnInit {
-  @Input() file: File | null = null;
+  @Input() scenarioName: string | null = null;
 
   structures: Map<string, string> = new Map<string, string>();
   strategies: Map<string, string> = new Map<string, string>();
 
+  selectedStrategy: string = "";
+  selectedStructure: string = "";
+
   //results: [string[][], string[][], string] | null = null;
-  results: any[][];
+  results: any[][] = [];
   selectedResult: any[][];
 
   constructor(public http: HttpClient) {}
@@ -25,18 +28,24 @@ export class OutputViewComponent implements OnInit {
     this.structures.set("attribute", "Attribute Ambiguity");
     this.structures.set("row", "Row Ambiguity");
     this.structures.set("fd", "FD Ambiguity");
+    this.structures.set("func", "Function Ambiguity??");
+    this.structures.set("full", "Full Ambiguity??");
+    this.selectedStructure = "attribute"
 
     //Strategies
     this.strategies.set("contradicting", "Contradictory (default)");
     this.strategies.set("uniform_true", "Uniform True");
     this.strategies.set("uniform_false", "Uniform False");
+    this.selectedStrategy = "contradicting"
   }
 
   generate() {
+    this.results = [];
     try {
       const formData = new FormData();
-      formData.append('file', this.file as Blob, this.file?.name);
-      formData.append('strategy', 'schema');
+      formData.append('name', this.scenarioName as string);
+      formData.append('strategy', this.selectedStrategy);
+      formData.append('structure', this.selectedStructure);
       //this.http.post<HttpResponse>("http://127.0.0.1:8080/api/predict/", formData).subscribe(val => this.results = val.content as [string[][], string[][], string]);
       this.http.post<HttpResponse>("http://127.0.0.1:8080/api/predict/", formData).subscribe(val => {
         console.log(val.content)
@@ -45,6 +54,16 @@ export class OutputViewComponent implements OnInit {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  onSelectStrategy(event: any) {
+    this.selectedStrategy = event.target.value;
+    console.log("strategy: " + this.selectedStrategy)
+  }
+
+  onSelectStructure(event: any) {
+    this.selectedStructure = event.target.value;
+    console.log("structure: " + this.selectedStructure)
   }
 
   onClickView(row: number) {
