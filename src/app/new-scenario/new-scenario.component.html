@@ -28,7 +28,18 @@
       <div class="col-md-12">
         <div class="panel panel-success pt-2">
           <div class="panel-heading">
-            <h5 class="panel-title mt-3">Table Preview</h5>
+            <div class="d-flex align-items-center">
+              <h5 class="panel-title mt-3">Table Preview</h5>
+              <div class="d-grid gap-2 col-2 ms-auto mt-2">
+                <button
+                  class="btn btn-primary btn-sm btn-cust"
+                  (click)="delete($event)"
+                  type="button"
+                >
+                  Delete scenario
+                </button>
+              </div>
+            </div>
             <h6 class="card-subtitle mb-2 text-muted">
               (only first 10 rows are shown)
             </h6>
@@ -55,7 +66,8 @@
 
 <div *ngIf="showTable">
   <app-metadata
-        [metadata]="data?._metadata"
-        (metaEvent)="loadMeta($event)"
-      ></app-metadata>
+    [scenarioName]="scenarioName"
+    [metadata]="data?._metadata"
+    (metaEvent)="loadMeta($event)"
+  ></app-metadata>
 </div>

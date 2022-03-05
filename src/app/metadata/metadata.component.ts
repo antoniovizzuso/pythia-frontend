@@ -1,5 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
+import { HttpResponse } from '../models/httpresponse.model';
 import { MetadataDataSet } from '../models/metadatadataset.model';
 
 @Component({
@@ -8,9 +10,9 @@ import { MetadataDataSet } from '../models/metadatadataset.model';
   styleUrls: ['./metadata.component.css'],
 })
 export class MetadataComponent implements OnInit {
+  @Input() scenarioName: string | null = null;
   @Input() metadata: MetadataDataSet | undefined;
   @Output() metaEvent = new EventEmitter<MetadataDataSet>();
-
   form: FormGroup;
 
   get headers(): Array<string> {
@@ -33,7 +35,7 @@ export class MetadataComponent implements OnInit {
     return this.metadata!.fds;
   }
 
-  constructor(fb: FormBuilder) {
+  constructor(fb: FormBuilder, public http: HttpClient) {
     this.form = fb.group({
       selectedPk: new FormArray([]),
       selectedCompositeKeys: new FormArray([])
@@ -77,4 +79,17 @@ export class MetadataComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  save(event: any) {
+    try {
+      const formData = new FormData();
+      formData.append('name', this.scenarioName as string);
+      formData.append('metadata', JSON.stringify(this.metadata));
+      this.http.post<HttpResponse>("http://127.0.0.1:8080/api/scenario/update/", formData).subscribe(val => {
+        console.log("TO IMPLEMENT!!!!");
+      });
+    } catch(error) {
+      console.log(error)
+    }
+  }
 }

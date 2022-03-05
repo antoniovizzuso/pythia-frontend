@@ -1,38 +1,49 @@
 <div class="card mt-3">
-    <div class="card-body">
-      <div *ngIf="showTable" class="row table-dataset">
-        <div class="col-md-12">
-          <div class="panel panel-success pt-2">
-            <div class="panel-heading">
+  <div class="card-body">
+    <div *ngIf="showTable" class="row table-dataset">
+      <div class="col-md-12">
+        <div class="panel panel-success pt-2">
+          <div class="panel-heading">
+            <div class="d-flex align-items-center">
               <h5 class="panel-title mt-3">Table Preview</h5>
-              <h6 class="card-subtitle mb-2 text-muted">
-                (only first 10 rows are shown)
-              </h6>
+              <div class="d-grid gap-2 col-2 ms-auto mt-2">
+                <button
+                  class="btn btn-primary btn-sm btn-cust"
+                  (click)="delete($event)"
+                  type="button"
+                >
+                  Delete scenario
+                </button>
+              </div>
             </div>
-            <app-datagrid [data]="data"></app-datagrid>
-            <nav *ngIf="pages" aria-label="Page navigation example">
-              <ul class="pagination justify-content-center">
-                <li class="page-item disabled">
-                  <a class="page-link" href="#" tabindex="-1">Previous</a>
-                </li>
-                <li *ngFor="let i of pages" class="page-item">
-                  <a class="page-link" href="#">{{ i }}</a>
-                </li>
-                <li class="page-item"> 
-                  <a class="page-link" href="#">Next</a>
-                </li>
-              </ul>
-            </nav>
+            <h6 class="card-subtitle mb-2 text-muted">
+              (only first 10 rows are shown)
+            </h6>
           </div>
+          <app-datagrid [data]="data"></app-datagrid>
+          <nav *ngIf="pages" aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+              <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">Previous</a>
+              </li>
+              <li *ngFor="let i of pages" class="page-item">
+                <a class="page-link" href="#">{{ i }}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
     </div>
   </div>
-  
-  <div *ngIf="showTable">
-    <app-metadata
-          [metadata]="data?._metadata"
-          (metaEvent)="loadMeta($event)"
-        ></app-metadata>
-  </div>
-  
+</div>
+
+<div *ngIf="showTable">
+  <app-metadata
+    [scenarioName]="scenarioName"
+    [metadata]="data?._metadata"
+    (metaEvent)="loadMeta($event)"
+  ></app-metadata>
+</div>

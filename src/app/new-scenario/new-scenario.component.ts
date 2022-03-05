@@ -15,6 +15,7 @@ import { MetadataDataSet } from '../models/metadatadataset.model';
 export class NewScenarioComponent implements OnInit {
   @Output() fileUploadEvent = new EventEmitter<File | null>();
   @Output() scenarioSetEvent = new EventEmitter<string>();
+  @Output() deletedScenearioEvent = new EventEmitter<string>();
   @Input() scenarioName: string | null = null;
   file: File | null = null;
   data: DTModel | null = null;
@@ -134,6 +135,16 @@ export class NewScenarioComponent implements OnInit {
       this.http.post<HttpResponse>("http://127.0.0.1:8080/api/scenario/update/", formData).subscribe(val => {
         this.showData(val.content);
         this.scenarioSetEvent.emit((val.content as DTModel)._name);
+      });
+    } catch(error) {
+      console.log(error)
+    }
+  }
+
+  delete() {
+    try {
+      this.http.delete<HttpResponse>("http://127.0.0.1:8080/api/scenario/delete/" + this.scenarioName).subscribe(val => {
+        this.deletedScenearioEvent.emit(this.scenarioName!);
       });
     } catch(error) {
       console.log(error)

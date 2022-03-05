@@ -55,7 +55,7 @@ export class HomeComponent implements OnInit {
   }
 
   newScenario(): void {
-    //this.refreshComponent();
+    this.scenarioName = null;
     this.idScenarioSelected = 2;
   }
 
@@ -69,5 +69,11 @@ export class HomeComponent implements OnInit {
 
   refreshComponent() {
     this.router.navigate([this.router.url]);
+  }
+
+  deletedScenario(): void {
+    this.scenarioName = null;
+    this.idScenarioSelected = 0;
+    this.loadListScenarios();
   }
 }

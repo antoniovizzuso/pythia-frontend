@@ -57,7 +57,7 @@
               <option [ngValue]="null" selected disabled>
                 Select an existing scenario...
               </option>
-              <option *ngFor="let s of listScenarios | keyvalue" [value]="s.value">
+              <option *ngFor="let s of listScenarios | keyvalue" [value]="s.key">
                 {{ s.value }}
               </option>
             </select>
@@ -83,7 +83,10 @@
       </div>
 
       <div *ngIf="idScenarioSelected == 1">
-        <app-load-scenario [scenarioName]="scenarioName"></app-load-scenario>
+        <app-load-scenario 
+        [scenarioName]="scenarioName"
+        (deletedScenearioEvent)="deletedScenario()"
+        ></app-load-scenario>
       </div>
 
       <div *ngIf="idScenarioSelected == 2">
@@ -91,6 +94,7 @@
           [scenarioName]="scenarioName"
           (scenarioSetEvent)="loadScenarioName($event)"
           (fileUploadEvent)="loadFile($event)"
+          (deletedScenearioEvent)="deletedScenario()"
         ></app-new-scenario>
       </div>
     </div>

@@ -10,20 +10,21 @@
           Functional dependencies, keys and composite keys can be automatically
           find using profiling techniques.
         </h6>
-        <!-- <div class="d-grid gap-2 col-2 ms-auto">
-          <button
-            class="btn btn-outline-primary btn-sm btn-cust"
-            (click)="getMetadata()"
-            type="button"
-          >
-            Find
-          </button>
-        </div> -->
       </div>
       <form [formGroup]="form" novalidate>
         <!-- Primary keys -->
         <div class="row table-dataset">
-          <h5 class="panel-title mt-3 card-text">Primary Keys</h5>
+          <div class="d-flex align-items-center mb-1 mt-3">
+            <h5 class="panel-title mt-3 card-text">Primary Keys</h5>
+            <div class="d-grid gap-2 col-2 ms-auto">
+              <button
+                class="btn btn-outline-primary btn-sm btn-cust"
+                type="button"
+              >
+                Find
+              </button>
+            </div>
+          </div>
           <div class="col-md-12">
             <table
               style="table-layout: fixed"
@@ -71,7 +72,17 @@
 
         <!-- Composite Keys -->
         <div class="row table-dataset">
-          <h5 class="panel-title mt-3 card-text">Composite Keys</h5>
+          <div class="d-flex align-items-center mb-1 mt-3">
+            <h5 class="panel-title mt-3 card-text">Composite Keys</h5>
+            <div class="d-grid gap-2 col-2 ms-auto">
+              <button
+                class="btn btn-outline-primary btn-sm btn-cust"
+                type="button"
+              >
+                Find
+              </button>
+            </div>
+          </div>
           <div class="col-md-12">
             <table
               style="table-layout: fixed"
@@ -119,7 +130,17 @@
 
         <!-- Functional dependencies -->
         <div class="row table-dataset">
-          <h5 class="panel-title mt-3 card-text">Functional dependencies</h5>
+          <div class="d-flex align-items-center mb-1 mt-3">
+            <h5 class="panel-title mt-3 card-text">Functional dependencies</h5>
+            <div class="d-grid gap-2 col-2 ms-auto">
+              <button
+                class="btn btn-outline-primary btn-sm btn-cust"
+                type="button"
+              >
+                Find
+              </button>
+            </div>
+          </div>
           <div class="col-md-12">
             <table
               style="table-layout: fixed"
@@ -169,132 +190,200 @@
 
 <div class="card mt-3 card-template">
   <div class="card-body">
-      <h5 class="card-title">Template</h5>
-      <h6 class="card-subtitle mb-2 text-muted">A-Query template</h6>
-      <p class="card-text">Ambiguity Templates (or A-Query Templates) are parameterized queries used to
-          generate SQL scripts. The parameters identify the elements of the query and can be assigned
-          to
-          <em>relation</em> and <em>attribute names</em>, a set of <em>labels</em> and <em>comparison
-              operators</em>. Parameter values are automatically populated by Pythia using profiling
-          methods and machine learning modules to find attributes ambiguities with the corresponding
-          ambiguous words.
-      </p>
-      <form class="row g-3">
-          <div class="input-group mb-3">
-              <select class="form-select" id="select-templ">
-                  <option selected>Select a query template...</option>
-                  <option value="1">Attribute Ambiguity</option>
-                  <option value="2">Row Ambiguity</option>
-                  <option value="3">FD Ambiguity</option>
-                  <option value="4">Blank</option>
-              </select>
-              <button class="btn btn-outline-primary" type="button"
-                  onclick="javascript:show_element('card-t' + document.getElementById('select-templ').selectedIndex)">Add</button>
-          </div>
-      </form>
-      <div class="code-editor" id="card-t1">
-          <div class="accordion-item">
-              <h2 class="accordion-header" id="headingOne">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                      Attribute Ambiguity <em style="margin-left: 10px">(Default Template)</em>
-                  </button>
-              </h2>
-              <div id="collapseOne" class="accordion-collapse collapse"
-                  aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                  <div class="accordion-body">
-                      <div class="row">
-                          <label class="col-sm-2 col-form-label">Template Name</label>
-                          <div class="col-sm-10">
-                              <input class="form-control" type="text" placeholder="Template Name"
-                                  aria-label="default input example" value="Attribute Ambiguity" />
-                          </div>
-                      </div>
-                      <div class="row g-3">
-                          <div style="height: 150px; " class="col-12">
-                              <textarea placeholder="Insert template sql" id="editing"
-                                  spellcheck="false" oninput="update(this.value); sync_scroll(this);"
-                                  onscroll="sync_scroll(this);" onkeydown="check_tab(this, event);">SELECT CONCAT (t1.$PK$, print($op1$, $label1$), t2.$PK$)
+    <h5 class="card-title">Template</h5>
+    <h6 class="card-subtitle mb-2 text-muted">A-Query template</h6>
+    <p class="card-text">
+      Ambiguity Templates (or A-Query Templates) are parameterized queries used
+      to generate SQL scripts. The parameters identify the elements of the query
+      and can be assigned to <em>relation</em> and <em>attribute names</em>, a
+      set of <em>labels</em> and <em>comparison operators</em>. Parameter values
+      are automatically populated by Pythia using profiling methods and machine
+      learning modules to find attributes ambiguities with the corresponding
+      ambiguous words.
+    </p>
+    <form class="row g-3">
+      <div class="input-group mb-3">
+        <select class="form-select" id="select-templ">
+          <option selected>Select a query template...</option>
+          <option value="1">Attribute Ambiguity</option>
+          <option value="2">Row Ambiguity</option>
+          <option value="3">FD Ambiguity</option>
+          <option value="4">Blank</option>
+        </select>
+        <button
+          class="btn btn-outline-primary"
+          type="button"
+          onclick="javascript:show_element('card-t' + document.getElementById('select-templ').selectedIndex)"
+        >
+          Add
+        </button>
+      </div>
+    </form>
+    <div class="code-editor" id="card-t1">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseOne"
+            aria-expanded="true"
+            aria-controls="collapseOne"
+          >
+            Attribute Ambiguity
+            <em style="margin-left: 10px">(Default Template)</em>
+          </button>
+        </h2>
+        <div
+          id="collapseOne"
+          class="accordion-collapse collapse"
+          aria-labelledby="headingOne"
+          data-bs-parent="#accordionExample"
+        >
+          <div class="accordion-body">
+            <div class="row">
+              <label class="col-sm-2 col-form-label">Template Name</label>
+              <div class="col-sm-10">
+                <input
+                  class="form-control"
+                  type="text"
+                  placeholder="Template Name"
+                  aria-label="default input example"
+                  value="Attribute Ambiguity"
+                />
+              </div>
+            </div>
+            <div class="row g-3">
+              <div style="height: 150px" class="col-12">
+                <textarea
+                  placeholder="Insert template sql"
+                  id="editing"
+                  spellcheck="false"
+                  oninput="update(this.value); sync_scroll(this);"
+                  onscroll="sync_scroll(this);"
+                  onkeydown="check_tab(this, event);"
+                >
+SELECT CONCAT (t1.$PK$, print($op1$, $label1$), t2.$PK$)
 FROM $RELATION$ t1, $RELATION$ t2
 WHERE t1.$PKS <> t2.$PK$ AND t1.$A1$ $op1$ t2.$A2$ 
-AND t1.$A2$ neg($op1$) t2.$A2$;</textarea>
-                              <pre id="highlighting" aria-hidden="true">
+AND t1.$A2$ neg($op1$) t2.$A2$;</textarea
+                >
+                <pre id="highlighting" aria-hidden="true">
           <code class="language-sql" id="highlighting-content">SELECT CONCAT (t1.$PK$, print($op1$, $label1$), t2.$PK$)
 FROM $RELATION$ t1, $RELATION$ t2
 WHERE t1.$PKS <> t2.$PK$ AND t1.$A1$ $op1$ t2.$A2$ 
 AND t1.$A2$ neg($op1$) t2.$A2$;</code>
           </pre>
-                          </div>
-                      </div>
-                  </div>
               </div>
+            </div>
           </div>
-
+        </div>
       </div>
+    </div>
 
-      <div class="code-editor" id="card-t2">
-          <div class="accordion-item">
-              <h2 class="accordion-header" id="headingTwo">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                      Row Ambiguity <em style="margin-left: 10px">(Default Template)</em>
-                  </button>
-              </h2>
-              <div id="collapseTwo" class="accordion-collapse collapse"
-                  aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                  <div class="accordion-body">
-                      <div class="row">
-                          <label class="col-sm-2 col-form-label">Template Name</label>
-                          <div class="col-sm-10">
-                              <input class="form-control" type="text" placeholder="Template Name"
-                                  aria-label="default input example" value="Row Ambiguity" />
-                          </div>
-                      </div>
-                      <div class="row g-3">
-                          <div style="height: 150px;" class="col-12">
-                              <textarea placeholder="Insert template sql" id="editing"
-                                  spellcheck="false" oninput="update(this.value); sync_scroll(this);"
-                                  onscroll="sync_scroll(this);" onkeydown="check_tab(this, event);">SELECT CONCAT (t1.sub($PK$), print($op1$), t2.$A1$, $A1$)
+    <div class="code-editor" id="card-t2">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingTwo">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseTwo"
+            aria-expanded="true"
+            aria-controls="collapseTwo"
+          >
+            Row Ambiguity <em style="margin-left: 10px">(Default Template)</em>
+          </button>
+        </h2>
+        <div
+          id="collapseTwo"
+          class="accordion-collapse collapse"
+          aria-labelledby="headingTwo"
+          data-bs-parent="#accordionExample"
+        >
+          <div class="accordion-body">
+            <div class="row">
+              <label class="col-sm-2 col-form-label">Template Name</label>
+              <div class="col-sm-10">
+                <input
+                  class="form-control"
+                  type="text"
+                  placeholder="Template Name"
+                  aria-label="default input example"
+                  value="Row Ambiguity"
+                />
+              </div>
+            </div>
+            <div class="row g-3">
+              <div style="height: 150px" class="col-12">
+                <textarea
+                  placeholder="Insert template sql"
+                  id="editing"
+                  spellcheck="false"
+                  oninput="update(this.value); sync_scroll(this);"
+                  onscroll="sync_scroll(this);"
+                  onkeydown="check_tab(this, event);"
+                >
+SELECT CONCAT (t1.sub($PK$), print($op1$), t2.$A1$, $A1$)
 FROM $RELATION$ t1, $RELATION$ t2
-WHERE t1.sub($PK$) = t2.sub($PK$) AND t1.$A1$ neg($op1$) t2.$A2$;</textarea>
-                              <pre id="highlighting" aria-hidden="true">
+WHERE t1.sub($PK$) = t2.sub($PK$) AND t1.$A1$ neg($op1$) t2.$A2$;</textarea
+                >
+                <pre id="highlighting" aria-hidden="true">
           <code class="language-sql" id="highlighting-content">SELECT CONCAT (t1.sub($PK$), print($op1$), t2.$A1$, $A1$)
 FROM $RELATION$ t1, $RELATION$ t2
 WHERE t1.sub($PK$) = t2.sub($PK$) AND t1.$A1$ neg($op1$) t2.$A2$;</code>
           </pre>
-                          </div>
-                      </div>
-
-                  </div>
               </div>
+            </div>
           </div>
+        </div>
+      </div>
 
-          <div class="code-editor" id="card-t3">
-              <div class="accordion-item">
-                  <h2 class="accordion-header" id="headingThree">
-                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                          data-bs-target="#collapseThree" aria-expanded="true"
-                          aria-controls="collapseThree">
-                          FD Ambiguity <em style="margin-left: 10px">(Default Template)</em>
-                      </button>
-                  </h2>
-                  <div id="collapseThree" class="accordion-collapse collapse"
-                      aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                      <div class="accordion-body">
-                          <div class="row">
-                              <label class="col-sm-2 col-form-label">Template Name</label>
-                              <div class="col-sm-10">
-                                  <input class="form-control" type="text" placeholder="Template Name"
-                                      aria-label="default input example" value="FD Ambiguity" />
-                              </div>
-                          </div>
-                          <div class="row g-3">
-                              <div style="height: 300px;" class="col-12">
-                                  <textarea placeholder="Insert template sql" id="editing"
-                                      spellcheck="false"
-                                      oninput="update(this.value); sync_scroll(this);"
-                                      onscroll="sync_scroll(this);"
-                                      onkeydown="check_tab(this, event);" style="height: 300px;">CREATE view fd_occ as ( 
+      <div class="code-editor" id="card-t3">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingThree">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseThree"
+              aria-expanded="true"
+              aria-controls="collapseThree"
+            >
+              FD Ambiguity <em style="margin-left: 10px">(Default Template)</em>
+            </button>
+          </h2>
+          <div
+            id="collapseThree"
+            class="accordion-collapse collapse"
+            aria-labelledby="headingThree"
+            data-bs-parent="#accordionExample"
+          >
+            <div class="accordion-body">
+              <div class="row">
+                <label class="col-sm-2 col-form-label">Template Name</label>
+                <div class="col-sm-10">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Template Name"
+                    aria-label="default input example"
+                    value="FD Ambiguity"
+                  />
+                </div>
+              </div>
+              <div class="row g-3">
+                <div style="height: 300px" class="col-12">
+                  <textarea
+                    placeholder="Insert template sql"
+                    id="editing"
+                    spellcheck="false"
+                    oninput="update(this.value); sync_scroll(this);"
+                    onscroll="sync_scroll(this);"
+                    onkeydown="check_tab(this, event);"
+                    style="height: 300px"
+                  >
+CREATE view fd_occ as ( 
 SELECT $RHS$ FROM 
 (SELECT $RHS$, $LHS$
 FROM $RELATION$
@@ -303,8 +392,13 @@ GROUP BY $RHS$
 HAVING count(*) > 1);
 
 SELECT CONCAT($LHS$, $label1$, $RHS$, label2, count($PK$), plural($PK$))
-FROM $RELATION$ IN (SELECT * FROM fd_occ) GROUP BY $RHS$, $LHS$</textarea>
-                                  <pre id="highlighting" style="height: 300px;" aria-hidden="true">
+FROM $RELATION$ IN (SELECT * FROM fd_occ) GROUP BY $RHS$, $LHS$</textarea
+                  >
+                  <pre
+                    id="highlighting"
+                    style="height: 300px"
+                    aria-hidden="true"
+                  >
           <code class="language-sql" id="highlighting-content">CREATE view fd_occ as ( 
 SELECT $RHS$ FROM 
 (SELECT $RHS$, $LHS$
@@ -316,104 +410,127 @@ HAVING count(*) > 1);
 SELECT CONCAT($LHS$, $label1$, $RHS$, label2, count($PK$), plural($PK$))
 FROM $RELATION$ IN (SELECT * FROM fd_occ) GROUP BY $RHS$, $LHS$</code>
           </pre>
-                              </div>
-                          </div>
-
-                      </div>
-                  </div>
+                </div>
               </div>
+            </div>
           </div>
+        </div>
       </div>
+    </div>
   </div>
 </div>
 
 <div class="card mt-3 card-ambiguous">
   <div class="card-body">
-      <h5 class="card-title">Ambiguous Attributes</h5>
-      <h6 class="card-subtitle mb-2 text-muted">Define ambiguous attribute pairs</h6>
-      <div class="row mb-3">
-          <p class="col-9 card-text">Finds ambiguous attributes pairs with T5 model. It is
-              possible to
-              edit
-              labels, or add new pairs.
-              You can also submit ambiguous pairs as training data and retrain the T5 model
-              <br /><em>Note: the process is asynchronous and may require some minutes to be
-                  completed</em>.
-          </p>
-          <div class="col-3">
-              <button class="col-12 btn btn-outline-primary btn-sm btn-cust mb-2"
-                  onclick="javascript:show_element('row-amb1', 'row-amb2', 'row-amb3')"
-                  type="button">Find</button>
-              <button class="col-12 btn btn-primary btn-sm btn-cust" type="button">Submit &
-                  Train</button>
-          </div>
+    <h5 class="card-title">Ambiguous Attributes</h5>
+    <h6 class="card-subtitle mb-2 text-muted">
+      Define ambiguous attribute pairs
+    </h6>
+    <div class="row mb-3">
+      <p class="col-9 card-text">
+        Finds ambiguous attributes pairs with T5 model. It is possible to edit
+        labels, or add new pairs. You can also submit ambiguous pairs as
+        training data and retrain the T5 model <br /><em
+          >Note: the process is asynchronous and may require some minutes to be
+          completed</em
+        >.
+      </p>
+      <div class="col-3">
+        <button
+          class="col-12 btn btn-outline-primary btn-sm btn-cust mb-2"
+          onclick="javascript:show_element('row-amb1', 'row-amb2', 'row-amb3')"
+          type="button"
+        >
+          Find
+        </button>
+        <button class="col-12 btn btn-primary btn-sm btn-cust" type="button">
+          Submit & Train
+        </button>
       </div>
-      <div class="row">
-          <div class="cxol-md-8">
-              <div class="panel panel-success">
-                  <table style="table-layout: fixed;" border=1
-                      class="table table-sm table-striped table-bordered table-hover text-center">
-                      <thead>
-                          <tr>
-                              <th>Attribute 1</th>
-                              <th>Attribute 2</th>
-                              <th>Label</th>
-                              <th class="column-button"> </th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <tr class="row-amb1">
-                              <td>confirmed cases</td>
-                              <td>active cases</td>
-                              <td>cases</td>
-                              <td>
-                                  <button class="btn btn-outline-danger btn-sm"
-                                      type="button">Delete</button>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td> <select class="form-select" aria-label="Default select example">
-                                      <option selected> </option>
-                                      <option value="1">id</option>
-                                      <option value="2">player</option>
-                                      <option value="3">team</option>
-                                      <option value="4">Field Goal</option>
-                                      <option value="5">3pt Field Goal</option>
-                                      <option value="6">FG%</option>
-                                      <option value="7">3FG%</option>
-                                      <option value="8">Fouls</option>
-                                      <option value="9">Rebounds</option>
-                                      <option value="10">Def. rebounds</option>
-                                      <option value="11">Apparences</option>
-                                      <option value="12">City</option>
-                                  </select>
-                              </td>
-                              <td> <select class="form-select" aria-label="Default select example">
-                                      <option selected> </option>
-                                      <option value="1">id</option>
-                                      <option value="2">player</option>
-                                      <option value="3">team</option>
-                                      <option value="4">Field Goal</option>
-                                      <option value="5">3pt Field Goal</option>
-                                      <option value="6">FG%</option>
-                                      <option value="7">3FG%</option>
-                                      <option value="8">Fouls</option>
-                                      <option value="9">Rebounds</option>
-                                      <option value="10">Def. rebounds</option>
-                                      <option value="11">Apparences</option>
-                                      <option value="12">City</option>
-                                  </select> </td>
-                              <td> <input class="form-control" type="text" value=""></td>
-                              <td>
-                                  <button class="btn btn-outline-secondary btn-sm"
-                                      onclick="javascript:show_element('row-amb1')"
-                                      type="button">Add</button>
-                              </td>
-                          </tr>
-                      </tbody>
-                  </table>
-              </div>
-          </div>
+    </div>
+    <div class="row">
+      <div class="cxol-md-8">
+        <div class="panel panel-success">
+          <table
+            style="table-layout: fixed"
+            border="1"
+            class="table table-sm table-striped table-bordered table-hover text-center"
+          >
+            <thead>
+              <tr>
+                <th>Attribute 1</th>
+                <th>Attribute 2</th>
+                <th>Label</th>
+                <th class="column-button"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="row-amb1">
+                <td>confirmed cases</td>
+                <td>active cases</td>
+                <td>cases</td>
+                <td>
+                  <button class="btn btn-outline-danger btn-sm" type="button">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <select
+                    class="form-select"
+                    aria-label="Default select example"
+                  >
+                    <option selected></option>
+                    <option value="1">id</option>
+                    <option value="2">player</option>
+                    <option value="3">team</option>
+                    <option value="4">Field Goal</option>
+                    <option value="5">3pt Field Goal</option>
+                    <option value="6">FG%</option>
+                    <option value="7">3FG%</option>
+                    <option value="8">Fouls</option>
+                    <option value="9">Rebounds</option>
+                    <option value="10">Def. rebounds</option>
+                    <option value="11">Apparences</option>
+                    <option value="12">City</option>
+                  </select>
+                </td>
+                <td>
+                  <select
+                    class="form-select"
+                    aria-label="Default select example"
+                  >
+                    <option selected></option>
+                    <option value="1">id</option>
+                    <option value="2">player</option>
+                    <option value="3">team</option>
+                    <option value="4">Field Goal</option>
+                    <option value="5">3pt Field Goal</option>
+                    <option value="6">FG%</option>
+                    <option value="7">3FG%</option>
+                    <option value="8">Fouls</option>
+                    <option value="9">Rebounds</option>
+                    <option value="10">Def. rebounds</option>
+                    <option value="11">Apparences</option>
+                    <option value="12">City</option>
+                  </select>
+                </td>
+                <td><input class="form-control" type="text" value="" /></td>
+                <td>
+                  <button
+                    class="btn btn-outline-secondary btn-sm"
+                    onclick="javascript:show_element('row-amb1')"
+                    type="button"
+                  >
+                    Add
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
+    </div>
   </div>
 </div>

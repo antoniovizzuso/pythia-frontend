@@ -14,6 +14,7 @@ import { MetadataDataSet } from '../models/metadatadataset.model';
 })
 export class LoadScenarioComponent implements OnInit {
   @Input() scenarioName: string | null = null;
+  @Output() deletedScenearioEvent = new EventEmitter<string>();
   data: DTModel | null = null;
   pages: string[] = new Array();
   selectedPage: number = 1;
@@ -90,6 +91,16 @@ export class LoadScenarioComponent implements OnInit {
         .subscribe((val) => this.showData(val.content));
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  delete() {
+    try {
+      this.http.delete<HttpResponse>("http://127.0.0.1:8080/api/scenario/delete/" + this.scenarioName).subscribe(val => {
+        this.deletedScenearioEvent.emit(this.scenarioName!);
+      });
+    } catch(error) {
+      console.log(error)
     }
   }
 }
