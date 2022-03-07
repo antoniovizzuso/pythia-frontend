@@ -78,22 +78,6 @@ export class LoadScenarioComponent implements OnInit {
     console.log(this.data!._metadata)
   }
 
-  save() {
-    try {
-      const formData = new FormData();
-      formData.append('name', this.scenarioName as string);
-      formData.append('metadata', JSON.stringify(this.data?._metadata));
-      this.http
-        .post<HttpResponse>(
-          'http://127.0.0.1:8080/api/scenario/update/',
-          formData
-        )
-        .subscribe((val) => this.showData(val.content));
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   delete() {
     try {
       this.http.delete<HttpResponse>("http://127.0.0.1:8080/api/scenario/delete/" + this.scenarioName).subscribe(val => {

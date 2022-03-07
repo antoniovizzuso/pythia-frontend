@@ -77,6 +77,7 @@ export class NewScenarioComponent implements OnInit {
 
   showData(content: Object) {
     this.data = content as DTModel;
+    this.scenarioSetEvent.emit(this.data._name);
     this.getPages(this.data._count);
     this.showTable = true;
   }
@@ -103,42 +104,6 @@ export class NewScenarioComponent implements OnInit {
   loadMeta(meta: MetadataDataSet) {
     this.data!._metadata = meta;
     console.log(this.data!._metadata)
-  }
-
-  save(event: any) {
-    if(this.scenarioName) {
-      this.saveNewScenario();
-    } else {
-      this.updateScenario();
-    }
-  }
-
-  saveNewScenario() {
-    try {
-      const formData = new FormData();
-      formData.append('file', this.file as Blob, this.file?.name);
-      formData.append('metadata', JSON.stringify(this.data?._metadata));
-      this.http.post<HttpResponse>("http://127.0.0.1:8080/api/scenario/new/", formData).subscribe(val => {
-        this.showData(val.content);
-        this.scenarioSetEvent.emit((val.content as DTModel)._name);
-      });
-    } catch(error) {
-      console.log(error)
-    }
-  }
-
-  updateScenario() {
-    try {
-      const formData = new FormData();
-      formData.append('name', this.scenarioName as string);
-      formData.append('metadata', JSON.stringify(this.data?._metadata));
-      this.http.post<HttpResponse>("http://127.0.0.1:8080/api/scenario/update/", formData).subscribe(val => {
-        this.showData(val.content);
-        this.scenarioSetEvent.emit((val.content as DTModel)._name);
-      });
-    } catch(error) {
-      console.log(error)
-    }
   }
 
   delete() {

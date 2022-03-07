@@ -20,6 +20,7 @@
               <button
                 class="btn btn-outline-primary btn-sm btn-cust"
                 type="button"
+                (click)="findPks()"
               >
                 Find
               </button>
@@ -60,8 +61,9 @@
                     <button
                       class="btn btn-outline-secondary btn-sm"
                       type="button"
+                      (click)="save()"
                     >
-                      Add
+                      Save
                     </button>
                   </td>
                 </tr>
@@ -78,6 +80,7 @@
               <button
                 class="btn btn-outline-primary btn-sm btn-cust"
                 type="button"
+                (click)="findCks()"
               >
                 Find
               </button>
@@ -118,8 +121,9 @@
                     <button
                       class="btn btn-outline-secondary btn-sm"
                       type="button"
+                      (click)="save()"
                     >
-                      Add
+                      Save
                     </button>
                   </td>
                 </tr>
@@ -136,6 +140,7 @@
               <button
                 class="btn btn-outline-primary btn-sm btn-cust"
                 type="button"
+                (click)="findFds()"
               >
                 Find
               </button>
@@ -174,8 +179,9 @@
                     <button
                       class="btn btn-outline-secondary btn-sm"
                       type="button"
+                      (click)="save()"
                     >
-                      Add
+                      Save
                     </button>
                   </td>
                 </tr>
@@ -188,6 +194,7 @@
   </div>
 </div>
 
+<!-- Templates -->
 <div class="card mt-3 card-template">
   <div class="card-body">
     <h5 class="card-title">Template</h5>
@@ -219,23 +226,23 @@
         </button>
       </div>
     </form>
-    <div class="code-editor" id="card-t1">
+    <div *ngFor="let t of templates;let indexOfelement=index;" class="code-editor" id="card-t1">
       <div class="accordion-item">
         <h2 class="accordion-header" id="headingOne">
           <button
             class="accordion-button collapsed"
             type="button"
             data-bs-toggle="collapse"
-            data-bs-target="#collapseOne"
+            [attr.data-bs-target]="'#collapse' + indexOfelement"
             aria-expanded="true"
-            aria-controls="collapseOne"
+            [aria-controls]="'#collapse' + indexOfelement"
           >
-            Attribute Ambiguity
+            {{ t.name }}
             <em style="margin-left: 10px">(Default Template)</em>
           </button>
         </h2>
         <div
-          id="collapseOne"
+          [attr.id]="'collapse' + indexOfelement"
           class="accordion-collapse collapse"
           aria-labelledby="headingOne"
           data-bs-parent="#accordionExample"
@@ -259,158 +266,12 @@
                   placeholder="Insert template sql"
                   id="editing"
                   spellcheck="false"
-                  oninput="update(this.value); sync_scroll(this);"
-                  onscroll="sync_scroll(this);"
-                  onkeydown="check_tab(this, event);"
                 >
-SELECT CONCAT (t1.$PK$, print($op1$, $label1$), t2.$PK$)
-FROM $RELATION$ t1, $RELATION$ t2
-WHERE t1.$PKS <> t2.$PK$ AND t1.$A1$ $op1$ t2.$A2$ 
-AND t1.$A2$ neg($op1$) t2.$A2$;</textarea
+                {{ t.query }}</textarea
                 >
                 <pre id="highlighting" aria-hidden="true">
-          <code class="language-sql" id="highlighting-content">SELECT CONCAT (t1.$PK$, print($op1$, $label1$), t2.$PK$)
-FROM $RELATION$ t1, $RELATION$ t2
-WHERE t1.$PKS <> t2.$PK$ AND t1.$A1$ $op1$ t2.$A2$ 
-AND t1.$A2$ neg($op1$) t2.$A2$;</code>
+          <code class="language-sql" id="highlighting-content">{{ t.query }}</code>
           </pre>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="code-editor" id="card-t2">
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingTwo">
-          <button
-            class="accordion-button collapsed"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#collapseTwo"
-            aria-expanded="true"
-            aria-controls="collapseTwo"
-          >
-            Row Ambiguity <em style="margin-left: 10px">(Default Template)</em>
-          </button>
-        </h2>
-        <div
-          id="collapseTwo"
-          class="accordion-collapse collapse"
-          aria-labelledby="headingTwo"
-          data-bs-parent="#accordionExample"
-        >
-          <div class="accordion-body">
-            <div class="row">
-              <label class="col-sm-2 col-form-label">Template Name</label>
-              <div class="col-sm-10">
-                <input
-                  class="form-control"
-                  type="text"
-                  placeholder="Template Name"
-                  aria-label="default input example"
-                  value="Row Ambiguity"
-                />
-              </div>
-            </div>
-            <div class="row g-3">
-              <div style="height: 150px" class="col-12">
-                <textarea
-                  placeholder="Insert template sql"
-                  id="editing"
-                  spellcheck="false"
-                  oninput="update(this.value); sync_scroll(this);"
-                  onscroll="sync_scroll(this);"
-                  onkeydown="check_tab(this, event);"
-                >
-SELECT CONCAT (t1.sub($PK$), print($op1$), t2.$A1$, $A1$)
-FROM $RELATION$ t1, $RELATION$ t2
-WHERE t1.sub($PK$) = t2.sub($PK$) AND t1.$A1$ neg($op1$) t2.$A2$;</textarea
-                >
-                <pre id="highlighting" aria-hidden="true">
-          <code class="language-sql" id="highlighting-content">SELECT CONCAT (t1.sub($PK$), print($op1$), t2.$A1$, $A1$)
-FROM $RELATION$ t1, $RELATION$ t2
-WHERE t1.sub($PK$) = t2.sub($PK$) AND t1.$A1$ neg($op1$) t2.$A2$;</code>
-          </pre>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="code-editor" id="card-t3">
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="headingThree">
-            <button
-              class="accordion-button collapsed"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#collapseThree"
-              aria-expanded="true"
-              aria-controls="collapseThree"
-            >
-              FD Ambiguity <em style="margin-left: 10px">(Default Template)</em>
-            </button>
-          </h2>
-          <div
-            id="collapseThree"
-            class="accordion-collapse collapse"
-            aria-labelledby="headingThree"
-            data-bs-parent="#accordionExample"
-          >
-            <div class="accordion-body">
-              <div class="row">
-                <label class="col-sm-2 col-form-label">Template Name</label>
-                <div class="col-sm-10">
-                  <input
-                    class="form-control"
-                    type="text"
-                    placeholder="Template Name"
-                    aria-label="default input example"
-                    value="FD Ambiguity"
-                  />
-                </div>
-              </div>
-              <div class="row g-3">
-                <div style="height: 300px" class="col-12">
-                  <textarea
-                    placeholder="Insert template sql"
-                    id="editing"
-                    spellcheck="false"
-                    oninput="update(this.value); sync_scroll(this);"
-                    onscroll="sync_scroll(this);"
-                    onkeydown="check_tab(this, event);"
-                    style="height: 300px"
-                  >
-CREATE view fd_occ as ( 
-SELECT $RHS$ FROM 
-(SELECT $RHS$, $LHS$
-FROM $RELATION$
-GROUP BY $RHS$, $LHS$) as nest
-GROUP BY $RHS$
-HAVING count(*) > 1);
-
-SELECT CONCAT($LHS$, $label1$, $RHS$, label2, count($PK$), plural($PK$))
-FROM $RELATION$ IN (SELECT * FROM fd_occ) GROUP BY $RHS$, $LHS$</textarea
-                  >
-                  <pre
-                    id="highlighting"
-                    style="height: 300px"
-                    aria-hidden="true"
-                  >
-          <code class="language-sql" id="highlighting-content">CREATE view fd_occ as ( 
-SELECT $RHS$ FROM 
-(SELECT $RHS$, $LHS$
-FROM $RELATION$
-GROUP BY $RHS$, $LHS$) as nest
-GROUP BY $RHS$
-HAVING count(*) > 1);
-
-SELECT CONCAT($LHS$, $label1$, $RHS$, label2, count($PK$), plural($PK$))
-FROM $RELATION$ IN (SELECT * FROM fd_occ) GROUP BY $RHS$, $LHS$</code>
-          </pre>
-                </div>
               </div>
             </div>
           </div>
@@ -443,9 +304,9 @@ FROM $RELATION$ IN (SELECT * FROM fd_occ) GROUP BY $RHS$, $LHS$</code>
         >
           Find
         </button>
-        <button class="col-12 btn btn-primary btn-sm btn-cust" type="button">
+        <!-- <button class="col-12 btn btn-primary btn-sm btn-cust" type="button">
           Submit & Train
-        </button>
+        </button> -->
       </div>
     </div>
     <div class="row">
