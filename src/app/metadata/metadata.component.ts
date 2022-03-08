@@ -125,11 +125,10 @@ export class MetadataComponent implements OnInit {
   save() {
     try {
       const formData = new FormData();
-      formData.append('name', this.scenarioName as string);
       formData.append('metadata', JSON.stringify(this.metadata));
       this.http
         .post<HttpResponse>(
-          'http://127.0.0.1:8080/api/scenario/update/',
+          'http://127.0.0.1:8080/api/scenario/update/' + this.scenarioName,
           formData
         )
         .subscribe((val) => {

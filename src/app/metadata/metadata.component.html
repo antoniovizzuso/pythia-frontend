@@ -226,7 +226,11 @@
         </button>
       </div>
     </form>
-    <div *ngFor="let t of templates;let indexOfelement=index;" class="code-editor" id="card-t1">
+    <div
+      *ngFor="let t of templates; let indexOfelement = index"
+      class="code-editor"
+      id="card-t1"
+    >
       <div class="accordion-item">
         <h2 class="accordion-header" id="headingOne">
           <button
@@ -256,7 +260,7 @@
                   type="text"
                   placeholder="Template Name"
                   aria-label="default input example"
-                  value="Attribute Ambiguity"
+                  [value]="t.name"
                 />
               </div>
             </div>
@@ -270,8 +274,23 @@
                 {{ t.query }}</textarea
                 >
                 <pre id="highlighting" aria-hidden="true">
-          <code class="language-sql" id="highlighting-content">{{ t.query }}</code>
-          </pre>
+                  <code class="language-sql" id="highlighting-content">{{ t.query }}</code>
+                </pre>
+              </div>
+              <div class="col-12">
+                <h6>Operators</h6>
+                <div *ngFor="let conf of t.config" class="row">
+                  <label class="col-sm-2 col-form-label">Template Name</label>
+                  <div class="col-sm-6">
+                    <input
+                      class="form-control"
+                      type="text"
+                      placeholder="Template Name"
+                      aria-label="default input example"
+                      [value]="conf"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

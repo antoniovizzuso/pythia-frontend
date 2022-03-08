@@ -73,12 +73,12 @@
               </tr>
             </thead>
             <tbody>
-              <!-- <tr
-                *ngFor="let row of results[0][2]; let indexOfelement = index"
-                class="hide row-amb r-1"
+              <tr
+                *ngFor="let row of results; let indexOfelement=index;"
+                class="row-amb r-1"
               >
                 <td>
-                  <span class="r-1-a">{{ row[0] }}</span>
+                  <span class="r-1-a">{{ row }}</span>
                 </td>
                 <td>
                   <button
@@ -99,7 +99,7 @@
                     View
                   </button>
                 </td>
-              </tr> -->
+              </tr>
             </tbody>
           </table>
         </div>
@@ -119,7 +119,7 @@
     </h6>
     <div class="row">
       <pre id="highlighting" class="m-2 language-sql" aria-hidden="true">
-      <code class="language-sql" id="highlighting-content">{{selectedResult[0]}}</code></pre>
+      <code class="language-sql" id="highlighting-content">{{selectedResult[0]!}}</code></pre>
     </div>
   </div>
 </div>

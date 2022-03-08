@@ -2,6 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpResponse } from '../models/httpresponse.model';
 import { DTModel } from '../models/dtmodel.model';
+import { Template } from '../models/template.model';
+import { Result } from '../models/result.model';
 
 @Component({
   selector: 'app-output-view',
@@ -14,43 +16,71 @@ export class OutputViewComponent implements OnInit {
   structures: Map<string, string> = new Map<string, string>();
   strategies: Map<string, string> = new Map<string, string>();
 
-  selectedStrategy: string = "";
-  selectedStructure: string = "";
+  selectedStrategy: string = '';
+  selectedStructure: string = '';
 
   //results: [string[][], string[][], string] | null = null;
-  results: any[][] = [];
-  selectedResult: any[][];
+  results: string[] | null = null;
+  selectedResult: string | null = null;
 
   constructor(public http: HttpClient) {}
 
   ngOnInit(): void {
+    if (this.scenarioName) this.loadStrategies();
     //Structures
-    this.structures.set("attribute", "Attribute Ambiguity");
-    this.structures.set("row", "Row Ambiguity");
-    this.structures.set("fd", "FD Ambiguity");
-    this.structures.set("func", "Function Ambiguity??");
-    this.structures.set("full", "Full Ambiguity??");
-    this.selectedStructure = "attribute"
+    // this.structures.set("attribute", "Attribute Ambiguity");
+    // this.structures.set("row", "Row Ambiguity");
+    // this.structures.set("fd", "FD Ambiguity");
+    // this.structures.set("func", "Function Ambiguity??");
+    // this.structures.set("full", "Full Ambiguity??");
+    // this.selectedStructure = "attribute"
 
     //Strategies
-    this.strategies.set("contradicting", "Contradictory (default)");
-    this.strategies.set("uniform_true", "Uniform True");
-    this.strategies.set("uniform_false", "Uniform False");
-    this.selectedStrategy = "contradicting"
+    this.strategies.set('contradicting', 'Contradictory (default)');
+    this.strategies.set('uniform_true', 'Uniform True');
+    this.strategies.set('uniform_false', 'Uniform False');
+    this.selectedStrategy = 'contradicting';
+  }
+
+  loadStrategies() {
+    let templates: Template[] = [];
+    try {
+      this.http
+        .get<HttpResponse>(
+          'http://127.0.0.1:8080/api/scenario/templates/' + this.scenarioName
+        )
+        .subscribe((val) => {
+          templates = val.content as Template[];
+          //Structures
+          templates.forEach((t) => {
+            this.structures.set(t.name, t.name);
+          });
+          this.selectedStructure = templates[0].name;
+        });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   generate() {
-    this.results = [];
+    this.results = new Array();
     try {
       const formData = new FormData();
       formData.append('name', this.scenarioName as string);
       formData.append('strategy', this.selectedStrategy);
       formData.append('structure', this.selectedStructure);
       //this.http.post<HttpResponse>("http://127.0.0.1:8080/api/predict/", formData).subscribe(val => this.results = val.content as [string[][], string[][], string]);
-      this.http.post<HttpResponse>("http://127.0.0.1:8080/api/predict/", formData).subscribe(val => {
-        console.log(val.content)
-        this.results = val.content as any[][]
-      });
+      this.http
+        .post<HttpResponse>('http://127.0.0.1:8080/api/predict/', formData)
+        .subscribe((val) => {
+          console.log(val.content);
+          let temp :string[][];
+          temp = val.content as string[][];
+          temp.forEach(element => {
+            this.results?.push(element[0]);
+            console.log(element[0])
+          });
+        });
     } catch (error) {
       console.log(error);
     }
@@ -58,15 +88,17 @@ export class OutputViewComponent implements OnInit {
 
   onSelectStrategy(event: any) {
     this.selectedStrategy = event.target.value;
-    console.log("strategy: " + this.selectedStrategy)
+    console.log('strategy: ' + this.selectedStrategy);
   }
 
   onSelectStructure(event: any) {
     this.selectedStructure = event.target.value;
-    console.log("structure: " + this.selectedStructure)
+    console.log('structure: ' + this.selectedStructure);
   }
 
   onClickView(row: number) {
-    this.selectedResult = this.results[row];
+    if (this.results) {
+      this.selectedResult = this.results[row][0];
+    }
   }
 }

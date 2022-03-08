@@ -57,7 +57,10 @@
               <option [ngValue]="null" selected disabled>
                 Select an existing scenario...
               </option>
-              <option *ngFor="let s of listScenarios | keyvalue" [value]="s.key">
+              <option
+                *ngFor="let s of listScenarios | keyvalue"
+                [value]="s.key"
+              >
                 {{ s.value }}
               </option>
             </select>
@@ -83,9 +86,9 @@
       </div>
 
       <div *ngIf="idScenarioSelected == 1">
-        <app-load-scenario 
-        [scenarioName]="scenarioName"
-        (deletedScenearioEvent)="deletedScenario()"
+        <app-load-scenario
+          [scenarioName]="scenarioName"
+          (deletedScenearioEvent)="deletedScenario()"
         ></app-load-scenario>
       </div>
 
@@ -106,7 +109,9 @@
       role="tabpanel"
       aria-labelledby="profile-tab"
     >
-      <app-output-view [scenarioName]="scenarioName"></app-output-view>
+      <div *ngIf="scenarioName">
+        <app-output-view [scenarioName]="scenarioName"></app-output-view>
+      </div>
     </div>
   </div>
 </div>

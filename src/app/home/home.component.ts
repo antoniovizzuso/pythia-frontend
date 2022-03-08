@@ -42,6 +42,7 @@ export class HomeComponent implements OnInit {
   }
 
   onScenarioSelected(event: any) {
+    this.scenarioName = null;
     this.scenarioName = event.target.value;
   }
 
@@ -55,6 +56,7 @@ export class HomeComponent implements OnInit {
   }
 
   newScenario(): void {
+    this.idScenarioSelected = 0;
     this.scenarioName = null;
     this.idScenarioSelected = 2;
   }
