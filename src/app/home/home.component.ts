@@ -1,5 +1,4 @@
 import { Component, OnInit, EventEmitter } from '@angular/core';
-import { Entry } from '../models/entry.model';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { JwtService } from '../jwt.service';
 import { HttpClient } from '@angular/common/http';
@@ -13,7 +12,6 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 })
 export class HomeComponent implements OnInit {
   idScenarioSelected: number = 0; //0: nessuno, 1: load scenario, 2: new scenario
-  entries: Entry[] = new Array();
   fileToUpload: File | null = null;
   scenarioName: string | null = null;
   listScenarios: Map<string, string> = new Map<string, string>();
@@ -33,8 +31,8 @@ export class HomeComponent implements OnInit {
 
   loadListScenarios(): void {
     try {
-      this.http.get<HttpResponse>("http://127.0.0.1:8080/api/getscenarios/").subscribe(val => {
-        this.listScenarios = val.content as Map<string, string>;
+      this.http.get<Map<string, string>>("http://127.0.0.1:8080/scenario/get").subscribe(val => {
+        this.listScenarios = val;
       });
     } catch (error) {
       console.log(error);

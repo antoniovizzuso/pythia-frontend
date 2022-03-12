@@ -20,7 +20,8 @@
               (only first 10 rows are shown)
             </h6>
           </div>
-          <app-datagrid [data]="data"></app-datagrid>
+          <div [innerHTML]="dataFrame" class="grid-container">
+          </div>
           <nav *ngIf="pages" aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
               <li class="page-item disabled">
@@ -43,8 +44,5 @@
 <div *ngIf="showTable">
   <app-metadata
     [scenarioName]="scenarioName"
-    [metadata]="data?._metadata"
-    [templates]="data?.templates"
-    (metaEvent)="loadMeta($event)"
   ></app-metadata>
 </div>

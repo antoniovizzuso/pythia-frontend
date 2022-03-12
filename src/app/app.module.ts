@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { DatagridComponent } from './datagrid/datagrid.component';
 import { NewScenarioComponent } from './new-scenario/new-scenario.component';
 import { FileInputDirective } from './file-input.directive';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -27,7 +26,6 @@ export function tokenGetter() {
   declarations: [
     AppComponent,
     HomeComponent,
-    DatagridComponent,
     NewScenarioComponent,
     FileInputDirective,
     SplitPipe,

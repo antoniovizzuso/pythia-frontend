@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpResponse } from '../models/httpresponse.model';
-import { DTModel } from '../models/dtmodel.model';
 import { Template } from '../models/template.model';
 import { Result } from '../models/result.model';
 

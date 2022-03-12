@@ -45,7 +45,7 @@ export class JwtService {
     let headers: HttpHeaders = new HttpHeaders();
     headers = headers.append('Authorization', 'Barear ' + localStorage.getItem('access_token'));
     return this.httpClient
-      .get<{ username: string }>('http://localhost:8080/users/me/');
+      .get<{ username: string }>('http://localhost:8080/auth/me');
   }
 
   public get loggedIn(): boolean {

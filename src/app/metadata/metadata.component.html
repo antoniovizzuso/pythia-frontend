@@ -35,19 +35,19 @@
               <thead>
                 <tr>
                   <th class="column-id">#</th>
-                  <th *ngFor="let h of headers" scope="col">{{ h }}</th>
+                  <th *ngFor="let h of attributes" scope="col">{{ h }}</th>
                   <th class="column-id"></th>
                 </tr>
               </thead>
               <tbody>
                 <tr class="row-pk">
                   <td>PK1</td>
-                  <td *ngFor="let h of headers"></td>
+                  <td *ngFor="let h of attributes"></td>
                   <td></td>
                 </tr>
                 <tr>
                   <td></td>
-                  <td *ngFor="let h of headers">
+                  <td *ngFor="let h of attributes">
                     <input
                       class="form-check-input"
                       type="checkbox"
@@ -95,19 +95,19 @@
               <thead>
                 <tr>
                   <th class="column-id">#</th>
-                  <th *ngFor="let h of headers" scope="col">{{ h }}</th>
+                  <th *ngFor="let h of attributes" scope="col">{{ h }}</th>
                   <th class="column-id"></th>
                 </tr>
               </thead>
               <tbody>
                 <tr class="row-pk">
                   <td>PK1</td>
-                  <td *ngFor="let h of headers"></td>
+                  <td *ngFor="let h of attributes"></td>
                   <td></td>
                 </tr>
                 <tr>
                   <td></td>
-                  <td *ngFor="let h of headers">
+                  <td *ngFor="let h of attributes">
                     <input
                       class="form-check-input"
                       type="checkbox"
@@ -155,19 +155,19 @@
               <thead>
                 <tr>
                   <th class="column-id">#</th>
-                  <th *ngFor="let h of headers" scope="col">{{ h }}</th>
+                  <th *ngFor="let h of attributes" scope="col">{{ h }}</th>
                   <th class="column-id"></th>
                 </tr>
               </thead>
               <tbody>
                 <tr class="row-pk">
                   <td>PK1</td>
-                  <td *ngFor="let h of headers"></td>
+                  <td *ngFor="let h of attributes"></td>
                   <td></td>
                 </tr>
                 <tr>
                   <td></td>
-                  <td *ngFor="let h of headers">
+                  <td *ngFor="let h of attributes">
                     <input
                       class="form-check-input"
                       type="checkbox"
@@ -279,8 +279,11 @@
               </div>
               <div class="col-12">
                 <h6>Operators</h6>
-                <div *ngFor="let conf of t.config" class="row">
-                  <label class="col-sm-2 col-form-label">Template Name</label>
+                <div *ngFor="let conf of t.config; let i = index" class="row my-1">
+                  <label *ngIf="i==0" class="col-sm-2 col-form-label text-center font-weight-bold">=</label>
+                  <label *ngIf="i==1" class="col-sm-2 col-form-label text-center font-weight-bold">&gt;</label>
+                  <label *ngIf="i==2" class="col-sm-2 col-form-label text-center font-weight-bold">&lt;</label>
+                  <label *ngIf="i==3" class="col-sm-2 col-form-label text-center font-weight-bold">&lt;&gt;</label>
                   <div class="col-sm-6">
                     <input
                       class="form-control"

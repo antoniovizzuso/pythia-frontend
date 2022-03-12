@@ -1,11 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { DTModel } from '../models/dtmodel.model';
-import { DTRow } from '../models/dtrow.model';
-import { HttpService } from '../httpservice.service';
-import { Observable } from 'rxjs';
-import { HttpResponse } from '../models/httpresponse.model';
-import { MetadataDataSet } from '../models/metadatadataset.model';
 
 @Component({
   selector: 'app-load-scenario',
@@ -15,7 +9,7 @@ import { MetadataDataSet } from '../models/metadatadataset.model';
 export class LoadScenarioComponent implements OnInit {
   @Input() scenarioName: string | null = null;
   @Output() deletedScenearioEvent = new EventEmitter<string>();
-  data: DTModel | null = null;
+  dataFrame: string | null = null;
   pages: string[] = new Array();
   selectedPage: number = 1;
   rowsPerPage: number = 10;
@@ -26,33 +20,17 @@ export class LoadScenarioComponent implements OnInit {
   ngOnInit(): void {
     try {
       this.http
-        .get<HttpResponse>(
-          'http://127.0.0.1:8080/api/loadscenario/' + this.scenarioName
+        .get<string>(
+          'http://127.0.0.1:8080/scenario/dataframe/' + this.scenarioName
         )
-        .subscribe((val) => this.showData(val.content));
+        .subscribe((val) => { 
+          this.dataFrame = val; 
+          this.getPages(1);
+          this.showTable = true;
+        });
     } catch (error) {
       console.log(error);
     }
-  }
-
-  getMetadata() {
-    try {
-      const formData = new FormData();
-      //formData.append('file', this.file as Blob, this.file?.name);
-      this.http
-        .post<HttpResponse>('http://127.0.0.1:8080/api/getmetadata/', formData)
-        .subscribe(
-          (val) => (this.data!._metadata = val.content as MetadataDataSet)
-        );
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  showData(content: Object) {
-    this.data = content as DTModel;
-    this.getPages(this.data._count);
-    this.showTable = true;
   }
 
   getPages(rowsCount: number) {
@@ -73,14 +51,9 @@ export class LoadScenarioComponent implements OnInit {
     }
   }
 
-  loadMeta(meta: MetadataDataSet) {
-    this.data!._metadata = meta;
-    console.log(this.data!._metadata)
-  }
-
   delete() {
     try {
-      this.http.delete<HttpResponse>("http://127.0.0.1:8080/api/scenario/delete/" + this.scenarioName).subscribe(val => {
+      this.http.delete("http://127.0.0.1:8080/scenario/delete/" + this.scenarioName).subscribe(val => {
         this.deletedScenearioEvent.emit(this.scenarioName!);
       });
     } catch(error) {
