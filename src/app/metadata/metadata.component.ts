@@ -17,20 +17,29 @@ export class MetadataComponent implements OnInit {
   templates: Template[] | undefined;
   form: FormGroup;
 
-  get attributes(): string[] {
-    let hs: string[] = new Array<string>();
-    this.scenario!.attributes.forEach((element) => {
-      hs.push(element.name);
-    });
-    return hs;
+  // get attributes(): string[] {
+  //   let hs: string[] = new Array<string>();
+  //   this.scenario!.attributes.forEach((element) => {
+  //     hs.push(element.name);
+  //   });
+  //   return hs;
+  // }
+
+  get attributes(): Attribute[] {
+    return this.scenario!.attributes;
   }
 
   get primaryKeys(): Attribute {
     return this.scenario!.pk;
   }
 
-  get compositeKeys(): Array<string> {
-    return this.scenario!.compositeKeys;
+  get compositeKeys(): string[] {
+    let cks: string[] = new Array<string>();
+    let firstRow: Attribute[] = this.scenario!.compositeKeys[0];
+    firstRow.forEach((element) => {
+      cks.push(element.normalizedName);
+    });
+    return cks;
   }
 
   get functionalDependencies(): Array<string> {
@@ -51,11 +60,9 @@ export class MetadataComponent implements OnInit {
   loadMetadata() {
     try {
       this.http
-        .get<Scenario>(
-          'http://127.0.0.1:8080/scenario/find/cks/' + this.scenarioName
-        )
-        .subscribe((val) => { 
-          console.log(val)
+        .get<string>('http://127.0.0.1:8080/scenario/get/' + this.scenarioName)
+        .subscribe((val) => {
+          this.scenario = <Scenario>JSON.parse(val);
         });
     } catch (error) {
       console.log(error);

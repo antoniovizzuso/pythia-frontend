@@ -26,16 +26,15 @@
               </button>
             </div>
           </div>
-          <div class="col-md-12">
+          <div class="col-md-12 overflow-auto">
             <table
-              style="table-layout: fixed"
               border="1"
               class="table table-sm table-striped table-bordered table-hover text-center"
             >
               <thead>
                 <tr>
                   <th class="column-id">#</th>
-                  <th *ngFor="let h of attributes" scope="col">{{ h }}</th>
+                  <th *ngFor="let h of attributes" scope="col">{{ h.name }}</th>
                   <th class="column-id"></th>
                 </tr>
               </thead>
@@ -52,7 +51,7 @@
                       class="form-check-input"
                       type="checkbox"
                       [value]="h"
-                      [checked]="primaryKeys?.includes(h)"
+                      [checked]="primaryKeys.name == h.name"
                       formArrayName="selectedPk"
                       (change)="onPkChange($event)"
                     />
@@ -86,16 +85,15 @@
               </button>
             </div>
           </div>
-          <div class="col-md-12">
+          <div class="col-md-12 overflow-auto">
             <table
-              style="table-layout: fixed"
               border="1"
               class="table table-sm table-striped table-bordered table-hover text-center"
             >
               <thead>
                 <tr>
                   <th class="column-id">#</th>
-                  <th *ngFor="let h of attributes" scope="col">{{ h }}</th>
+                  <th *ngFor="let h of attributes" scope="col">{{ h.name }}</th>
                   <th class="column-id"></th>
                 </tr>
               </thead>
@@ -112,7 +110,7 @@
                       class="form-check-input"
                       type="checkbox"
                       [value]="h"
-                      [checked]="compositeKeys?.includes(h)"
+                      [checked]="compositeKeys?.includes(h.normalizedName)"
                       formArrayName="selectedCompositeKeys"
                       (change)="onCkChange($event)"
                     />
@@ -146,16 +144,15 @@
               </button>
             </div>
           </div>
-          <div class="col-md-12">
+          <div class="col-md-12 overflow-auto">
             <table
-              style="table-layout: fixed"
               border="1"
               class="table table-sm table-striped table-bordered table-hover text-center"
             >
               <thead>
                 <tr>
                   <th class="column-id">#</th>
-                  <th *ngFor="let h of attributes" scope="col">{{ h }}</th>
+                  <th *ngFor="let h of attributes" scope="col">{{ h.name }}</th>
                   <th class="column-id"></th>
                 </tr>
               </thead>

@@ -4,7 +4,7 @@ export interface Scenario {
     datasetName: string
     pk: Attribute
     fds: any[]
-    compositeKeys: any[]
+    compositeKeys: Array<Attribute[]>
     ambiguousAttribute: any[]
     attributes: Attribute[]
     nameToAttribute: object
