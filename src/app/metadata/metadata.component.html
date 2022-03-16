@@ -103,20 +103,31 @@
               </thead>
               <tbody>
                 <tr class="row-pk">
-                  <td>PK1</td>
+                  <td>CK</td>
                   <td *ngFor="let h of scenario?.attributes"></td>
-                  <td></td>
+                  <td>
+                    <button
+                      class="btn btn-outline-secondary btn-sm"
+                      type="button"
+                      (click)="save()"
+                    >
+                      Save
+                    </button>
+                  </td>
                 </tr>
-                <tr>
+                <tr
+                  *ngFor="let item of scenario?.compositeKeys; let i = index"
+                  [attr.data-index]="i"
+                >
                   <td></td>
                   <td *ngFor="let h of scenario?.attributes">
                     <input
                       class="form-check-input"
                       type="checkbox"
                       [value]="h.normalizedName"
-                      [checked]="includeCompositeKeys(0, h.normalizedName)"
+                      [checked]="includeCompositeKeys(i, h.normalizedName)"
                       formArrayName="selectedCompositeKeys"
-                      (change)="onCkChange(0, $event)"
+                      (change)="onCkChange(i, $event)"
                     />
                   </td>
                   <td>
@@ -125,7 +136,7 @@
                       type="button"
                       (click)="save()"
                     >
-                      Save
+                      Delete
                     </button>
                   </td>
                 </tr>
@@ -165,12 +176,23 @@
               </thead>
               <tbody>
                 <tr class="row-pk">
-                  <td>PK1</td>
+                  <td>FD</td>
                   <td *ngFor="let h of scenario?.attributes"></td>
                   <td></td>
-                  <td></td>
+                  <td>
+                    <button
+                      class="btn btn-outline-secondary btn-sm"
+                      type="button"
+                      (click)="save()"
+                    >
+                      Save
+                    </button>
+                  </td>
                 </tr>
-                <tr>
+                <tr
+                  *ngFor="let item of scenario?.fds; let i = index"
+                  [attr.data-index]="i"
+                >
                   <td></td>
                   <td *ngFor="let h of scenario?.attributes">
                     <input
@@ -178,7 +200,7 @@
                       type="checkbox"
                       [value]="h.normalizedName"
                       [checked]="
-                        includeFunctionalDependencies(0, h.normalizedName)
+                        includeFunctionalDependencies(i, h.normalizedName)
                       "
                     />
                   </td>
@@ -191,9 +213,9 @@
                       <option
                         *ngFor="let h of scenario?.attributes"
                         [value]="h.normalizedName"
-                        [selected]="isAttrDependecy(0, h.normalizedName)"
+                        [selected]="isAttrDependecy(i, h.normalizedName)"
                         [disabled]="
-                          includeFunctionalDependencies(0, h.normalizedName)
+                          includeFunctionalDependencies(i, h.normalizedName)
                         "
                       >
                         {{ h.name }}
@@ -206,7 +228,7 @@
                       type="button"
                       (click)="save()"
                     >
-                      Save
+                      Delete
                     </button>
                   </td>
                 </tr>
