@@ -1,23 +1,23 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-load-scenario',
   templateUrl: './load-scenario.component.html',
   styleUrls: ['./load-scenario.component.css'],
 })
-export class LoadScenarioComponent implements OnInit {
+export class LoadScenarioComponent implements OnChanges {
   @Input() scenarioName: string | null = null;
   @Output() deletedScenearioEvent = new EventEmitter<string>();
   dataFrame: string | null = null;
   pages: string[] = new Array();
   selectedPage: number = 1;
   rowsPerPage: number = 10;
-  showTable: boolean = false;
+  //showTable: boolean = false;
 
   constructor(public http: HttpClient) {}
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
     try {
       this.http
         .get<string>(
@@ -26,7 +26,7 @@ export class LoadScenarioComponent implements OnInit {
         .subscribe((val) => { 
           this.dataFrame = val; 
           this.getPages(1);
-          this.showTable = true;
+          //this.showTable = true;
         });
     } catch (error) {
       console.log(error);

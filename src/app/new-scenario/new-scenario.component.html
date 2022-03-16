@@ -24,7 +24,7 @@
         {{ errorMessage }}
       </div>
     </div>
-    <div *ngIf="showTable" class="row table-dataset">
+    <div *ngIf="dataFrame" class="row table-dataset">
       <div class="col-md-12">
         <div class="panel panel-success pt-2">
           <div class="panel-heading">
@@ -65,7 +65,7 @@
   </div>
 </div>
 
-<div *ngIf="showTable">
+<div *ngIf="dataFrame">
   <app-metadata
     [scenarioName]="scenarioName"
     [metadata]="data?._metadata"

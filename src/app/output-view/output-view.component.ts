@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { HttpResponse } from '../models/httpresponse.model';
 import { Template } from '../models/template.model';
 import { Result } from '../models/result.model';
 
@@ -25,7 +24,7 @@ export class OutputViewComponent implements OnInit {
   constructor(public http: HttpClient) {}
 
   ngOnInit(): void {
-    if (this.scenarioName) this.loadStrategies();
+    //if (this.scenarioName) this.loadStrategies();
     //Structures
     // this.structures.set("attribute", "Attribute Ambiguity");
     // this.structures.set("row", "Row Ambiguity");
@@ -45,11 +44,11 @@ export class OutputViewComponent implements OnInit {
     let templates: Template[] = [];
     try {
       this.http
-        .get<HttpResponse>(
+        .get<Template[]>(
           'http://127.0.0.1:8080/api/scenario/templates/' + this.scenarioName
         )
         .subscribe((val) => {
-          templates = val.content as Template[];
+          templates = val as Template[];
           //Structures
           templates.forEach((t) => {
             this.structures.set(t.name, t.name);
@@ -70,11 +69,11 @@ export class OutputViewComponent implements OnInit {
       formData.append('structure', this.selectedStructure);
       //this.http.post<HttpResponse>("http://127.0.0.1:8080/api/predict/", formData).subscribe(val => this.results = val.content as [string[][], string[][], string]);
       this.http
-        .post<HttpResponse>('http://127.0.0.1:8080/api/predict/', formData)
+        .post<string[][]>('http://127.0.0.1:8080/api/predict/', formData)
         .subscribe((val) => {
-          console.log(val.content);
+          console.log(val);
           let temp :string[][];
-          temp = val.content as string[][];
+          temp = val as string[][];
           temp.forEach(element => {
             this.results?.push(element[0]);
             console.log(element[0])

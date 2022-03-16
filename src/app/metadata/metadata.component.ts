@@ -1,49 +1,77 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  OnChanges,
+} from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
-import { HttpResponse } from '../models/httpresponse.model';
 import { Scenario } from '../models/scenario.model';
 import { Template } from '../models/template.model';
 import { Attribute } from '../models/attribute.model';
+import { Result } from '../models/result.model';
 
 @Component({
   selector: 'app-metadata',
   templateUrl: './metadata.component.html',
   styleUrls: ['./metadata.component.css'],
 })
-export class MetadataComponent implements OnInit {
+export class MetadataComponent implements OnChanges {
   @Input() scenarioName: string | null = null;
   scenario: Scenario | undefined;
   templates: Template[] | undefined;
   form: FormGroup;
-
-  // get attributes(): string[] {
-  //   let hs: string[] = new Array<string>();
-  //   this.scenario!.attributes.forEach((element) => {
-  //     hs.push(element.name);
-  //   });
-  //   return hs;
-  // }
 
   get attributes(): Attribute[] {
     return this.scenario!.attributes;
   }
 
   get primaryKeys(): Attribute {
-    return this.scenario!.pk;
+    return this.scenario!.pk!;
   }
 
-  get compositeKeys(): string[] {
-    let cks: string[] = new Array<string>();
-    let firstRow: Attribute[] = this.scenario!.compositeKeys[0];
-    firstRow.forEach((element) => {
-      cks.push(element.normalizedName);
-    });
-    return cks;
+  includeCompositeKeys(i: number, attributeName: string): boolean {
+    let result: boolean = false;
+    let firstRow: Attribute[] = this.scenario!.compositeKeys[i];
+    if (firstRow) {
+      firstRow.forEach((element) => {
+        if(element.normalizedName == attributeName) {
+          result = true;
+        }
+      });
+    }
+    return result;
   }
 
-  get functionalDependencies(): Array<string> {
-    return this.scenario!.fds;
+  includeFunctionalDependencies(i: number, attributeName: string): boolean {
+    let result: boolean = false;
+    if (this.scenario!.fds.length > 0) {
+      let firstRow: Attribute[] = this.scenario!.fds[i][0];
+      if (firstRow) {
+        for (let index = 0; index < firstRow.length - 1; index++) {
+          const element = firstRow[index];
+          if (element.normalizedName == attributeName) {
+            result = true;
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+  isAttrDependecy(i: number, attributeName: string): boolean {
+    let result: boolean = false;
+    if (this.scenario!.fds.length > 0) {
+      let firstRow: Attribute[] = this.scenario!.fds[i][0];
+      if (firstRow) {
+        if(firstRow[firstRow.length - 1].normalizedName == attributeName) {
+          result = true;
+        }
+      }
+    }
+    return result;
   }
 
   constructor(fb: FormBuilder, public http: HttpClient) {
@@ -53,7 +81,7 @@ export class MetadataComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
     if (this.scenarioName) this.loadMetadata();
   }
 
@@ -84,93 +112,103 @@ export class MetadataComponent implements OnInit {
   }
 
   findPks() {
-    // try {
-    //   this.http
-    //     .get<HttpResponse>(
-    //       'http://127.0.0.1:8080/scenario/findpks/' + this.scenarioName
-    //     )
-    //     .subscribe((val) => {
-    //       this.metadata!.pks = val.content as string[];
-    //     });
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try {
+      this.http
+        .get<string>(
+          'http://127.0.0.1:8080/scenario/find/pk/' + this.scenarioName
+        )
+        .subscribe((val) => {
+          this.scenario = <Scenario>JSON.parse(val);
+        });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   findCks() {
-    // try {
-    //   this.http
-    //     .get<HttpResponse>(
-    //       'http://127.0.0.1:8080/scenario/findcks/' + this.scenarioName
-    //     )
-    //     .subscribe((val) => {
-    //       this.metadata!.cks = val.content as string[];
-    //     });
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try {
+      this.http
+        .get<string>(
+          'http://127.0.0.1:8080/scenario/find/cks/' + this.scenarioName
+        )
+        .subscribe((val) => {
+          this.scenario = <Scenario>JSON.parse(val);
+        });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   findFds() {
-    // try {
-    //   this.http
-    //     .get<HttpResponse>(
-    //       'http://127.0.0.1:8080/scenario/findfds/' + this.scenarioName
-    //     )
-    //     .subscribe((val) => {
-    //       this.metadata!.fds = val.content as string[];
-    //     });
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try {
+      this.http
+        .get<string>(
+          'http://127.0.0.1:8080/scenario/find/fds/' + this.scenarioName
+        )
+        .subscribe((val) => {
+          this.scenario = <Scenario>JSON.parse(val);
+        });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   onPkChange(event: any) {
-    // const selectedPk = this.form.controls['selectedPk'] as FormArray;
-    // const pk = event.target.value;
-    // if (event.target.checked) {
-    //   selectedPk.push(new FormControl(pk));
-    //   this.metadata!.pks.push(pk);
-    // } else {
-    //   const index = selectedPk.controls.findIndex((x) => x.value === pk);
-    //   selectedPk.removeAt(index);
-    //   this.metadata!.pks.forEach((element, index) => {
-    //     if (element == pk) this.metadata!.pks.splice(index, 1);
-    //   });
-    // }
+    event.preventDefault();
+    if (this.scenario) {
+      const selectedPk = this.form.controls['selectedPk'] as FormArray;
+      let pk: Attribute | undefined = this.scenario.attributes.find(
+        (x) => x.normalizedName == event.target.value
+      );
+      selectedPk.reset();
+      selectedPk.push(new FormControl(pk));
+      this.scenario.pk = pk!;
+      event.target.checked = true;
+    }
   }
 
-  onCkChange(event: any) {
-    // const compositeKeys = this.form.controls[
-    //   'selectedCompositeKeys'
-    // ] as FormArray;
-    // const ck = event.target.value.split(',')[0];
-    // if (event.target.checked) {
-    //   compositeKeys.push(new FormControl(ck));
-    //   this.metadata!.cks.push(ck);
-    // } else {
-    //   const index = compositeKeys.controls.findIndex((x) => x.value === ck);
-    //   compositeKeys.removeAt(index);
-    //   this.metadata!.cks.forEach((element, index) => {
-    //     if (element == ck) this.metadata!.cks.splice(index, 1);
-    //   });
-    // }
+  checkboxClick(event: any) {
+    event.preventDefault();
+  }
+
+  onCkChange(i: number, event: any) {
+    if (this.scenario) {
+      const compositeKeys = this.form.controls[
+        'selectedCompositeKeys'
+      ] as FormArray;
+      let ck: Attribute | undefined = this.scenario.attributes.find(
+        (x) => x.normalizedName == event.target.value
+      );
+      if (event.target.checked) {
+        compositeKeys.push(new FormControl(ck!.normalizedName));
+        if (!this.scenario.compositeKeys[i])
+          this.scenario.compositeKeys[i] = [];
+        this.scenario.compositeKeys[i].push(ck!);
+      } else {
+        const index = compositeKeys.controls.findIndex((x) => x.value === ck);
+        compositeKeys.removeAt(index);
+        this.scenario!.compositeKeys[i].forEach((element, index) => {
+          if (element.normalizedName == ck?.normalizedName)
+            this.scenario!.compositeKeys[i].splice(index, 1);
+        });
+      }
+    }
   }
 
   save() {
-    // try {
-    //   const formData = new FormData();
-    //   formData.append('metadata', JSON.stringify(this.metadata));
-    //   this.http
-    //     .post<HttpResponse>(
-    //       'http://127.0.0.1:8080/api/scenario/update/' + this.scenarioName,
-    //       formData
-    //     )
-    //     .subscribe((val) => {
-    //       console.log('TO IMPLEMENT!!!!');
-    //     });
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try {
+      const formData = new FormData();
+      formData.append('scenario', JSON.stringify(this.scenario));
+      this.http
+        .post<string>(
+          'http://127.0.0.1:8080/scenario/save/' + this.scenarioName,
+          formData
+        )
+        .subscribe((val) => {
+          this.scenario = <Scenario>JSON.parse(val);
+        });
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

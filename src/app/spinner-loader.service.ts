@@ -9,6 +9,8 @@ export class SpinnerLoaderService {
   isLoading$ = this.isLoading$$.asObservable();
   
   setLoading(isLoading: boolean) {
-    this.isLoading$$.next(isLoading);
+    setTimeout(()=> {
+      this.isLoading$$.next(isLoading);
+    }, 0);
   }
 }

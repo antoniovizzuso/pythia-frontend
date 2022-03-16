@@ -2,8 +2,6 @@ import { Component, OnInit, EventEmitter } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { JwtService } from '../jwt.service';
 import { HttpClient } from '@angular/common/http';
-import { HttpResponse } from '../models/httpresponse.model';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -13,7 +11,8 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 export class HomeComponent implements OnInit {
   idScenarioSelected: number = 0; //0: nessuno, 1: load scenario, 2: new scenario
   fileToUpload: File | null = null;
-  scenarioName: string | null = null;
+  scenarioSelected: string | null = null; 
+  scenarioName: string = "";
   listScenarios: Map<string, string> = new Map<string, string>();
   errorMessage: string = "";
 
@@ -40,13 +39,14 @@ export class HomeComponent implements OnInit {
   }
 
   onScenarioSelected(event: any) {
-    this.scenarioName = null;
-    this.scenarioName = event.target.value;
+    this.scenarioSelected = event.target.value;
   }
 
   loadScenario(): void {
     this.errorMessage = "";
-    if (this.scenarioName) {
+    if (this.scenarioSelected) {
+      this.scenarioName = this.scenarioSelected!;
+      this.scenarioSelected = null;
       this.idScenarioSelected = 1;
     } else {
       this.errorMessage = "select a scenario";
@@ -55,7 +55,6 @@ export class HomeComponent implements OnInit {
 
   newScenario(): void {
     this.idScenarioSelected = 0;
-    this.scenarioName = null;
     this.idScenarioSelected = 2;
   }
 
@@ -67,12 +66,12 @@ export class HomeComponent implements OnInit {
     this.scenarioName = name;
   }
 
-  refreshComponent() {
-    this.router.navigate([this.router.url]);
-  }
+  // refreshComponent() {
+  //   this.router.navigate([this.router.url]);
+  // }
 
   deletedScenario(): void {
-    this.scenarioName = null;
+    this.scenarioName = "";
     this.idScenarioSelected = 0;
     this.loadListScenarios();
   }

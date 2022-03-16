@@ -2,7 +2,6 @@ import { Injectable, Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from "rxjs";
 import { formatNumber } from '@angular/common';
-import { HttpResponse } from './models/httpresponse.model';
 
 @Injectable({
     providedIn: 'root'

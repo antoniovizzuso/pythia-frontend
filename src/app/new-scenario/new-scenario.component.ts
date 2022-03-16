@@ -2,12 +2,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { HttpService } from '../httpservice.service';
 import { Observable } from 'rxjs';
-import { HttpResponse } from '../models/httpresponse.model';
 
 @Component({
   selector: 'app-new-scenario',
   templateUrl: './new-scenario.component.html',
-  styleUrls: ['./new-scenario.component.css']
+  styleUrls: ['./new-scenario.component.css'],
 })
 export class NewScenarioComponent implements OnInit {
   @Output() fileUploadEvent = new EventEmitter<File | null>();
@@ -19,10 +18,10 @@ export class NewScenarioComponent implements OnInit {
   pages: string[] = new Array();
   selectedPage: number = 1;
   rowsPerPage: number = 10;
-  showTable: boolean = false;
-  errorMessage: string = "";
+  //showTable: boolean = false;
+  errorMessage: string = '';
 
-  constructor(public http: HttpClient) { }
+  constructor(public http: HttpClient) {}
 
   ngOnInit(): void {
     this.file = null;
@@ -35,20 +34,21 @@ export class NewScenarioComponent implements OnInit {
   }
 
   submitFile() {
-    this.errorMessage = "";
+    this.errorMessage = '';
     this.dataFrame = null;
-    this.showTable = false;
+    //this.showTable = false;
     try {
-      this.http.get<boolean>("http://127.0.0.1:8080/scenario/check/" + this.file?.name).subscribe(val => 
-      {
-        if (!val) {
-          this.uploadFile();
-        } else {
-          this.errorMessage = "this scenario already exists";
-        }
-      });
-    } catch(error) {
-      console.log(error)
+      this.http
+        .get<boolean>('http://127.0.0.1:8080/scenario/check/' + this.file?.name)
+        .subscribe((val) => {
+          if (!val) {
+            this.uploadFile();
+          } else {
+            this.errorMessage = 'this scenario already exists';
+          }
+        });
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -56,28 +56,34 @@ export class NewScenarioComponent implements OnInit {
     try {
       const formData = new FormData();
       formData.append('file', this.file as Blob, this.file?.name);
-      this.http.post<string>("http://127.0.0.1:8080/scenario/create", formData).subscribe(val => this.loadScenario(val));
-    } catch(error) {
-      console.log(error)
-    }
-  }
-
-  loadScenario(name: string) {
-    try {
       this.http
-        .get<string>(
-          'http://127.0.0.1:8080/scenario/dataframe/' + this.scenarioName!
-        )
-        .subscribe((val) => { 
-          this.dataFrame = val; 
-          this.getPages(1);
-          this.showTable = true;
+        .post<string>('http://127.0.0.1:8080/scenario/create', formData)
+        .subscribe((val) => {
+          if (val) {
+            this.scenarioName = val;
+            this.loadScenario();
+          }
         });
     } catch (error) {
       console.log(error);
     }
   }
 
+  loadScenario() {
+    try {
+      this.http
+        .get<string>(
+          'http://127.0.0.1:8080/scenario/dataframe/' + this.scenarioName
+        )
+        .subscribe((val) => {
+          this.dataFrame = val;
+          this.getPages(1);
+          //this.showTable = true;
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   getPages(rowsCount: number) {
     this.pages = new Array();
@@ -85,11 +91,11 @@ export class NewScenarioComponent implements OnInit {
     let total = Math.round(rowsCount / this.rowsPerPage);
     this.pages.push((1).toString());
 
-    if(this.selectedPage > visiblePages/2) {
+    if (this.selectedPage > visiblePages / 2) {
       this.pages.push('...');
     }
 
-    if(this.selectedPage < total - visiblePages/2) {
+    if (this.selectedPage < total - visiblePages / 2) {
       this.pages.push('...');
     }
 
@@ -100,13 +106,13 @@ export class NewScenarioComponent implements OnInit {
 
   delete() {
     try {
-      this.http.delete("http://127.0.0.1:8080/scenario/delete/" + this.scenarioName).subscribe(val => {
-        this.deletedScenearioEvent.emit(this.scenarioName!);
-      });
-    } catch(error) {
-      console.log(error)
+      this.http
+        .delete('http://127.0.0.1:8080/scenario/delete/' + this.scenarioName)
+        .subscribe((val) => {
+          this.deletedScenearioEvent.emit(this.scenarioName!);
+        });
+    } catch (error) {
+      console.log(error);
     }
   }
-
-
 }
