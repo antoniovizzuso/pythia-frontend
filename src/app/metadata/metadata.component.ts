@@ -48,18 +48,6 @@ export class MetadataComponent implements OnChanges {
     return result;
   }
 
-  // includeCompositeKeys(attributeName: string): boolean {
-  //   let result: boolean = false;
-  //   if (this.newCk) {
-  //     this.newCk.forEach((element) => {
-  //       if(element.normalizedName == attributeName) {
-  //         result = true;
-  //       }
-  //     });
-  //   }
-  //   return result;
-  // }
-
   includeFunctionalDependencies(i: number, attributeName: string): boolean {
     let result: boolean = false;
     if (this.scenario!.fds.length > 0) {
@@ -75,19 +63,6 @@ export class MetadataComponent implements OnChanges {
     }
     return result;
   }
-
-  // isAttrDependecy(i: number, attributeName: string): boolean {
-  //   let result: boolean = false;
-  //   if (this.scenario!.fds.length > 0) {
-  //     let firstRow: Attribute[] = this.scenario!.fds[i][0];
-  //     if (firstRow) {
-  //       if (firstRow[firstRow.length - 1].normalizedName == attributeName) {
-  //         result = true;
-  //       }
-  //     }
-  //   }
-  //   return result;
-  // }
 
   getAttrDependency(i: number): string {
     let result: string = '';
@@ -270,11 +245,25 @@ export class MetadataComponent implements OnChanges {
   }
 
   addFd() {
-    const words: string[] = []
-    words.push((this.form.controls['fdAttr1'] as FormControl).value)
-    words.push((this.form.controls['fdAttr2'] as FormControl).value)
+    const words: string[] = [];
+    words.push((this.form.controls['fdAttr1'] as FormControl).value);
+    words.push((this.form.controls['fdAttr2'] as FormControl).value);
     this.newFd.push(this.newFdDependency!);
     this.scenario?.fds.push([this.newFd, words]);
+    this.save();
+  }
+
+  deleteCk(i: number) {
+    this.scenario?.compositeKeys.forEach((element, index) => {
+      if (index == i) this.scenario?.compositeKeys.splice(index, 1);
+    });
+    this.save();
+  }
+
+  deleteFd(i: number) {
+    this.scenario?.fds.forEach((element, index) => {
+      if (index == i) this.scenario?.fds.splice(index, 1);
+    });
     this.save();
   }
 
@@ -292,8 +281,8 @@ export class MetadataComponent implements OnChanges {
           this.newCk = new Array();
           this.newFd = new Array();
           this.newFdDependency = undefined;
-          this.form.controls['fdAttr1'].reset()
-          this.form.controls['fdAttr2'].reset()
+          this.form.controls['fdAttr1'].reset();
+          this.form.controls['fdAttr2'].reset();
         });
     } catch (error) {
       console.log(error);

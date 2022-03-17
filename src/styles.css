@@ -136,3 +136,13 @@ p {
     display: none;
     /* opacity: 0.5; */
   }
+
+
+  .table-sm th{
+    font-size:0.70rem;
+  }
+
+  .form-check-input {
+    position: relative;
+    margin-left: unset;
+}
