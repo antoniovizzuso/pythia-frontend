@@ -102,41 +102,47 @@
                 </tr>
               </thead>
               <tbody>
-                <tr class="row-pk">
-                  <td>CK</td>
-                  <td *ngFor="let h of scenario?.attributes"></td>
-                  <td>
-                    <button
-                      class="btn btn-outline-secondary btn-sm"
-                      type="button"
-                      (click)="save()"
-                    >
-                      Save
-                    </button>
-                  </td>
-                </tr>
                 <tr
+                  class="row-pk"
                   *ngFor="let item of scenario?.compositeKeys; let i = index"
                   [attr.data-index]="i"
                 >
+                  <td>{{ "CK" + (i + 1) }}</td>
+                  <td *ngFor="let h of scenario?.attributes">
+                    <i
+                      *ngIf="includeCompositeKeys(i, h.normalizedName)"
+                      class="fas fa-link"
+                      style="color: orange"
+                    ></i>
+                  </td>
+                  <td>
+                    <button
+                      class="btn btn-outline-danger btn-sm"
+                      type="button"
+                      (click)="save()"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+                <tr>
                   <td></td>
                   <td *ngFor="let h of scenario?.attributes">
                     <input
                       class="form-check-input"
                       type="checkbox"
                       [value]="h.normalizedName"
-                      [checked]="includeCompositeKeys(i, h.normalizedName)"
                       formArrayName="selectedCompositeKeys"
-                      (change)="onCkChange(i, $event)"
+                      (change)="onCkChange($event)"
                     />
                   </td>
                   <td>
                     <button
                       class="btn btn-outline-secondary btn-sm"
                       type="button"
-                      (click)="save()"
+                      (click)="addCk()"
                     >
-                      Delete
+                      Add
                     </button>
                   </td>
                 </tr>
@@ -172,50 +178,75 @@
                   </th>
                   <th class="column-id"></th>
                   <th class="column-id"></th>
+                  <th class="column-id" colspan="2"></th>
+                  <th class="column-id"></th>
                 </tr>
               </thead>
               <tbody>
-                <tr class="row-pk">
-                  <td>FD</td>
-                  <td *ngFor="let h of scenario?.attributes"></td>
-                  <td></td>
-                  <td>
-                    <button
-                      class="btn btn-outline-secondary btn-sm"
-                      type="button"
-                      (click)="save()"
-                    >
-                      Save
-                    </button>
-                  </td>
-                </tr>
                 <tr
+                  class="row-pk"
                   *ngFor="let item of scenario?.fds; let i = index"
                   [attr.data-index]="i"
                 >
+                  <td>{{ "FD" + (i + 1) }}</td>
+                  <td *ngFor="let h of scenario?.attributes">
+                    <i
+                      *ngIf="includeFunctionalDependencies(i, h.normalizedName)"
+                      class="fas fa-check"
+                      style="color: orange"
+                    ></i>
+                  </td>
+                  <td>
+                    <i class="fas fa-arrow-right" style="color: orange"></i>
+                  </td>
+                  <td>
+                    {{ getAttrDependency(i) }}
+                  </td>
+                  <td colspan="2">
+                    {{ this.scenario!.fds[i][1].toString() }}
+                  </td>
+                  <td>
+                    <button
+                      class="btn btn-outline-danger btn-sm"
+                      type="button"
+                      (click)="save()"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+                <tr>
                   <td></td>
                   <td *ngFor="let h of scenario?.attributes">
                     <input
                       class="form-check-input"
                       type="checkbox"
                       [value]="h.normalizedName"
-                      [checked]="
-                        includeFunctionalDependencies(i, h.normalizedName)
-                      "
+                      formArrayName="selectedFds"
+                      (change)="onFdChange($event)"
                     />
+                  </td>
+                  <td>
+                    <i class="fas fa-arrow-right" style="color: orange"></i>
                   </td>
                   <td>
                     <select
                       class="form-select"
                       aria-label="Default select example"
                       style="width: fit-content"
+                      (change)="onFdDependencyChange($event)"
                     >
+                      <option
+                        [value]=""
+                        [disabled]="true"
+                        [selected]="true"
+                      ></option>
                       <option
                         *ngFor="let h of scenario?.attributes"
                         [value]="h.normalizedName"
-                        [selected]="isAttrDependecy(i, h.normalizedName)"
-                        [disabled]="
-                          includeFunctionalDependencies(i, h.normalizedName)
+                        [disabled]="includeAttrDependency(h.normalizedName)"
+                        [selected]="
+                          newFdDependency?.normalizedName == h.normalizedName
                         "
                       >
                         {{ h.name }}
@@ -223,12 +254,18 @@
                     </select>
                   </td>
                   <td>
+                    <input class="form-control" formControlName="fdAttr1" />
+                  </td>
+                  <td>
+                    <input class="form-control" formControlName="fdAttr2" />
+                  </td>
+                  <td>
                     <button
                       class="btn btn-outline-secondary btn-sm"
                       type="button"
-                      (click)="save()"
+                      (click)="addFd()"
                     >
-                      Delete
+                      Add
                     </button>
                   </td>
                 </tr>

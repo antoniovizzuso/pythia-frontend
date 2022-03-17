@@ -11,7 +11,6 @@ import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { Scenario } from '../models/scenario.model';
 import { Template } from '../models/template.model';
 import { Attribute } from '../models/attribute.model';
-import { Result } from '../models/result.model';
 
 @Component({
   selector: 'app-metadata',
@@ -23,6 +22,10 @@ export class MetadataComponent implements OnChanges {
   scenario: Scenario | undefined;
   templates: Template[] | undefined;
   form: FormGroup;
+
+  newCk: Attribute[] = new Array();
+  newFd: Attribute[] = new Array();
+  newFdDependency: Attribute | undefined;
 
   get attributes(): Attribute[] {
     return this.scenario!.attributes;
@@ -37,13 +40,25 @@ export class MetadataComponent implements OnChanges {
     let firstRow: Attribute[] = this.scenario!.compositeKeys[i];
     if (firstRow) {
       firstRow.forEach((element) => {
-        if(element.normalizedName == attributeName) {
+        if (element.normalizedName == attributeName) {
           result = true;
         }
       });
     }
     return result;
   }
+
+  // includeCompositeKeys(attributeName: string): boolean {
+  //   let result: boolean = false;
+  //   if (this.newCk) {
+  //     this.newCk.forEach((element) => {
+  //       if(element.normalizedName == attributeName) {
+  //         result = true;
+  //       }
+  //     });
+  //   }
+  //   return result;
+  // }
 
   includeFunctionalDependencies(i: number, attributeName: string): boolean {
     let result: boolean = false;
@@ -61,16 +76,37 @@ export class MetadataComponent implements OnChanges {
     return result;
   }
 
-  isAttrDependecy(i: number, attributeName: string): boolean {
-    let result: boolean = false;
+  // isAttrDependecy(i: number, attributeName: string): boolean {
+  //   let result: boolean = false;
+  //   if (this.scenario!.fds.length > 0) {
+  //     let firstRow: Attribute[] = this.scenario!.fds[i][0];
+  //     if (firstRow) {
+  //       if (firstRow[firstRow.length - 1].normalizedName == attributeName) {
+  //         result = true;
+  //       }
+  //     }
+  //   }
+  //   return result;
+  // }
+
+  getAttrDependency(i: number): string {
+    let result: string = '';
     if (this.scenario!.fds.length > 0) {
       let firstRow: Attribute[] = this.scenario!.fds[i][0];
       if (firstRow) {
-        if(firstRow[firstRow.length - 1].normalizedName == attributeName) {
-          result = true;
-        }
+        result = firstRow[firstRow.length - 1].name;
       }
     }
+    return result;
+  }
+
+  includeAttrDependency(attributeName: string): boolean {
+    let result: boolean = false;
+    this.newFd.forEach((element) => {
+      if (element.normalizedName == attributeName) {
+        result = true;
+      }
+    });
     return result;
   }
 
@@ -78,6 +114,9 @@ export class MetadataComponent implements OnChanges {
     this.form = fb.group({
       selectedPk: new FormArray([]),
       selectedCompositeKeys: new FormArray([]),
+      selectedFds: new FormArray([]),
+      fdAttr1: new FormControl(''),
+      fdAttr2: new FormControl(''),
     });
   }
 
@@ -167,11 +206,7 @@ export class MetadataComponent implements OnChanges {
     }
   }
 
-  checkboxClick(event: any) {
-    event.preventDefault();
-  }
-
-  onCkChange(i: number, event: any) {
+  onCkChange(event: any) {
     if (this.scenario) {
       const compositeKeys = this.form.controls[
         'selectedCompositeKeys'
@@ -180,19 +215,67 @@ export class MetadataComponent implements OnChanges {
         (x) => x.normalizedName == event.target.value
       );
       if (event.target.checked) {
-        compositeKeys.push(new FormControl(ck!.normalizedName));
-        if (!this.scenario.compositeKeys[i])
-          this.scenario.compositeKeys[i] = [];
-        this.scenario.compositeKeys[i].push(ck!);
+        compositeKeys.push(new FormControl(ck!));
+        this.newCk.push(ck!);
       } else {
-        const index = compositeKeys.controls.findIndex((x) => x.value === ck);
+        const index = compositeKeys.controls.findIndex(
+          (x) => x.value === ck?.normalizedName
+        );
         compositeKeys.removeAt(index);
-        this.scenario!.compositeKeys[i].forEach((element, index) => {
+        this.newCk.forEach((element, index) => {
           if (element.normalizedName == ck?.normalizedName)
-            this.scenario!.compositeKeys[i].splice(index, 1);
+            this.newCk.splice(index, 1);
         });
       }
     }
+  }
+
+  onFdChange(event: any) {
+    if (this.scenario) {
+      const fds = this.form.controls['selectedFds'] as FormArray;
+      let fd: Attribute | undefined = this.scenario.attributes.find(
+        (x) => x.normalizedName == event.target.value
+      );
+      if (event.target.checked) {
+        fds.push(new FormControl(fd!));
+        this.newFd.push(fd!);
+      } else {
+        const index = fds.controls.findIndex(
+          (x) => x.value === fd?.normalizedName
+        );
+        fds.removeAt(index);
+        this.newFd.forEach((element, index) => {
+          if (element.normalizedName == fd?.normalizedName)
+            this.newFd.splice(index, 1);
+        });
+      }
+      if (this.includeAttrDependency(this.newFdDependency?.normalizedName!)) {
+        this.newFdDependency = undefined;
+      }
+    }
+  }
+
+  onFdDependencyChange(event: any) {
+    if (this.scenario) {
+      let attr: Attribute | undefined = this.scenario.attributes.find(
+        (x) => x.normalizedName == event.target.value
+      );
+      this.newFdDependency = attr;
+    }
+  }
+
+  addCk() {
+    this.scenario?.compositeKeys.push(this.newCk);
+    this.save();
+  }
+
+  addFd() {
+    const words: string[] = []
+    words.push((this.form.controls['fdAttr1'] as FormControl).value)
+    words.push((this.form.controls['fdAttr2'] as FormControl).value)
+    this.newFd.push(this.newFdDependency!);
+    this.scenario?.fds.push([this.newFd, words]);
+    this.save();
   }
 
   save() {
@@ -206,6 +289,11 @@ export class MetadataComponent implements OnChanges {
         )
         .subscribe((val) => {
           this.scenario = <Scenario>JSON.parse(val);
+          this.newCk = new Array();
+          this.newFd = new Array();
+          this.newFdDependency = undefined;
+          this.form.controls['fdAttr1'].reset()
+          this.form.controls['fdAttr2'].reset()
         });
     } catch (error) {
       console.log(error);
