@@ -5,7 +5,7 @@ export interface Scenario {
     pk: Attribute
     fds: Array<[Attribute[], string[]]>
     compositeKeys: Array<Attribute[]>
-    ambiguousAttribute: any[]
+    ambiguousAttribute: Array<[Attribute, Attribute, string]>
     attributes: Attribute[]
     nameToAttribute: object
 }

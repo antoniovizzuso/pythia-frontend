@@ -6,11 +6,17 @@ import {
   OnInit,
   Output,
   OnChanges,
+  ViewChildren,
+  QueryList,
+  ElementRef,
+  ViewChild,
 } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { Scenario } from '../models/scenario.model';
 import { Template } from '../models/template.model';
 import { Attribute } from '../models/attribute.model';
+import Prism from 'prismjs';
+import 'prismjs/components/prism-sql';
 
 @Component({
   selector: 'app-metadata',
@@ -20,12 +26,19 @@ import { Attribute } from '../models/attribute.model';
 export class MetadataComponent implements OnChanges {
   @Input() scenarioName: string | null = null;
   scenario: Scenario | undefined;
-  templates: Template[] | undefined;
+  templates: Array<[string, string, string[]]> | undefined;
   form: FormGroup;
+  formAmbiguous: FormGroup;
 
   newCk: Attribute[] = new Array();
   newFd: Attribute[] = new Array();
   newFdDependency: Attribute | undefined;
+  newTemplate: [string, string, string[]] | undefined;
+  newAttr1Ambiguous: Attribute | undefined;
+  newAttr2Ambiguous: Attribute | undefined;
+
+  @ViewChildren('highlightingContent')
+  highlightingContents!: QueryList<ElementRef>;
 
   get attributes(): Attribute[] {
     return this.scenario!.attributes;
@@ -33,6 +46,111 @@ export class MetadataComponent implements OnChanges {
 
   get primaryKeys(): Attribute {
     return this.scenario!.pk!;
+  }
+
+  constructor(fb: FormBuilder, public http: HttpClient) {
+    this.form = fb.group({
+      selectedPk: new FormArray([]),
+      selectedCompositeKeys: new FormArray([]),
+      selectedFds: new FormArray([]),
+      fdAttr1: new FormControl(''),
+      fdAttr2: new FormControl(''),
+      queryTemplate: new FormControl(''),
+      typeTemplate: new FormControl(''),
+      operatorsTemplate: new FormArray([]),
+    });
+    this.formAmbiguous = fb.group({
+      ambiguousLabel: new FormControl('')
+    });
+  }
+
+  ngOnChanges(): void {
+    if (this.scenarioName) {
+      this.loadMetadata();
+      this.loadTemplates();
+    }
+  }
+
+  loadMetadata() {
+    try {
+      this.http
+        .get<string>('http://127.0.0.1:8080/scenario/get/' + this.scenarioName)
+        .subscribe((val) => {
+          this.scenario = <Scenario>JSON.parse(val);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  loadTemplates() {
+    try {
+      this.http
+        .get<string>(
+          'http://127.0.0.1:8080/scenario/get/templates/' + this.scenarioName
+        )
+        .subscribe((val) => {
+          this.templates = <Array<[string, string, string[]]>>JSON.parse(val);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  findPks() {
+    try {
+      this.http
+        .get<string>(
+          'http://127.0.0.1:8080/scenario/find/pk/' + this.scenarioName
+        )
+        .subscribe((val) => {
+          this.scenario = <Scenario>JSON.parse(val);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  findCks() {
+    try {
+      this.http
+        .get<string>(
+          'http://127.0.0.1:8080/scenario/find/cks/' + this.scenarioName
+        )
+        .subscribe((val) => {
+          this.scenario = <Scenario>JSON.parse(val);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  findFds() {
+    try {
+      this.http
+        .get<string>(
+          'http://127.0.0.1:8080/scenario/find/fds/' + this.scenarioName
+        )
+        .subscribe((val) => {
+          this.scenario = <Scenario>JSON.parse(val);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  findAmbiguous() {
+    try {
+      this.http
+        .get<string>(
+          'http://127.0.0.1:8080/scenario/find/ambiguous/' + this.scenarioName
+        )
+        .subscribe((val) => {
+          this.scenario = <Scenario>JSON.parse(val);
+        });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   includeCompositeKeys(i: number, attributeName: string): boolean {
@@ -83,88 +201,6 @@ export class MetadataComponent implements OnChanges {
       }
     });
     return result;
-  }
-
-  constructor(fb: FormBuilder, public http: HttpClient) {
-    this.form = fb.group({
-      selectedPk: new FormArray([]),
-      selectedCompositeKeys: new FormArray([]),
-      selectedFds: new FormArray([]),
-      fdAttr1: new FormControl(''),
-      fdAttr2: new FormControl(''),
-    });
-  }
-
-  ngOnChanges(): void {
-    if (this.scenarioName) this.loadMetadata();
-  }
-
-  loadMetadata() {
-    try {
-      this.http
-        .get<string>('http://127.0.0.1:8080/scenario/get/' + this.scenarioName)
-        .subscribe((val) => {
-          this.scenario = <Scenario>JSON.parse(val);
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  loadTemplates() {
-    try {
-      this.http
-        .get<Template[]>(
-          'http://127.0.0.1:8080/scenario/templates/' + this.scenarioName
-        )
-        .subscribe((val) => {
-          this.templates = val;
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  findPks() {
-    try {
-      this.http
-        .get<string>(
-          'http://127.0.0.1:8080/scenario/find/pk/' + this.scenarioName
-        )
-        .subscribe((val) => {
-          this.scenario = <Scenario>JSON.parse(val);
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  findCks() {
-    try {
-      this.http
-        .get<string>(
-          'http://127.0.0.1:8080/scenario/find/cks/' + this.scenarioName
-        )
-        .subscribe((val) => {
-          this.scenario = <Scenario>JSON.parse(val);
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  findFds() {
-    try {
-      this.http
-        .get<string>(
-          'http://127.0.0.1:8080/scenario/find/fds/' + this.scenarioName
-        )
-        .subscribe((val) => {
-          this.scenario = <Scenario>JSON.parse(val);
-        });
-    } catch (error) {
-      console.log(error);
-    }
   }
 
   onPkChange(event: any) {
@@ -239,9 +275,30 @@ export class MetadataComponent implements OnChanges {
     }
   }
 
+  onAmbiguousAttrChange(event: any, attrIndex: number) {
+    let attr: Attribute | undefined = this.scenario!.attributes.find(
+      (x) => x.normalizedName == event.target.value
+    );
+    if (attr) {
+      if (attrIndex == 0) this.newAttr1Ambiguous = attr;
+      if (attrIndex == 1) this.newAttr2Ambiguous = attr;
+    }
+  }
+
+  getOperators(type: string): string[] {
+    let operators: string[] = [];
+    if (type == 'attribute' || type == 'row' || type == 'full') {
+      operators.push('=');
+      operators.push('>');
+      operators.push('<');
+      operators.push('<>');
+    }
+    return operators;
+  }
+
   addCk() {
     this.scenario?.compositeKeys.push(this.newCk);
-    this.save();
+    this.saveScenario();
   }
 
   addFd() {
@@ -250,24 +307,40 @@ export class MetadataComponent implements OnChanges {
     words.push((this.form.controls['fdAttr2'] as FormControl).value);
     this.newFd.push(this.newFdDependency!);
     this.scenario?.fds.push([this.newFd, words]);
-    this.save();
+    this.saveScenario();
+  }
+
+  //TODO --> addTemplate()
+
+  addAmbiguous() {
+    if(!this.scenario?.ambiguousAttribute) this.scenario!.ambiguousAttribute = []
+    let label = (this.formAmbiguous.controls['ambiguousLabel'] as FormControl).value;
+    this.scenario!.ambiguousAttribute.push([this.newAttr1Ambiguous!, this.newAttr2Ambiguous!, label])
+    console.log("*** " + this.newAttr1Ambiguous!.name + " ," + this.newAttr2Ambiguous!.name + " ," + label);
+    //this.saveScenario();
   }
 
   deleteCk(i: number) {
     this.scenario?.compositeKeys.forEach((element, index) => {
       if (index == i) this.scenario?.compositeKeys.splice(index, 1);
     });
-    this.save();
+    this.saveScenario();
   }
 
   deleteFd(i: number) {
     this.scenario?.fds.forEach((element, index) => {
       if (index == i) this.scenario?.fds.splice(index, 1);
     });
-    this.save();
+    this.saveScenario();
   }
 
-  save() {
+  //TODO --> deleteTemplate()
+
+  deleteAmbiguous() {
+
+  }
+
+  saveScenario() {
     try {
       const formData = new FormData();
       formData.append('scenario', JSON.stringify(this.scenario));
@@ -286,6 +359,27 @@ export class MetadataComponent implements OnChanges {
         });
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  saveTemplates() {
+    // TODO
+    console.log('*** op: ' + this.templates![0][2][0].toString());
+  }
+
+  //*--- Prism methods ---*
+
+  updateSqlText(index: number) {
+    if (this.highlightingContents) {
+      let test: string = '';
+      let contents = this.highlightingContents!.toArray();
+      if (contents[index] && this.templates) {
+        // Update code
+        contents[index].nativeElement.textContent = this.templates[index][0];
+
+        // Syntax Highlight
+        Prism.highlightElement(contents[index].nativeElement);
+      }
     }
   }
 }
