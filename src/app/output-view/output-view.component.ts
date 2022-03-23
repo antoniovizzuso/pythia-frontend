@@ -11,27 +11,24 @@ import { Result } from '../models/result.model';
 export class OutputViewComponent implements OnInit {
   @Input() scenarioName: string | null = null;
 
-  structures: Map<string, string> = new Map<string, string>();
   strategies: Map<string, string> = new Map<string, string>();
+  templates: Array<[string, string, string[], string]> | undefined;
 
   selectedStrategy: string = '';
   selectedStructure: string = '';
+  limitResults: number = 5;
 
   //results: [string[][], string[][], string] | null = null;
-  results: string[] | null = null;
-  selectedResult: string | null = null;
+  results: Result[] = [];
+  selectedResult: Result | null = null;
+  selectedAQuery: number = 0;
 
   constructor(public http: HttpClient) {}
 
   ngOnInit(): void {
-    //if (this.scenarioName) this.loadStrategies();
-    //Structures
-    // this.structures.set("attribute", "Attribute Ambiguity");
-    // this.structures.set("row", "Row Ambiguity");
-    // this.structures.set("fd", "FD Ambiguity");
-    // this.structures.set("func", "Function Ambiguity??");
-    // this.structures.set("full", "Full Ambiguity??");
-    // this.selectedStructure = "attribute"
+    if (this.scenarioName) {
+      this.loadTemplates();
+    }
 
     //Strategies
     this.strategies.set('contradicting', 'Contradictory (default)');
@@ -40,63 +37,62 @@ export class OutputViewComponent implements OnInit {
     this.selectedStrategy = 'contradicting';
   }
 
-  loadStrategies() {
-    let templates: Template[] = [];
+  loadTemplates() {
     try {
       this.http
-        .get<Template[]>(
-          'http://127.0.0.1:8080/api/scenario/templates/' + this.scenarioName
+        .get<string>(
+          'http://127.0.0.1:8080/scenario/get/templates/' + this.scenarioName
         )
         .subscribe((val) => {
-          templates = val as Template[];
-          //Structures
-          templates.forEach((t) => {
-            this.structures.set(t.name, t.name);
-          });
-          this.selectedStructure = templates[0].name;
+          this.templates = <Array<[string, string, string[], string]>>(
+            JSON.parse(val)
+          );
+          this.selectedStructure = this.templates[0][3];
         });
     } catch (error) {
       console.log(error);
     }
   }
 
-  generate() {
-    this.results = new Array();
-    try {
-      const formData = new FormData();
-      formData.append('name', this.scenarioName as string);
-      formData.append('strategy', this.selectedStrategy);
-      formData.append('structure', this.selectedStructure);
-      //this.http.post<HttpResponse>("http://127.0.0.1:8080/api/predict/", formData).subscribe(val => this.results = val.content as [string[][], string[][], string]);
-      this.http
-        .post<string[][]>('http://127.0.0.1:8080/api/predict/', formData)
-        .subscribe((val) => {
-          console.log(val);
-          let temp :string[][];
-          temp = val as string[][];
-          temp.forEach(element => {
-            this.results?.push(element[0]);
-            console.log(element[0])
-          });
-        });
-    } catch (error) {
-      console.log(error);
+  onSelectStructure(event: any) {
+    if (event.target.value) {
+      this.selectedStructure = event.target.value;
+      console.log('structure: ' + this.selectedStructure);
     }
   }
 
   onSelectStrategy(event: any) {
     this.selectedStrategy = event.target.value;
-    console.log('strategy: ' + this.selectedStrategy);
+    console.log('*** strategy: ' + this.selectedStrategy);
   }
 
-  onSelectStructure(event: any) {
-    this.selectedStructure = event.target.value;
-    console.log('structure: ' + this.selectedStructure);
-  }
-
-  onClickView(row: number) {
+  onClickView(index: number, row: number) {
     if (this.results) {
-      this.selectedResult = this.results[row][0];
+      this.selectedAQuery = index;
+      this.selectedResult = this.results[row];
+    }
+  }
+
+  generate() {
+    this.results = new Array();
+    this.selectedResult = null;
+    this.selectedAQuery = 0;
+    try {
+      const formData = new FormData();
+      formData.append('strategy', this.selectedStrategy);
+      formData.append('structure', this.selectedStructure);
+      formData.append('limitResults', this.limitResults.toString());
+      this.http
+        .post<Result[]>(
+          'http://127.0.0.1:8080/scenario/predict/' + this.scenarioName,
+          formData
+        )
+        .subscribe((val) => {
+          this.results = val;
+          console.log('*** : ' + this.results[0]);
+        });
+    } catch (error) {
+      console.log(error);
     }
   }
 }

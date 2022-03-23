@@ -15,6 +15,7 @@ export class HomeComponent implements OnInit {
   scenarioName: string = "";
   listScenarios: Map<string, string> = new Map<string, string>();
   errorMessage: string = "";
+  attrsCount: number = 0;
 
   constructor(
     private router: Router,
@@ -66,13 +67,13 @@ export class HomeComponent implements OnInit {
     this.scenarioName = name;
   }
 
-  // refreshComponent() {
-  //   this.router.navigate([this.router.url]);
-  // }
-
   deletedScenario(): void {
     this.scenarioName = "";
     this.idScenarioSelected = 0;
     this.loadListScenarios();
+  }
+
+  setAttrsNumber(value: number) {
+    this.attrsCount = value;
   }
 }

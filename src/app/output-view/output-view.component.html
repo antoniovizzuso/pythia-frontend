@@ -5,13 +5,17 @@
     <div class="row my-1 align-items-center">
       <div class="col-6 input-group">
         <p class="col-sm-4 nowrap col-form-label">Structure Type</p>
-        <select class="form-select" (change)="onSelectStructure($event)" aria-label="Default select example">
+        <select
+          class="form-select"
+          (change)="onSelectStructure($event)"
+          aria-label="Default select example"
+        >
           <option
-            *ngFor="let s of structures | keyvalue"
-            [value]="s.key"
-            [selected]="s.key === selectedStructure"
+            *ngFor="let t of templates"
+            [value]="t[3]"
+            [selected]="t[3] === selectedStructure"
           >
-            {{ s.value }}
+            {{ t[3] }}
           </option>
         </select>
       </div>
@@ -21,13 +25,18 @@
           class="form-control"
           type="number"
           placeholder="number of results"
+          [(ngModel)]="limitResults"
         />
       </div>
     </div>
     <div class="row my-1 align-items-center">
       <div class="col-6 input-group">
         <p class="col-sm-4 nowrap col-form-label">Strategy</p>
-        <select class="form-select" (change)="onSelectStrategy($event)" aria-label="Default select example">
+        <select
+          class="form-select"
+          (change)="onSelectStrategy($event)"
+          aria-label="Default select example"
+        >
           <option
             *ngFor="let s of strategies | keyvalue"
             [value]="s.key"
@@ -51,7 +60,7 @@
   </div>
 </div>
 
-<div *ngIf="results" class="card mt-3">
+<div *ngIf="results.length > 0" class="card mt-3">
   <div class="card-body">
     <h5 class="card-title">Generated Sentences</h5>
     <h6 class="card-subtitle mb-2 text-muted">
@@ -60,25 +69,28 @@
     </h6>
     <div class="row">
       <div class="col-md-12">
-        <div class="panel panel-success">
+        <div
+          class="panel panel-success"
+          *ngFor="let res of results; let i = index"
+        >
           <table
             border="1"
             class="table table-striped table-bordered table-hover table-condensed"
           >
             <thead>
               <tr>
-                <th title="Field #1">Sentences</th>
+                <th title="Field #1">{{ "A-Query " + (i + 1) }}</th>
                 <th title="Field #2"></th>
                 <th title="Field #3"></th>
               </tr>
             </thead>
             <tbody>
               <tr
-                *ngFor="let row of results; let indexOfelement=index;"
+                *ngFor="let row of res![2]!; let j = index"
                 class="row-amb r-1"
               >
                 <td>
-                  <span class="r-1-a">{{ row }}</span>
+                  <span class="r-1-a">{{ row[0] }}</span>
                 </td>
                 <td>
                   <button
@@ -94,7 +106,7 @@
                   <button
                     class="btn btn-outline-primary btn-sm w-100"
                     type="button"
-                    (click)="onClickView(indexOfelement)"
+                    (click)="onClickView(j,i)"
                   >
                     View
                   </button>
@@ -102,24 +114,36 @@
               </tr>
             </tbody>
           </table>
+          <div
+            *ngIf="selectedAQuery == i && selectedResult"
+            class="card my-2 mb-4 card-details"
+            id="card-details-r1"
+          >
+            <div class="card-body">
+              <h6 class="card-title">
+                Sentence Details for A-Query {{ i + 1 }}
+              </h6>
+              <h6 class="card-subtitle mb-2 text-muted">Selected: ""</h6>
+              <h6 class="card-subtitle mb-2 text-muted">
+                A-Query (from template "{{ selectedStructure }}")
+              </h6>
+              <div class="row">
+                <div class="cxol-md-8">
+                  <div [innerHTML]="selectedResult[5][i]!" class="panel panel-success">
+                  </div>
+                </div>
+                <pre
+                  id="highlighting"
+                  class="m-2 language-sql"
+                  aria-hidden="true"
+                  style="position: relative"
+                >
+                <code class="language-sql" id="highlighting-content">{{selectedResult[0]!}}</code></pre>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
-<div *ngIf="selectedResult" class="card mt-3 card-details" id="card-details-r1">
-  <div class="card-body">
-    <h5 class="card-title">Sentence Details</h5>
-    <h6 class="card-subtitle mb-2 text-muted">
-      Selected: ""
-    </h6>
-    <h6 class="card-subtitle mb-2 text-muted">
-      A-Query (from template "Attribute Ambiguity")
-    </h6>
-    <div class="row">
-      <pre id="highlighting" class="m-2 language-sql" aria-hidden="true">
-      <code class="language-sql" id="highlighting-content">{{selectedResult[0]!}}</code></pre>
     </div>
   </div>
 </div>

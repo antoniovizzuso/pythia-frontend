@@ -35,7 +35,7 @@
     </ul>
   </div>
 </div>
-<div class="content">
+<div class="content" [ngClass]="{'max-width-1520': attrsCount > 15}">
   <div class="tab-content" id="myTabContent">
     <!-- Scenario -->
     <div
@@ -89,6 +89,7 @@
         <app-load-scenario
           [scenarioName]="scenarioName"
           (deletedScenearioEvent)="deletedScenario()"
+          (attrsNumberEvent)="setAttrsNumber($event)"
         ></app-load-scenario>
       </div>
 
@@ -98,6 +99,7 @@
           (scenarioSetEvent)="loadScenarioName($event)"
           (fileUploadEvent)="loadFile($event)"
           (deletedScenearioEvent)="deletedScenario()"
+          (attrsNumberEvent)="setAttrsNumber($event)"
         ></app-new-scenario>
       </div>
     </div>

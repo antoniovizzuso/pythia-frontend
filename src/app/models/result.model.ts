@@ -1,7 +1,8 @@
-export class Result {
-    query: string = "";
-    template: string = "";
-    sentences: string[][] = new Array();
-    prototype: string[] = new Array();
-    obj: any;
-}
+export type Result = [
+    string,
+    string,
+    [string, number, number, number, number, number, number][],
+    [string, string, string[][]],
+    any,
+    string[]
+  ]

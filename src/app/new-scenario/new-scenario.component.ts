@@ -12,10 +12,12 @@ export class NewScenarioComponent implements OnInit {
   @Output() fileUploadEvent = new EventEmitter<File | null>();
   @Output() scenarioSetEvent = new EventEmitter<string>();
   @Output() deletedScenearioEvent = new EventEmitter<string>();
+  @Output() attrsNumberEvent = new EventEmitter<number>();
   @Input() scenarioName: string | null = null;
   file: File | null = null;
   dataFrame: string | null = null;
   pages: string[] = new Array();
+  attrsNumber: number = 0;
   selectedPage: number = 1;
   rowsPerPage: number = 10;
   //showTable: boolean = false;
@@ -79,6 +81,8 @@ export class NewScenarioComponent implements OnInit {
           this.dataFrame = val;
           this.getPages(1);
           //this.showTable = true;
+          this.attrsNumber = ( this.dataFrame.match(/\<\/th\>/g) || []).length - 11;
+          this.attrsNumberEvent.emit(this.attrsNumber);
         });
     } catch (error) {
       console.log(error);

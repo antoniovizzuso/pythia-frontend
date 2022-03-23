@@ -29,7 +29,7 @@
           <div class="col-md-12 overflow-auto">
             <table
               border="1"
-              class="table table-sm table-striped table-bordered table-hover text-center"
+              class="table table-sm table-striped table-bordered table-hover text-center table-ck"
             >
               <thead>
                 <tr>
@@ -82,10 +82,10 @@
               </button>
             </div>
           </div>
-          <div class="col-md-12 overflow-auto">
+          <div class="col-md-12 overflow-auto" style="max-height: 400px;">
             <table
               border="1"
-              class="table table-sm table-striped table-bordered table-hover text-center"
+              class="table table-sm table-striped table-bordered table-hover text-center table-ck"
             >
               <thead>
                 <tr>
@@ -160,10 +160,10 @@
               </button>
             </div>
           </div>
-          <div class="col-md-12 overflow-auto">
+          <div class="col-md-12 overflow-auto" style="max-height: 400px;">
             <table
               border="1"
-              class="table table-sm table-striped table-bordered table-hover text-center"
+              class="table table-sm table-striped table-bordered table-hover text-center table-fd"
             >
               <thead>
                 <tr>
@@ -171,10 +171,10 @@
                   <th *ngFor="let h of scenario?.attributes" scope="col">
                     {{ h.name }}
                   </th>
-                  <th class="column-id"></th>
-                  <th class="column-id"></th>
-                  <th class="column-id" colspan="2"></th>
-                  <th class="column-id"></th>
+                  <th class="column-id col-arrow"></th>
+                  <th class="column-id col-attr"></th>
+                  <th class="column-id col-words"></th>
+                  <th class="column-id col-btn"></th>
                 </tr>
               </thead>
               <tbody>
@@ -191,16 +191,16 @@
                       style="color: orange"
                     ></i>
                   </td>
-                  <td>
+                  <td class="col-arrow">
                     <i class="fas fa-arrow-right" style="color: orange"></i>
                   </td>
-                  <td>
+                  <td class="col-attr">
                     {{ getAttrDependency(i) }}
                   </td>
-                  <td colspan="2">
+                  <td class="col-words">
                     {{ this.scenario!.fds[i][1].toString() }}
                   </td>
-                  <td>
+                  <td class="col-btn">
                     <button
                       class="btn btn-outline-danger btn-sm"
                       type="button"
@@ -249,10 +249,7 @@
                     </select>
                   </td>
                   <td>
-                    <input class="form-control" formControlName="fdAttr1" />
-                  </td>
-                  <td>
-                    <input class="form-control" formControlName="fdAttr2" />
+                    <input class="form-control" formControlName="fdAttr" />
                   </td>
                   <td>
                     <button
@@ -320,7 +317,7 @@
             aria-expanded="true"
             [aria-controls]="'#collapse' + indexOfelement"
           >
-            {{ t[1] }}
+            {{ t[3] }}
             <em style="margin-left: 10px">(Default Template)</em>
           </button>
         </h2>
@@ -339,7 +336,7 @@
                   type="text"
                   placeholder="Template Name"
                   aria-label="default input example"
-                  [value]="t.name"
+                  [(ngModel)]="t[3]"
                 />
               </div>
             </div>

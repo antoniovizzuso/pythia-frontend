@@ -1,5 +1,18 @@
 @import "prismjs/themes/prism.css";
 
+.container {
+  max-width: unset;
+}
+
+.container .tab-content .card {
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.max-width-1520 {
+  max-width: 1520px !important;
+}
+
 p {
     margin: 0;
 }
@@ -148,3 +161,114 @@ p {
     position: relative;
     margin-left: unset;
 }
+
+/* --- CK TABLE --- */
+
+.table-bordered.table-ck thead th {
+  border-bottom-width: 0;
+}
+
+.table-ck {
+  border-collapse: separate;
+  border: none;
+  border-spacing: 0;
+}
+
+.table-ck th,
+.table-ck td {
+  border: 0.5px solid #dee2e6;
+}
+
+.table-ck th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: white;
+}
+
+.table-ck thead th:last-child,
+.table-ck tbody tr td:last-child {
+  position: sticky;
+  right: -16px;
+  z-index: 1;
+  width: 100px;
+  background: white;
+  border-left: 1px solid #eee;
+  -webkit-box-shadow: -2px 0rem 0.25rem rgb(0 0 0 / 4%);
+  box-shadow: -2px 0rem 0.25rem rgb(0 0 0 / 4%);
+}
+
+.table-ck thead th:last-child {
+  top: 0;
+  z-index: 3;
+}
+
+/* --- FD TABLE --- */
+
+.table-bordered.table-fd thead th {
+  border-bottom-width: 0;
+}
+
+.table-fd {
+  border-collapse: separate;
+  border: none;
+  border-spacing: 0;
+}
+
+.table-fd th,
+.table-fd td {
+  border: 0.5px solid #dee2e6;
+}
+
+.table-fd th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: white;
+}
+
+.table-fd .col-arrow,
+.table-fd .col-attr,
+.table-fd .col-words,
+.table-fd .col-btn {
+  position: sticky;
+  z-index: 1;
+  background: white;
+  border-left: 1px solid #eee;
+}
+
+.table-fd th.col-arrow,
+.table-fd th.col-attr,
+.table-fd th.col-words,
+.table-fd th.col-btn { 
+  top: 0;
+  z-index: 3;
+}
+
+.table-fd .col-arrow {
+  min-width: 50px;
+  max-width: 50px;
+  right: 489px;
+  -webkit-box-shadow: -2px 0rem 0.25rem rgb(0 0 0 / 4%);
+  box-shadow: -2px 0rem 0.25rem rgb(0 0 0 / 4%);
+}
+
+.table-fd .col-attr {
+  min-width: 175px;
+  max-width: 175px;
+  right: 259px;
+}
+
+.table-fd .col-words {
+  min-width: 175px;
+  max-width: 175px;
+  right: 84px;
+}
+
+.table-fd .col-btn {
+  min-width: 100px;
+  max-width: 100px;
+  right: -16px;
+}
+
+

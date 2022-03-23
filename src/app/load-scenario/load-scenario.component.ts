@@ -9,8 +9,10 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angu
 export class LoadScenarioComponent implements OnChanges {
   @Input() scenarioName: string | null = null;
   @Output() deletedScenearioEvent = new EventEmitter<string>();
+  @Output() attrsNumberEvent = new EventEmitter<number>();
   dataFrame: string | null = null;
   pages: string[] = new Array();
+  attrsNumber: number = 0;
   selectedPage: number = 1;
   rowsPerPage: number = 10;
   //showTable: boolean = false;
@@ -27,6 +29,8 @@ export class LoadScenarioComponent implements OnChanges {
           this.dataFrame = val; 
           this.getPages(1);
           //this.showTable = true;
+          this.attrsNumber = ( this.dataFrame.match(/\<\/th\>/g) || []).length - 11;
+          this.attrsNumberEvent.emit(this.attrsNumber);
         });
     } catch (error) {
       console.log(error);

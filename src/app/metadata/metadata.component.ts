@@ -26,14 +26,14 @@ import 'prismjs/components/prism-sql';
 export class MetadataComponent implements OnChanges {
   @Input() scenarioName: string | null = null;
   scenario: Scenario | undefined;
-  templates: Array<[string, string, string[]]> | undefined;
+  templates: Array<[string, string, string[], string]> | undefined;
   form: FormGroup;
   formAmbiguous: FormGroup;
 
   newCk: Attribute[] = new Array();
   newFd: Attribute[] = new Array();
   newFdDependency: Attribute | undefined;
-  newTemplate: [string, string, string[]] | undefined;
+  newTemplate: [string, string, string[], string] | undefined;
   newAttr1Ambiguous: Attribute | undefined;
   newAttr2Ambiguous: Attribute | undefined;
 
@@ -41,7 +41,11 @@ export class MetadataComponent implements OnChanges {
   highlightingContents!: QueryList<ElementRef>;
 
   get attributes(): Attribute[] {
-    return this.scenario!.attributes;
+    let result: Attribute[] = []
+    if(this.scenario) {
+      result = this.scenario.attributes;
+    }
+    return result;
   }
 
   get primaryKeys(): Attribute {
@@ -53,8 +57,7 @@ export class MetadataComponent implements OnChanges {
       selectedPk: new FormArray([]),
       selectedCompositeKeys: new FormArray([]),
       selectedFds: new FormArray([]),
-      fdAttr1: new FormControl(''),
-      fdAttr2: new FormControl(''),
+      fdAttr: new FormControl(''),
       queryTemplate: new FormControl(''),
       typeTemplate: new FormControl(''),
       operatorsTemplate: new FormArray([]),
@@ -90,7 +93,7 @@ export class MetadataComponent implements OnChanges {
           'http://127.0.0.1:8080/scenario/get/templates/' + this.scenarioName
         )
         .subscribe((val) => {
-          this.templates = <Array<[string, string, string[]]>>JSON.parse(val);
+          this.templates = <Array<[string, string, string[], string]>>JSON.parse(val);
         });
     } catch (error) {
       console.log(error);
@@ -303,8 +306,7 @@ export class MetadataComponent implements OnChanges {
 
   addFd() {
     const words: string[] = [];
-    words.push((this.form.controls['fdAttr1'] as FormControl).value);
-    words.push((this.form.controls['fdAttr2'] as FormControl).value);
+    words.push((this.form.controls['fdAttr'] as FormControl).value.split(','));
     this.newFd.push(this.newFdDependency!);
     this.scenario?.fds.push([this.newFd, words]);
     this.saveScenario();
@@ -336,9 +338,7 @@ export class MetadataComponent implements OnChanges {
 
   //TODO --> deleteTemplate()
 
-  deleteAmbiguous() {
-
-  }
+  //TODO --> deleteAmbiguous()
 
   saveScenario() {
     try {
@@ -354,8 +354,7 @@ export class MetadataComponent implements OnChanges {
           this.newCk = new Array();
           this.newFd = new Array();
           this.newFdDependency = undefined;
-          this.form.controls['fdAttr1'].reset();
-          this.form.controls['fdAttr2'].reset();
+          this.form.controls['fdAttr'].reset();
         });
     } catch (error) {
       console.log(error);
