@@ -70,75 +70,66 @@
     <div class="row">
       <div class="col-md-12">
         <div
-          class="panel panel-success"
+          class="panel panel-success table-a-query"
           *ngFor="let res of results; let i = index"
         >
-          <table
-            border="1"
-            class="table table-striped table-bordered table-hover table-condensed"
-          >
-            <thead>
-              <tr>
-                <th title="Field #1">{{ "A-Query " + (i + 1) }}</th>
-                <th title="Field #2"></th>
-                <th title="Field #3"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                *ngFor="let row of res![2]!; let j = index"
-                class="row-amb r-1"
+          <div border="1" class="row tr title mt-4">
+            <div class="col-12">{{ "A-Query " + (i + 1) }}</div>
+          </div>
+          <div *ngFor="let row of res![2]!; let j = index" class="row tr r-1">
+            <div class="col-8 td">
+              <span class="r-1-a">{{ row[0] }}</span>
+            </div>
+            <div class="col-2 td">
+              <button
+                class="btn btn-outline-secondary btn-sm w-100"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#modalEdit"
               >
-                <td>
-                  <span class="r-1-a">{{ row[0] }}</span>
-                </td>
-                <td>
-                  <button
-                    class="btn btn-outline-secondary btn-sm w-100"
-                    type="button"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalEdit"
-                  >
-                    Edit
-                  </button>
-                </td>
-                <td>
-                  <button
-                    class="btn btn-outline-primary btn-sm w-100"
-                    type="button"
-                    (click)="onClickView(j,i)"
-                  >
-                    View
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div
-            *ngIf="selectedAQuery == i && selectedResult"
-            class="card my-2 mb-4 card-details"
-            id="card-details-r1"
-          >
-            <div class="card-body">
-              <h6 class="card-title">
-                Sentence Details for A-Query {{ i + 1 }}
-              </h6>
-              <h6 class="card-subtitle mb-2 text-muted">Selected: ""</h6>
-              <h6 class="card-subtitle mb-2 text-muted">
-                A-Query (from template "{{ selectedStructure }}")
-              </h6>
-              <div class="row">
-                <div class="cxol-md-8">
-                  <div [innerHTML]="selectedResult[5][i]!" class="panel panel-success">
+                Edit
+              </button>
+            </div>
+            <div class="col-2 td">
+              <button
+                class="btn btn-outline-primary btn-sm w-100"
+                type="button"
+                (click)="onClickView(i, j)"
+              >
+                View
+              </button>
+            </div>
+            <div
+              class="col-12 details"
+              *ngIf="selectedAQuery == i && selectedRow == j && selectedResult"
+            >
+              <div class="card my-2 mb-4 card-details" id="card-details-r1">
+                <div class="card-body">
+                  <h6 class="card-title">
+                    Sentence Details for A-Query {{ i + 1 }}
+                  </h6>
+                  <h6 class="card-subtitle mb-2 text-muted">
+                    Selected: "{{ selectedResult[2][j][0] }}"
+                  </h6>
+                  <div class="row">
+                    <div class="cxol-md-8">
+                      <div
+                        [innerHTML]="selectedResult[5][selectedRow]!"
+                        class="panel panel-success"
+                      ></div>
+                    </div>
                   </div>
+                  <h6 class="card-subtitle mb-2 text-muted">
+                    A-Query (from template "{{ selectedStructure }}")
+                  </h6>
+                  <pre
+                    id="highlighting"
+                    class="m-2 language-sql"
+                    aria-hidden="true"
+                    style="position: relative"
+                  >
+                  <code class="language-sql" id="highlighting-content">{{selectedResult[0]!}}</code></pre>
                 </div>
-                <pre
-                  id="highlighting"
-                  class="m-2 language-sql"
-                  aria-hidden="true"
-                  style="position: relative"
-                >
-                <code class="language-sql" id="highlighting-content">{{selectedResult[0]!}}</code></pre>
               </div>
             </div>
           </div>

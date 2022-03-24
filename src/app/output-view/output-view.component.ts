@@ -22,6 +22,7 @@ export class OutputViewComponent implements OnInit {
   results: Result[] = [];
   selectedResult: Result | null = null;
   selectedAQuery: number = 0;
+  selectedRow: number = 0;
 
   constructor(public http: HttpClient) {}
 
@@ -66,10 +67,11 @@ export class OutputViewComponent implements OnInit {
     console.log('*** strategy: ' + this.selectedStrategy);
   }
 
-  onClickView(index: number, row: number) {
+  onClickView(i: number, j: number) {
     if (this.results) {
-      this.selectedAQuery = index;
-      this.selectedResult = this.results[row];
+      this.selectedAQuery = i;
+      this.selectedRow = j;
+      this.selectedResult = this.results[i];
     }
   }
 
