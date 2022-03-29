@@ -84,8 +84,7 @@
               <button
                 class="btn btn-outline-secondary btn-sm w-100"
                 type="button"
-                data-bs-toggle="modal"
-                data-bs-target="#modalEdit"
+                (click)="onClickEdit(content)"
               >
                 Edit
               </button>
@@ -138,3 +137,81 @@
     </div>
   </div>
 </div>
+
+<!-- Modal -->
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Edit Template</h5>
+    <button
+      type="button"
+      class="btn-close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <label class="col-sm-2 col-form-label">Template Name</label>
+      <div class="col-sm-10">
+        <input
+          class="form-control"
+          type="text"
+          placeholder="Template Name"
+          aria-label="default input example"
+          [(ngModel)]="selectedTemplate![3]"
+        />
+      </div>
+    </div>
+    <div class="row g-3">
+      <div style="height: 150px" class="col-12">
+        <textarea
+          placeholder="Insert template sql"
+          id="editing"
+          spellcheck="false"
+          [(ngModel)]="selectedTemplate![0]"
+          (input)="updateSqlText(indexOfelement)"
+        >
+        {{ selectedTemplate![0] }}</textarea
+        >
+        <pre id="highlighting" aria-hidden="true" class="language-sql">
+          <code #highlightingContent class="language-sql" id="highlighting-content">{{ selectedTemplate![0] }}</code>
+        </pre>
+      </div>
+      <div *ngIf="getOperators(selectedTemplate![1]).length > 0" class="col-12">
+        <h6>Operators</h6>
+        <div
+          class="row my-1"
+          *ngFor="let o of getOperators(selectedTemplate![1]); let i = index"
+        >
+          <label class="col-sm-1 col-form-label text-center font-weight-bold">{{
+            o
+          }}</label>
+          <div class="col-sm-6">
+            <input
+              class="form-control"
+              type="text"
+              placeholder="Template Name"
+              aria-label="default input example"
+              [(ngModel)]="selectedTemplate![2][i]"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="modal.close('Save click')"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-bs-dismiss="modal"
+    >
+      Edit
+    </button>
+  </div>
+</ng-template>

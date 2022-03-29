@@ -55,6 +55,7 @@ export class HomeComponent implements OnInit {
   }
 
   newScenario(): void {
+    this.scenarioName = "";
     this.idScenarioSelected = 0;
     this.idScenarioSelected = 2;
   }
@@ -65,12 +66,13 @@ export class HomeComponent implements OnInit {
 
   loadScenarioName(name: string) {
     this.scenarioName = name;
+    this.loadListScenarios();
   }
 
   deletedScenario(): void {
+    this.loadListScenarios();
     this.scenarioName = "";
     this.idScenarioSelected = 0;
-    this.loadListScenarios();
   }
 
   setAttrsNumber(value: number) {

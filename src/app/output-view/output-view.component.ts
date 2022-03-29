@@ -1,14 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, QueryList, ViewChildren, OnChanges, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Template } from '../models/template.model';
 import { Result } from '../models/result.model';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import Prism from 'prismjs';
+import 'prismjs/components/prism-sql';
 
 @Component({
   selector: 'app-output-view',
   templateUrl: './output-view.component.html',
   styleUrls: ['./output-view.component.css'],
 })
-export class OutputViewComponent implements OnInit {
+export class OutputViewComponent implements OnChanges {
   @Input() scenarioName: string | null = null;
 
   strategies: Map<string, string> = new Map<string, string>();
@@ -24,9 +27,13 @@ export class OutputViewComponent implements OnInit {
   selectedAQuery: number = 0;
   selectedRow: number = 0;
 
-  constructor(public http: HttpClient) {}
+  closeResult = '';
 
-  ngOnInit(): void {
+  private highlightingContents!: QueryList<ElementRef>;
+
+  constructor(public http: HttpClient, public modalService: NgbModal, private changeDetector : ChangeDetectorRef) {}
+
+  ngOnChanges(): void {
     if (this.scenarioName) {
       this.loadTemplates();
     }
@@ -36,6 +43,14 @@ export class OutputViewComponent implements OnInit {
     this.strategies.set('uniform_true', 'Uniform True');
     this.strategies.set('uniform_false', 'Uniform False');
     this.selectedStrategy = 'contradicting';
+  }
+
+  ngAfterViewInit() {
+    this.highlightingContents.changes.subscribe(() => {
+      this.highlightingContents.toArray().forEach((element) => {
+        Prism.highlightElement(element.nativeElement);
+      });
+    });
   }
 
   loadTemplates() {
@@ -53,6 +68,27 @@ export class OutputViewComponent implements OnInit {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  @ViewChildren('highlightingContent') set content(content: QueryList<ElementRef>) {
+    if(content) { 
+         this.highlightingContents = content;
+         this.highlightingContents.toArray().forEach((element) => {
+          Prism.highlightElement(element.nativeElement);
+        });
+    }
+ }
+
+  get selectedTemplate(): [string, string, string[], string] | undefined {
+    let result: [string, string, string[], string] | undefined = undefined;
+    if(this.selectedStructure) {
+      this.templates!.forEach(t => {
+        if(t[3] == this.selectedStructure) {
+          result = t;
+        }
+      });
+    }
+    return result;
   }
 
   onSelectStructure(event: any) {
@@ -75,6 +111,34 @@ export class OutputViewComponent implements OnInit {
     }
   }
 
+  onClickEdit(content: any) {
+    this.modalService
+      .open(content, {
+        ariaLabelledBy: 'modal-basic-title',
+        size: 'lg',
+        centered: true,
+      })
+      .result.then(
+        (result) => {
+          this.closeResult = `Closed with: ${result}`;
+        },
+        (reason) => {
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        }
+      );
+      this.changeDetector.detectChanges();
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
+
   generate() {
     this.results = new Array();
     this.selectedResult = null;
@@ -91,10 +155,37 @@ export class OutputViewComponent implements OnInit {
         )
         .subscribe((val) => {
           this.results = val;
-          console.log('*** : ' + this.results[0]);
         });
     } catch (error) {
       console.log(error);
     }
   }
+
+  getOperators(type: string): string[] {
+    let operators: string[] = [];
+    if (type == 'attribute' || type == 'row' || type == 'full') {
+      operators.push('=');
+      operators.push('>');
+      operators.push('<');
+      operators.push('<>');
+    }
+    return operators;
+  }
+
+  //*--- Prism methods ---*
+
+  updateSqlText(index: number) {
+    let test: string = '';
+    let contents = this.highlightingContents!.toArray();
+    if (contents[index]) {
+      console.log("*** Highlighted!")
+
+      // Update code
+      contents[index].nativeElement.textContent = this.templates![index][0];
+
+      // Syntax Highlight
+      Prism.highlightElement(contents[index].nativeElement);
+    }
+  }
+
 }

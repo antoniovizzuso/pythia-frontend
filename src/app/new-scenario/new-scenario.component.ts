@@ -26,6 +26,7 @@ export class NewScenarioComponent implements OnInit {
   constructor(public http: HttpClient) {}
 
   ngOnInit(): void {
+    console.log("*** new scenario init");
     this.file = null;
     this.dataFrame = null;
   }
@@ -64,6 +65,7 @@ export class NewScenarioComponent implements OnInit {
           if (val) {
             this.scenarioName = val;
             this.loadScenario();
+            this.scenarioSetEvent.emit(this.scenarioName);
           }
         });
     } catch (error) {

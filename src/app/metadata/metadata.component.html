@@ -82,7 +82,7 @@
               </button>
             </div>
           </div>
-          <div class="col-md-12 overflow-auto" style="max-height: 400px;">
+          <div class="col-md-12 overflow-auto" style="max-height: 400px">
             <table
               border="1"
               class="table table-sm table-striped table-bordered table-hover text-center table-ck"
@@ -160,7 +160,7 @@
               </button>
             </div>
           </div>
-          <div class="col-md-12 overflow-auto" style="max-height: 400px;">
+          <div class="col-md-12 overflow-auto" style="max-height: 400px">
             <table
               border="1"
               class="table table-sm table-striped table-bordered table-hover text-center table-fd"
@@ -221,14 +221,13 @@
                       (change)="onFdChange($event)"
                     />
                   </td>
-                  <td>
+                  <td class="col-arrow">
                     <i class="fas fa-arrow-right" style="color: orange"></i>
                   </td>
-                  <td>
+                  <td class="col-attr">
                     <select
                       class="form-select"
                       aria-label="Default select example"
-                      style="width: fit-content"
                       (change)="onFdDependencyChange($event)"
                     >
                       <option
@@ -248,10 +247,10 @@
                       </option>
                     </select>
                   </td>
-                  <td>
+                  <td class="col-words">
                     <input class="form-control" formControlName="fdAttr" />
                   </td>
-                  <td>
+                  <td class="col-btn">
                     <button
                       class="btn btn-outline-secondary btn-sm"
                       type="button"
@@ -286,17 +285,21 @@
     </p>
     <form class="row g-3">
       <div class="input-group mb-3">
-        <select class="form-select" id="select-templ">
+        <select
+          class="form-select"
+          id="select-templ"
+          (change)="onTemplataTypeChange($event)"
+        >
           <option selected>Select a query template...</option>
-          <option value="1">Attribute Ambiguity</option>
-          <option value="2">Row Ambiguity</option>
-          <option value="3">FD Ambiguity</option>
+          <option value="attribute">Attribute Ambiguity</option>
+          <option value="row">Row Ambiguity</option>
+          <option value="fd">FD Ambiguity</option>
           <option value="4">Blank</option>
         </select>
         <button
           class="btn btn-outline-primary"
           type="button"
-          onclick="javascript:show_element('card-t' + document.getElementById('select-templ').selectedIndex)"
+          (click)="addTemplate()"
         >
           Add
         </button>
@@ -385,6 +388,15 @@
                   Save
                 </button>
               </div>
+              <div class="d-grid gap-2 col-2">
+                <button
+                  class="btn btn-outline-danger btn-sm"
+                  type="button"
+                  (click)="deleteTemplate(indexOfelement)"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -439,12 +451,18 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let a of scenario?.ambiguousAttribute">
+                <tr
+                  *ngFor="let a of scenario?.ambiguousAttribute; let i = index"
+                >
                   <td>{{ a[0].name }}</td>
                   <td>{{ a[1].name }}</td>
                   <td>{{ a[2] }}</td>
                   <td>
-                    <button class="btn btn-outline-danger btn-sm" type="button">
+                    <button
+                      class="btn btn-outline-danger btn-sm"
+                      type="button"
+                      (click)="deleteAmbiguous(i)"
+                    >
                       Delete
                     </button>
                   </td>
@@ -458,7 +476,7 @@
                       (change)="onAmbiguousAttrChange($event, 0)"
                     >
                       <option
-                        [value]=""
+                        [value]="undefined"
                         [disabled]="true"
                         [selected]="true"
                       ></option>
@@ -478,7 +496,7 @@
                       (change)="onAmbiguousAttrChange($event, 1)"
                     >
                       <option
-                        [value]=""
+                        [value]="undefined"
                         [disabled]="true"
                         [selected]="true"
                       ></option>

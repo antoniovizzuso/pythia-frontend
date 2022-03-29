@@ -33,7 +33,7 @@ export class MetadataComponent implements OnChanges {
   newCk: Attribute[] = new Array();
   newFd: Attribute[] = new Array();
   newFdDependency: Attribute | undefined;
-  newTemplate: [string, string, string[], string] | undefined;
+  newTemplate: string | undefined;
   newAttr1Ambiguous: Attribute | undefined;
   newAttr2Ambiguous: Attribute | undefined;
 
@@ -41,8 +41,8 @@ export class MetadataComponent implements OnChanges {
   highlightingContents!: QueryList<ElementRef>;
 
   get attributes(): Attribute[] {
-    let result: Attribute[] = []
-    if(this.scenario) {
+    let result: Attribute[] = [];
+    if (this.scenario) {
       result = this.scenario.attributes;
     }
     return result;
@@ -63,7 +63,7 @@ export class MetadataComponent implements OnChanges {
       operatorsTemplate: new FormArray([]),
     });
     this.formAmbiguous = fb.group({
-      ambiguousLabel: new FormControl('')
+      ambiguousLabel: new FormControl(''),
     });
   }
 
@@ -72,6 +72,14 @@ export class MetadataComponent implements OnChanges {
       this.loadMetadata();
       this.loadTemplates();
     }
+  }
+
+  ngAfterViewInit() {
+    this.highlightingContents.changes.subscribe(() => {
+      this.highlightingContents.toArray().forEach((element) => {
+        Prism.highlightElement(element.nativeElement);
+      });
+    });
   }
 
   loadMetadata() {
@@ -93,7 +101,9 @@ export class MetadataComponent implements OnChanges {
           'http://127.0.0.1:8080/scenario/get/templates/' + this.scenarioName
         )
         .subscribe((val) => {
-          this.templates = <Array<[string, string, string[], string]>>JSON.parse(val);
+          this.templates = <Array<[string, string, string[], string]>>(
+            JSON.parse(val)
+          );
         });
     } catch (error) {
       console.log(error);
@@ -288,6 +298,10 @@ export class MetadataComponent implements OnChanges {
     }
   }
 
+  onTemplataTypeChange(event: any) {
+    this.newTemplate = event.target.value;
+  }
+
   getOperators(type: string): string[] {
     let operators: string[] = [];
     if (type == 'attribute' || type == 'row' || type == 'full') {
@@ -312,14 +326,35 @@ export class MetadataComponent implements OnChanges {
     this.saveScenario();
   }
 
-  //TODO --> addTemplate()
+  addTemplate() {
+    try {
+      this.http
+        .get<string>(
+          'http://127.0.0.1:8080/scenario/get/templates/structure/' + this.newTemplate
+        )
+        .subscribe((val) => {
+          let result: [string, string, string[], string] = <[string, string, string[], string]>(
+            JSON.parse(val)
+          );
+          console.log("*** new template: " + result[2])
+          this.templates?.push(result)
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   addAmbiguous() {
-    if(!this.scenario?.ambiguousAttribute) this.scenario!.ambiguousAttribute = []
-    let label = (this.formAmbiguous.controls['ambiguousLabel'] as FormControl).value;
-    this.scenario!.ambiguousAttribute.push([this.newAttr1Ambiguous!, this.newAttr2Ambiguous!, label])
-    console.log("*** " + this.newAttr1Ambiguous!.name + " ," + this.newAttr2Ambiguous!.name + " ," + label);
-    //this.saveScenario();
+    if (!this.scenario?.ambiguousAttribute)
+      this.scenario!.ambiguousAttribute = [];
+    let label = (this.formAmbiguous.controls['ambiguousLabel'] as FormControl)
+      .value;
+    this.scenario!.ambiguousAttribute.push([
+      this.newAttr1Ambiguous!,
+      this.newAttr2Ambiguous!,
+      label,
+    ]);
+    this.saveScenario();
   }
 
   deleteCk(i: number) {
@@ -336,9 +371,19 @@ export class MetadataComponent implements OnChanges {
     this.saveScenario();
   }
 
-  //TODO --> deleteTemplate()
+  deleteTemplate(i: number) {
+    this.templates?.forEach((element, index) => {
+      if (index == i) this.templates?.splice(index, 1);
+    });
+    this.saveTemplates();
+  }
 
-  //TODO --> deleteAmbiguous()
+  deleteAmbiguous(i: number) {
+    this.scenario?.ambiguousAttribute.forEach((element, index) => {
+      if (index == i) this.scenario?.ambiguousAttribute.splice(index, 1);
+    });
+    this.saveScenario();
+  }
 
   saveScenario() {
     try {
@@ -355,6 +400,9 @@ export class MetadataComponent implements OnChanges {
           this.newFd = new Array();
           this.newFdDependency = undefined;
           this.form.controls['fdAttr'].reset();
+          this.newAttr1Ambiguous = undefined;
+          this.newAttr2Ambiguous = undefined;
+          this.formAmbiguous.controls['ambiguousLabel'].reset();
         });
     } catch (error) {
       console.log(error);
@@ -362,23 +410,35 @@ export class MetadataComponent implements OnChanges {
   }
 
   saveTemplates() {
-    // TODO
-    console.log('*** op: ' + this.templates![0][2][0].toString());
+    try {
+      const formData = new FormData();
+      formData.append('templates', JSON.stringify(this.templates));
+      this.http
+        .post<string>(
+          'http://127.0.0.1:8080/scenario/save/templates/' + this.scenarioName,
+          formData
+        )
+        .subscribe((val) => {
+          this.templates = <Array<[string, string, string[], string]>>(
+            JSON.parse(val)
+          );
+        });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   //*--- Prism methods ---*
 
   updateSqlText(index: number) {
-    if (this.highlightingContents) {
-      let test: string = '';
-      let contents = this.highlightingContents!.toArray();
-      if (contents[index] && this.templates) {
-        // Update code
-        contents[index].nativeElement.textContent = this.templates[index][0];
+    let test: string = '';
+    let contents = this.highlightingContents!.toArray();
+    if (contents[index]) {
+      // Update code
+      contents[index].nativeElement.textContent = this.templates![index][0];
 
-        // Syntax Highlight
-        Prism.highlightElement(contents[index].nativeElement);
-      }
+      // Syntax Highlight
+      Prism.highlightElement(contents[index].nativeElement);
     }
   }
 }
