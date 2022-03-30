@@ -2,6 +2,7 @@ import { Injectable, Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from "rxjs";
 import { formatNumber } from '@angular/common';
+import { Constants } from '../constants';
 
 @Injectable({
     providedIn: 'root'
@@ -9,7 +10,7 @@ import { formatNumber } from '@angular/common';
 
 export class HttpService {
 
-    rootUrl: string = "http://127.0.0.1:8080/api/";
+    rootUrl: string = Constants.API_ENDPOINT;
 
     constructor(public http: HttpClient) {}
 

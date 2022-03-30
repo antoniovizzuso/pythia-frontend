@@ -5,6 +5,7 @@ import { Result } from '../models/result.model';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-sql';
+import { Constants } from 'src/constants';
 
 @Component({
   selector: 'app-output-view',
@@ -57,7 +58,7 @@ export class OutputViewComponent implements OnChanges {
     try {
       this.http
         .get<string>(
-          'http://127.0.0.1:8080/scenario/get/templates/' + this.scenarioName
+          Constants.API_ENDPOINT + 'scenario/get/templates/' + this.scenarioName
         )
         .subscribe((val) => {
           this.templates = <Array<[string, string, string[], string]>>(
@@ -150,7 +151,7 @@ export class OutputViewComponent implements OnChanges {
       formData.append('limitResults', this.limitResults.toString());
       this.http
         .post<Result[]>(
-          'http://127.0.0.1:8080/scenario/predict/' + this.scenarioName,
+          Constants.API_ENDPOINT + 'scenario/predict/' + this.scenarioName,
           formData
         )
         .subscribe((val) => {

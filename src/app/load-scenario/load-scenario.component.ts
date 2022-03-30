@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Constants } from 'src/constants';
 
 @Component({
   selector: 'app-load-scenario',
@@ -15,7 +16,6 @@ export class LoadScenarioComponent implements OnChanges {
   attrsNumber: number = 0;
   selectedPage: number = 1;
   rowsPerPage: number = 10;
-  //showTable: boolean = false;
 
   constructor(public http: HttpClient) {}
 
@@ -23,12 +23,11 @@ export class LoadScenarioComponent implements OnChanges {
     try {
       this.http
         .get<string>(
-          'http://127.0.0.1:8080/scenario/dataframe/' + this.scenarioName
+          Constants.API_ENDPOINT + 'scenario/dataframe/' + this.scenarioName
         )
         .subscribe((val) => { 
           this.dataFrame = val; 
           this.getPages(1);
-          //this.showTable = true;
           this.attrsNumber = ( this.dataFrame.match(/\<\/th\>/g) || []).length - 11;
           this.attrsNumberEvent.emit(this.attrsNumber);
         });
@@ -57,7 +56,7 @@ export class LoadScenarioComponent implements OnChanges {
 
   delete() {
     try {
-      this.http.delete("http://127.0.0.1:8080/scenario/delete/" + this.scenarioName).subscribe(val => {
+      this.http.delete(Constants.API_ENDPOINT + "scenario/delete/" + this.scenarioName).subscribe(val => {
         this.deletedScenearioEvent.emit(this.scenarioName!);
       });
     } catch(error) {

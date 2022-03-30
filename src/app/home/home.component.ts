@@ -1,7 +1,8 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { JwtService } from '../jwt.service';
 import { HttpClient } from '@angular/common/http';
+import { Constants } from '../../constants';
 
 @Component({
   selector: 'app-home',
@@ -21,7 +22,8 @@ export class HomeComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private jwtService: JwtService,
-    public http: HttpClient
+    public http: HttpClient,
+    private changeDetector : ChangeDetectorRef
   ) {
   }
 
@@ -31,7 +33,7 @@ export class HomeComponent implements OnInit {
 
   loadListScenarios(): void {
     try {
-      this.http.get<Map<string, string>>("http://127.0.0.1:8080/scenario/get").subscribe(val => {
+      this.http.get<Map<string, string>>(Constants.API_ENDPOINT + "scenario/get").subscribe(val => {
         this.listScenarios = val;
       });
     } catch (error) {
@@ -58,6 +60,7 @@ export class HomeComponent implements OnInit {
     this.scenarioName = "";
     this.idScenarioSelected = 0;
     this.idScenarioSelected = 2;
+    this.changeDetector.detectChanges();
   }
 
   loadFile(file: File | null) {

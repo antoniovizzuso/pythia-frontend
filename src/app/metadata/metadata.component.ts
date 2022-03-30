@@ -17,6 +17,7 @@ import { Template } from '../models/template.model';
 import { Attribute } from '../models/attribute.model';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-sql';
+import { Constants } from 'src/constants';
 
 @Component({
   selector: 'app-metadata',
@@ -85,7 +86,7 @@ export class MetadataComponent implements OnChanges {
   loadMetadata() {
     try {
       this.http
-        .get<string>('http://127.0.0.1:8080/scenario/get/' + this.scenarioName)
+        .get<string>(Constants.API_ENDPOINT + 'scenario/get/' + this.scenarioName)
         .subscribe((val) => {
           this.scenario = <Scenario>JSON.parse(val);
         });
@@ -98,7 +99,7 @@ export class MetadataComponent implements OnChanges {
     try {
       this.http
         .get<string>(
-          'http://127.0.0.1:8080/scenario/get/templates/' + this.scenarioName
+          Constants.API_ENDPOINT + 'scenario/get/templates/' + this.scenarioName
         )
         .subscribe((val) => {
           this.templates = <Array<[string, string, string[], string]>>(
@@ -114,7 +115,7 @@ export class MetadataComponent implements OnChanges {
     try {
       this.http
         .get<string>(
-          'http://127.0.0.1:8080/scenario/find/pk/' + this.scenarioName
+          Constants.API_ENDPOINT + 'scenario/find/pk/' + this.scenarioName
         )
         .subscribe((val) => {
           this.scenario = <Scenario>JSON.parse(val);
@@ -128,7 +129,7 @@ export class MetadataComponent implements OnChanges {
     try {
       this.http
         .get<string>(
-          'http://127.0.0.1:8080/scenario/find/cks/' + this.scenarioName
+          Constants.API_ENDPOINT + 'scenario/find/cks/' + this.scenarioName
         )
         .subscribe((val) => {
           this.scenario = <Scenario>JSON.parse(val);
@@ -142,7 +143,7 @@ export class MetadataComponent implements OnChanges {
     try {
       this.http
         .get<string>(
-          'http://127.0.0.1:8080/scenario/find/fds/' + this.scenarioName
+          Constants.API_ENDPOINT + 'scenario/find/fds/' + this.scenarioName
         )
         .subscribe((val) => {
           this.scenario = <Scenario>JSON.parse(val);
@@ -156,7 +157,7 @@ export class MetadataComponent implements OnChanges {
     try {
       this.http
         .get<string>(
-          'http://127.0.0.1:8080/scenario/find/ambiguous/' + this.scenarioName
+          Constants.API_ENDPOINT + 'scenario/find/ambiguous/' + this.scenarioName
         )
         .subscribe((val) => {
           this.scenario = <Scenario>JSON.parse(val);
@@ -330,7 +331,7 @@ export class MetadataComponent implements OnChanges {
     try {
       this.http
         .get<string>(
-          'http://127.0.0.1:8080/scenario/get/templates/structure/' + this.newTemplate
+          Constants.API_ENDPOINT + 'scenario/get/templates/structure/' + this.newTemplate
         )
         .subscribe((val) => {
           let result: [string, string, string[], string] = <[string, string, string[], string]>(
@@ -391,7 +392,7 @@ export class MetadataComponent implements OnChanges {
       formData.append('scenario', JSON.stringify(this.scenario));
       this.http
         .post<string>(
-          'http://127.0.0.1:8080/scenario/save/' + this.scenarioName,
+          Constants.API_ENDPOINT + 'scenario/save/' + this.scenarioName,
           formData
         )
         .subscribe((val) => {
@@ -415,7 +416,7 @@ export class MetadataComponent implements OnChanges {
       formData.append('templates', JSON.stringify(this.templates));
       this.http
         .post<string>(
-          'http://127.0.0.1:8080/scenario/save/templates/' + this.scenarioName,
+          Constants.API_ENDPOINT + 'scenario/save/templates/' + this.scenarioName,
           formData
         )
         .subscribe((val) => {

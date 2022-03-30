@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { HttpService } from '../httpservice.service';
 import { Observable } from 'rxjs';
+import { Constants } from 'src/constants';
 
 @Component({
   selector: 'app-new-scenario',
@@ -42,7 +43,7 @@ export class NewScenarioComponent implements OnInit {
     //this.showTable = false;
     try {
       this.http
-        .get<boolean>('http://127.0.0.1:8080/scenario/check/' + this.file?.name)
+        .get<boolean>(Constants.API_ENDPOINT + 'scenario/check/' + this.file?.name)
         .subscribe((val) => {
           if (!val) {
             this.uploadFile();
@@ -60,7 +61,7 @@ export class NewScenarioComponent implements OnInit {
       const formData = new FormData();
       formData.append('file', this.file as Blob, this.file?.name);
       this.http
-        .post<string>('http://127.0.0.1:8080/scenario/create', formData)
+        .post<string>(Constants.API_ENDPOINT + 'scenario/create', formData)
         .subscribe((val) => {
           if (val) {
             this.scenarioName = val;
@@ -77,7 +78,7 @@ export class NewScenarioComponent implements OnInit {
     try {
       this.http
         .get<string>(
-          'http://127.0.0.1:8080/scenario/dataframe/' + this.scenarioName
+          Constants.API_ENDPOINT + 'scenario/dataframe/' + this.scenarioName
         )
         .subscribe((val) => {
           this.dataFrame = val;
@@ -113,7 +114,7 @@ export class NewScenarioComponent implements OnInit {
   delete() {
     try {
       this.http
-        .delete('http://127.0.0.1:8080/scenario/delete/' + this.scenarioName)
+        .delete(Constants.API_ENDPOINT + 'scenario/delete/' + this.scenarioName)
         .subscribe((val) => {
           this.deletedScenearioEvent.emit(this.scenarioName!);
         });
