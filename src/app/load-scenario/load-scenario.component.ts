@@ -12,22 +12,36 @@ export class LoadScenarioComponent implements OnChanges {
   @Output() deletedScenearioEvent = new EventEmitter<string>();
   @Output() attrsNumberEvent = new EventEmitter<number>();
   dataFrame: string | null = null;
-  pages: string[] = new Array();
   attrsNumber: number = 0;
-  selectedPage: number = 1;
+
+  //pagination
+  rowsCount!: number;
+  rowsOffset: number = 0;
+  rowsLimit: number = 10;
   rowsPerPage: number = 10;
+  selectedPage: number = 1;
+  pagesLimit: number = 8;
+  groupPage: number = 0;
+  pages: string[] = new Array();
+
+
 
   constructor(public http: HttpClient) {}
 
   ngOnChanges(): void {
+    this.loadScenario();
+  }
+
+  loadScenario() {
     try {
+      console.log("*** " + this.rowsOffset + ", " + this.rowsLimit);
       this.http
         .get<string>(
-          Constants.API_ENDPOINT + 'scenario/dataframe/' + this.scenarioName
+          Constants.API_ENDPOINT + 'scenario/dataframe/' + this.scenarioName + "/" + this.rowsOffset + "/" + this.rowsLimit
         )
         .subscribe((val) => { 
           this.dataFrame = val; 
-          this.getPages(1);
+          this.getDatasetCount();
           this.attrsNumber = ( this.dataFrame.match(/\<\/th\>/g) || []).length - 11;
           this.attrsNumberEvent.emit(this.attrsNumber);
         });
@@ -36,22 +50,51 @@ export class LoadScenarioComponent implements OnChanges {
     }
   }
 
-  getPages(rowsCount: number) {
-    let visiblePages = 8;
-    let total = Math.round(rowsCount / this.rowsPerPage);
-    this.pages.push((1).toString());
-
-    if (this.selectedPage > visiblePages / 2) {
-      this.pages.push('...');
+  getDatasetCount() {
+    try {
+      this.http
+        .get<number>(
+          Constants.API_ENDPOINT + 'scenario/dataframe/count/' + this.scenarioName
+        )
+        .subscribe((val) => { 
+          this.rowsCount = val; 
+          this.getPages();
+        });
+    } catch (error) {
+      console.log(error);
     }
+  }
 
-    if (this.selectedPage < total - visiblePages / 2) {
-      this.pages.push('...');
+  getPages() {
+    this.pages = new Array();
+    let total = Math.round(this.rowsCount / this.rowsPerPage);
+    for (let i = 0; i < total; i++) {
+      if (i < (this.pagesLimit + this.groupPage) && i >= this.groupPage) {
+        this.pages.push((i+1).toString());
+      }
     }
+  }
 
-    if (rowsCount > this.rowsPerPage) {
-      this.pages.push(total.toString());
-    }
+  onClickPage(value: number) {
+    this.selectedPage = value - 1;
+    this.rowsOffset = this.selectedPage * this.rowsPerPage;
+    this.rowsLimit = this.rowsOffset + this.rowsPerPage;
+    this.loadScenario();
+  }
+
+  onClickPrevGroupPage() {
+    this.groupPage -= this.pagesLimit;
+    this.onClickPage(this.groupPage + 1);
+  }
+
+  onClickNextGroupPage() {
+    this.groupPage += this.pagesLimit;
+    this.onClickPage(this.groupPage + 1);
+  }
+
+  isHiddenNextGroupPage(): boolean {
+    let total = Math.round(this.rowsCount / this.rowsPerPage);
+    return total < (this.pagesLimit + this.groupPage);
   }
 
   delete() {

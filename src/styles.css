@@ -184,6 +184,15 @@ p {
   overflow-x: auto;
 }
 
+.page-link {
+  color: #e53c37;
+}
+
+.page-link.active {
+  background-color: #0a58ca;
+  color: #fff;
+}
+
 #editing,
 #highlighting {
   /* Both elements need the same text and space styling so they are directly on top of each other */
