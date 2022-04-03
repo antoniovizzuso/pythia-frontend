@@ -30,6 +30,9 @@ export class OutputViewComponent implements OnChanges {
 
   closeResult = '';
 
+  //spinner
+  loadGenerate: boolean = false;
+
   private highlightingContents!: QueryList<ElementRef>;
 
   constructor(public http: HttpClient, public modalService: NgbModal, private changeDetector : ChangeDetectorRef) {}
@@ -145,6 +148,7 @@ export class OutputViewComponent implements OnChanges {
     this.selectedResult = null;
     this.selectedAQuery = 0;
     try {
+      this.loadGenerate = true;
       const formData = new FormData();
       formData.append('strategy', this.selectedStrategy);
       formData.append('structure', this.selectedStructure);
@@ -156,6 +160,7 @@ export class OutputViewComponent implements OnChanges {
         )
         .subscribe((val) => {
           this.results = val;
+          this.loadGenerate = false;
         });
     } catch (error) {
       console.log(error);

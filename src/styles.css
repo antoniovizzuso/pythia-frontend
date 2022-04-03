@@ -1,5 +1,10 @@
 @import "prismjs/themes/prism.css";
 
+.fast-spin {
+  -webkit-animation: fa-spin 1s infinite linear;
+  animation: fa-spin 1s infinite linear;
+}
+
 .container {
   max-width: unset;
 }
@@ -31,6 +36,7 @@ p {
 .btn-outline-primary:hover,
 .btn-primary:not(:disabled):not(.disabled).active,
 .btn-primary:not(:disabled):not(.disabled):active,
+.btn-primary.disabled, .btn-primary:disabled,
 .show > .btn-primary.dropdown-toggle,
 .btn-outline-primary:not(:disabled):not(.disabled).active,
 .btn-outline-primary:not(:disabled):not(.disabled):active,
@@ -54,7 +60,8 @@ p {
   box-shadow: 0 0 0 0.2rem rgb(238 127 123 / 50%);
 }
 
-.btn-outline-primary {
+.btn-outline-primary,
+.btn-outline-primary.disabled, .btn-outline-primary:disabled {
   color: #eb6864;
   border-color: #eb6864;
 }

@@ -35,7 +35,7 @@ export class JwtInterceptor implements HttpInterceptor {
     }
 
     this.totalRequests++;
-    this.spinnerLoaderService.setLoading(true);
+    //this.spinnerLoaderService.setLoading(true);
 
     return next.handle(request).pipe(
       tap(null, error => {
@@ -47,7 +47,7 @@ export class JwtInterceptor implements HttpInterceptor {
       finalize(() => {
         this.totalRequests--;
         if (this.totalRequests === 0) {
-          this.spinnerLoaderService.setLoading(false);
+          //this.spinnerLoaderService.setLoading(false);
         }
       })
     );

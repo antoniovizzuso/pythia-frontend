@@ -38,6 +38,12 @@ export class MetadataComponent implements OnChanges {
   newAttr1Ambiguous: Attribute | undefined;
   newAttr2Ambiguous: Attribute | undefined;
 
+  //Spinner properties
+  loadFindPk: boolean = false;
+  loadFindCks: boolean = false;
+  loadFindFds: boolean = false;
+  loadFindAmbiguous: boolean = false;
+
   @ViewChildren('highlightingContent')
   highlightingContents!: QueryList<ElementRef>;
 
@@ -113,12 +119,14 @@ export class MetadataComponent implements OnChanges {
 
   findPks() {
     try {
+      this.loadFindPk = true;
       this.http
         .get<string>(
           Constants.API_ENDPOINT + 'scenario/find/pk/' + this.scenarioName
         )
         .subscribe((val) => {
           this.scenario = <Scenario>JSON.parse(val);
+          this.loadFindPk = false;
         });
     } catch (error) {
       console.log(error);
@@ -127,12 +135,14 @@ export class MetadataComponent implements OnChanges {
 
   findCks() {
     try {
+      this.loadFindCks = true;
       this.http
         .get<string>(
           Constants.API_ENDPOINT + 'scenario/find/cks/' + this.scenarioName
         )
         .subscribe((val) => {
           this.scenario = <Scenario>JSON.parse(val);
+          this.loadFindCks = false;
         });
     } catch (error) {
       console.log(error);
@@ -141,12 +151,14 @@ export class MetadataComponent implements OnChanges {
 
   findFds() {
     try {
+      this.loadFindFds = true;
       this.http
         .get<string>(
           Constants.API_ENDPOINT + 'scenario/find/fds/' + this.scenarioName
         )
         .subscribe((val) => {
           this.scenario = <Scenario>JSON.parse(val);
+          this.loadFindFds = false;
         });
     } catch (error) {
       console.log(error);
@@ -155,12 +167,14 @@ export class MetadataComponent implements OnChanges {
 
   findAmbiguous() {
     try {
+      this.loadFindAmbiguous = true;
       this.http
         .get<string>(
           Constants.API_ENDPOINT + 'scenario/find/ambiguous/' + this.scenarioName
         )
         .subscribe((val) => {
           this.scenario = <Scenario>JSON.parse(val);
+          this.loadFindAmbiguous = false;
         });
     } catch (error) {
       console.log(error);

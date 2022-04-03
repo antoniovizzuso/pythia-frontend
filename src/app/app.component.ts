@@ -11,7 +11,7 @@ import { SpinnerLoaderService } from './spinner-loader.service';
 })
 export class AppComponent {
   title = 'pythiaUI';
-  username: Observable<string>;
+  username!: Observable<string>;
 
   constructor(public jwtService: JwtService, public spinnerLoaderService: SpinnerLoaderService) { }
 

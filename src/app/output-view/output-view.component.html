@@ -9,6 +9,7 @@
           class="form-select"
           (change)="onSelectStructure($event)"
           aria-label="Default select example"
+          [disabled]="loadGenerate"
         >
           <option
             *ngFor="let t of templates"
@@ -26,6 +27,7 @@
           type="number"
           placeholder="number of results"
           [(ngModel)]="limitResults"
+          [disabled]="loadGenerate"
         />
       </div>
     </div>
@@ -36,6 +38,7 @@
           class="form-select"
           (change)="onSelectStrategy($event)"
           aria-label="Default select example"
+          [disabled]="loadGenerate"
         >
           <option
             *ngFor="let s of strategies | keyvalue"
@@ -52,8 +55,10 @@
           type="button"
           (click)="generate()"
           class="btn btn-primary w-100"
+          [disabled]="loadGenerate"
         >
           Generate
+          <i *ngIf="loadGenerate" class="fa fa-spinner-third fa-spin fast-spin px-1"></i>
         </button>
       </div>
     </div>

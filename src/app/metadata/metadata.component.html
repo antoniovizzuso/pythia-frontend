@@ -21,8 +21,10 @@
                 class="btn btn-outline-primary btn-sm btn-cust"
                 type="button"
                 (click)="findPks()"
+                [disabled]="loadFindPk"
               >
                 Find
+                <i *ngIf="loadFindPk" class="fa fa-spinner-third fa-spin fast-spin px-1"></i>
               </button>
             </div>
           </div>
@@ -77,8 +79,10 @@
                 class="btn btn-outline-primary btn-sm btn-cust"
                 type="button"
                 (click)="findCks()"
+                [disabled]="loadFindCks"
               >
                 Find
+                <i *ngIf="loadFindCks" class="fa fa-spinner-third fa-spin fast-spin px-1"></i>
               </button>
             </div>
           </div>
@@ -155,8 +159,10 @@
                 class="btn btn-outline-primary btn-sm btn-cust"
                 type="button"
                 (click)="findFds()"
+                [disabled]="loadFindFds"
               >
                 Find
+                <i *ngIf="loadFindFds" class="fa fa-spinner-third fa-spin fast-spin px-1"></i>
               </button>
             </div>
           </div>
@@ -426,8 +432,10 @@
             class="col-12 btn btn-outline-primary btn-sm btn-cust mb-2"
             type="button"
             (click)="findAmbiguous()"
+            [disabled]="loadFindAmbiguous"
           >
             Find
+            <i *ngIf="loadFindAmbiguous" class="fa fa-spinner-third fa-spin fast-spin px-1"></i>
           </button>
           <!-- <button class="col-12 btn btn-primary btn-sm btn-cust" type="button">
           Submit & Train
