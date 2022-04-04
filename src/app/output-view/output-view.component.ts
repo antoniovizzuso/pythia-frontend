@@ -1,4 +1,13 @@
-import { Component, ElementRef, Input, OnInit, QueryList, ViewChildren, OnChanges, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  QueryList,
+  ViewChildren,
+  OnChanges,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Template } from '../models/template.model';
 import { Result } from '../models/result.model';
@@ -6,6 +15,7 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-sql';
 import { Constants } from 'src/constants';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-output-view',
@@ -30,12 +40,19 @@ export class OutputViewComponent implements OnChanges {
 
   closeResult = '';
 
+  downloadJsonHref!: SafeUrl;
+
   //spinner
   loadGenerate: boolean = false;
 
   private highlightingContents!: QueryList<ElementRef>;
 
-  constructor(public http: HttpClient, public modalService: NgbModal, private changeDetector : ChangeDetectorRef) {}
+  constructor(
+    public http: HttpClient,
+    public modalService: NgbModal,
+    private changeDetector: ChangeDetectorRef,
+    private sanitizer: DomSanitizer
+  ) {}
 
   ngOnChanges(): void {
     if (this.scenarioName) {
@@ -74,20 +91,22 @@ export class OutputViewComponent implements OnChanges {
     }
   }
 
-  @ViewChildren('highlightingContent') set content(content: QueryList<ElementRef>) {
-    if(content) { 
-         this.highlightingContents = content;
-         this.highlightingContents.toArray().forEach((element) => {
-          Prism.highlightElement(element.nativeElement);
-        });
+  @ViewChildren('highlightingContent') set content(
+    content: QueryList<ElementRef>
+  ) {
+    if (content) {
+      this.highlightingContents = content;
+      this.highlightingContents.toArray().forEach((element) => {
+        Prism.highlightElement(element.nativeElement);
+      });
     }
- }
+  }
 
   get selectedTemplate(): [string, string, string[], string] | undefined {
     let result: [string, string, string[], string] | undefined = undefined;
-    if(this.selectedStructure) {
-      this.templates!.forEach(t => {
-        if(t[3] == this.selectedStructure) {
+    if (this.selectedStructure) {
+      this.templates!.forEach((t) => {
+        if (t[3] == this.selectedStructure) {
           result = t;
         }
       });
@@ -130,7 +149,7 @@ export class OutputViewComponent implements OnChanges {
           this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
         }
       );
-      this.changeDetector.detectChanges();
+    this.changeDetector.detectChanges();
   }
 
   private getDismissReason(reason: any): string {
@@ -161,6 +180,7 @@ export class OutputViewComponent implements OnChanges {
         .subscribe((val) => {
           this.results = val;
           this.loadGenerate = false;
+          this.exportFile();
         });
     } catch (error) {
       console.log(error);
@@ -178,13 +198,25 @@ export class OutputViewComponent implements OnChanges {
     return operators;
   }
 
+  private exportFile() {
+    let exportResults: string[] = [];
+    this.results.forEach(element => {
+      exportResults.push(element[6])
+    });
+    var theJSON = JSON.stringify(exportResults, null, 2);
+    var uri = this.sanitizer.bypassSecurityTrustUrl(
+      'data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON)
+    );
+    this.downloadJsonHref = uri;
+  }
+
   //*--- Prism methods ---*
 
   updateSqlText(index: number) {
     let test: string = '';
     let contents = this.highlightingContents!.toArray();
     if (contents[index]) {
-      console.log("*** Highlighted!")
+      console.log('*** Highlighted!');
 
       // Update code
       contents[index].nativeElement.textContent = this.templates![index][0];
@@ -193,5 +225,4 @@ export class OutputViewComponent implements OnChanges {
       Prism.highlightElement(contents[index].nativeElement);
     }
   }
-
 }

@@ -4,5 +4,6 @@ export type Result = [
     [string, number, number, number, number, number, number][],
     [string, string, string[], string],
     any,
-    string[]
+    string[],
+    string
   ]

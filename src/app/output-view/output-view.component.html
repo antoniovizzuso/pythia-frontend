@@ -49,8 +49,7 @@
           </option>
         </select>
       </div>
-      <div class="col-1"></div>
-      <div class="col input-group">
+      <div class="col-md-2 ml-md-auto">
         <button
           type="button"
           (click)="generate()"
@@ -58,8 +57,22 @@
           [disabled]="loadGenerate"
         >
           Generate
-          <i *ngIf="loadGenerate" class="fa fa-spinner-third fa-spin fast-spin px-1"></i>
+          <i
+            *ngIf="loadGenerate"
+            class="fa fa-spinner-third fa-spin fast-spin px-1"
+          ></i>
         </button>
+      </div>
+      <div class="col-md-2">
+        <a
+          type="button"
+          class="btn btn-outline-secondary w-100"
+          [href]="downloadJsonHref"
+          download="download.json"
+          [class.disabled]="results.length > 0 ? null : true"
+        >
+          Export
+        </a>
       </div>
     </div>
   </div>
@@ -211,11 +224,7 @@
     >
       Close
     </button>
-    <button
-      type="button"
-      class="btn btn-primary"
-      data-bs-dismiss="modal"
-    >
+    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
       Edit
     </button>
   </div>
