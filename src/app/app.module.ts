@@ -17,6 +17,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { JwtInterceptor } from './_utils/jwt.interceptor';
 import { MetadataComponent } from './metadata/metadata.component';
 import { LoadScenarioComponent } from './load-scenario/load-scenario.component';
+import { Constants } from '../constants';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -44,8 +45,8 @@ export function tokenGetter() {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        allowedDomains: ['localhost:8080'],
-        disallowedRoutes: ['http://localhost:8080/auth/login'],
+        allowedDomains: [Constants.API_ENDPOINT],
+        disallowedRoutes: [Constants.API_ENDPOINT + 'auth/login'],
       },
     }),
   ],
