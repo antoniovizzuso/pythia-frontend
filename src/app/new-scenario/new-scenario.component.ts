@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { HttpService } from '../httpservice.service';
 import { Observable } from 'rxjs';
 import { Constants } from 'src/constants';
@@ -9,7 +9,7 @@ import { Constants } from 'src/constants';
   templateUrl: './new-scenario.component.html',
   styleUrls: ['./new-scenario.component.css'],
 })
-export class NewScenarioComponent implements OnInit {
+export class NewScenarioComponent implements OnChanges {
   @Output() fileUploadEvent = new EventEmitter<File | null>();
   @Output() scenarioSetEvent = new EventEmitter<string>();
   @Output() deletedScenearioEvent = new EventEmitter<string>();
@@ -33,8 +33,7 @@ export class NewScenarioComponent implements OnInit {
 
   constructor(public http: HttpClient) {}
 
-  ngOnInit(): void {
-    console.log("*** new scenario init");
+  ngOnChanges(): void {
     this.file = null;
     this.dataFrame = null;
   }
@@ -47,7 +46,6 @@ export class NewScenarioComponent implements OnInit {
   submitFile() {
     this.errorMessage = '';
     this.dataFrame = null;
-    //this.showTable = false;
     try {
       this.http
         .get<boolean>(Constants.API_ENDPOINT + 'scenario/check/' + this.file?.name)
@@ -152,6 +150,7 @@ export class NewScenarioComponent implements OnInit {
         .delete(Constants.API_ENDPOINT + 'scenario/delete/' + this.scenarioName)
         .subscribe((val) => {
           this.deletedScenearioEvent.emit(this.scenarioName!);
+          this.attrsNumber = 0;
         });
     } catch (error) {
       console.log(error);

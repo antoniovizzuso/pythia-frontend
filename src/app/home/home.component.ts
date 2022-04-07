@@ -49,8 +49,8 @@ export class HomeComponent implements OnInit {
     this.errorMessage = "";
     if (this.scenarioSelected) {
       this.scenarioName = this.scenarioSelected!;
-      this.scenarioSelected = null;
       this.idScenarioSelected = 1;
+      this.changeDetector.detectChanges();
     } else {
       this.errorMessage = "select a scenario";
     }
@@ -58,7 +58,6 @@ export class HomeComponent implements OnInit {
 
   newScenario(): void {
     this.scenarioName = "";
-    this.idScenarioSelected = 0;
     this.idScenarioSelected = 2;
     this.changeDetector.detectChanges();
   }
