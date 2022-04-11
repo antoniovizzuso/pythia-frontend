@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angu
 import { HttpService } from '../httpservice.service';
 import { Observable } from 'rxjs';
 import { Constants } from 'src/constants';
+import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-new-scenario',
@@ -20,6 +21,8 @@ export class NewScenarioComponent implements OnChanges {
   attrsNumber: number = 0;
   errorMessage: string = '';
 
+  closeResult = '';
+
   //pagination
   rowsCount!: number;
   rowsOffset: number = 0;
@@ -31,7 +34,7 @@ export class NewScenarioComponent implements OnChanges {
   pages: string[] = new Array();
 
 
-  constructor(public http: HttpClient) {}
+  constructor(public http: HttpClient, public modalService: NgbModal) {}
 
   ngOnChanges(): void {
     this.file = null;
@@ -144,16 +147,40 @@ export class NewScenarioComponent implements OnChanges {
     return total < (this.pagesLimit + this.groupPage);
   }
 
+  onClickDelete(content: any) {
+    this.modalService
+      .open(content, {
+        ariaLabelledBy: 'modal-basic-title',
+        centered: true,
+      })
+      .result.then(
+        (result) => {
+          this.closeResult = `Closed with: ${result}`;
+        },
+        (reason) => {
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        }
+      );
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
+
   delete() {
     try {
-      this.http
-        .delete(Constants.API_ENDPOINT + 'scenario/delete/' + this.scenarioName)
-        .subscribe((val) => {
-          this.deletedScenearioEvent.emit(this.scenarioName!);
-          this.attrsNumber = 0;
-        });
-    } catch (error) {
-      console.log(error);
+      this.http.delete(Constants.API_ENDPOINT + "scenario/delete/" + this.scenarioName).subscribe(val => {
+        this.deletedScenearioEvent.emit(this.scenarioName!);
+        this.modalService.dismissAll()
+      });
+    } catch(error) {
+      console.log(error)
     }
   }
 }

@@ -33,8 +33,9 @@
               <div class="d-grid gap-2 col-2 ms-auto mt-2">
                 <button
                   class="btn btn-primary btn-sm btn-cust"
-                  (click)="delete($event)"
+                  data-toggle="modal"
                   type="button"
+                  (click)="onClickDelete(content)"
                 >
                   Delete scenario
                 </button>
@@ -44,18 +45,38 @@
               (only first 10 rows are shown)
             </h6>
           </div>
-          <div [innerHTML]="dataFrame" class="grid-container">
-          </div>
+          <div [innerHTML]="dataFrame" class="grid-container"></div>
           <nav *ngIf="pages" aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
-              <li class="page-item" [ngClass]="{'disabled': groupPage == 0}">
-                <a class="page-link" href="#" tabindex="-1" (click)="onClickPrevGroupPage()">Previous</a>
+              <li class="page-item" [ngClass]="{ disabled: groupPage == 0 }">
+                <a
+                  class="page-link"
+                  href="#"
+                  tabindex="-1"
+                  (click)="onClickPrevGroupPage()"
+                  >Previous</a
+                >
               </li>
               <li *ngFor="let i of pages" class="page-item">
-                <a class="page-link" href="#" (click)="onClickPage(i)" [ngClass]="{'active': selectedPage == (i+1)}">{{ i }}</a>
+                <a
+                  class="page-link"
+                  href="#"
+                  (click)="onClickPage(i)"
+                  [ngClass]="{ active: selectedPage == i + 1 }"
+                  >{{ i }}</a
+                >
               </li>
-              <li class="page-item" [ngClass]="{'disabled': isHiddenNextGroupPage()}">
-                <a class="page-link" href="#" tabindex="-1" (click)="onClickNextGroupPage()">Next</a>
+              <li
+                class="page-item"
+                [ngClass]="{ disabled: isHiddenNextGroupPage() }"
+              >
+                <a
+                  class="page-link"
+                  href="#"
+                  tabindex="-1"
+                  (click)="onClickNextGroupPage()"
+                  >Next</a
+                >
               </li>
             </ul>
           </nav>
@@ -72,3 +93,34 @@
     (metaEvent)="loadMeta($event)"
   ></app-metadata>
 </div>
+
+<!-- Delete scenario Modal -->
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Delete scenario</h5>
+    <button
+      type="button"
+      class="btn-close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <p>Your scenario will be deleted forever.</p>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="modal.close('Save click')"
+    >
+      Cancel
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-cust"
+      (click)="delete($event)"
+    >
+      Delete
+    </button>
+  </div>
+</ng-template>

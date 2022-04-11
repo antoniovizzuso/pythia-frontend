@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Constants } from 'src/constants';
 
 @Component({
@@ -24,9 +25,9 @@ export class LoadScenarioComponent implements OnChanges {
   groupPage: number = 0;
   pages: string[] = new Array();
 
+  closeResult = '';
 
-
-  constructor(public http: HttpClient) {}
+  constructor(public http: HttpClient, public modalService: NgbModal) {}
 
   ngOnChanges(): void {
     this.loadScenario();
@@ -97,10 +98,37 @@ export class LoadScenarioComponent implements OnChanges {
     return total < (this.pagesLimit + this.groupPage);
   }
 
+  onClickDelete(content: any) {
+    this.modalService
+      .open(content, {
+        ariaLabelledBy: 'modal-basic-title',
+        centered: true,
+      })
+      .result.then(
+        (result) => {
+          this.closeResult = `Closed with: ${result}`;
+        },
+        (reason) => {
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        }
+      );
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
+
   delete() {
     try {
       this.http.delete(Constants.API_ENDPOINT + "scenario/delete/" + this.scenarioName).subscribe(val => {
         this.deletedScenearioEvent.emit(this.scenarioName!);
+        this.modalService.dismissAll()
       });
     } catch(error) {
       console.log(error)
