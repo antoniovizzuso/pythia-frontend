@@ -11,7 +11,13 @@ import {
   ElementRef,
   ViewChild,
 } from '@angular/core';
-import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  FormArray,
+  FormControl,
+  Validators,
+} from '@angular/forms';
 import { Scenario } from '../models/scenario.model';
 import { Template } from '../models/template.model';
 import { Attribute } from '../models/attribute.model';
@@ -28,8 +34,16 @@ export class MetadataComponent implements OnChanges {
   @Input() scenarioName: string | null = null;
   scenario: Scenario | undefined;
   templates: Array<[string, string, string[], string]> | undefined;
-  form: FormGroup;
+
+  formPk: FormGroup;
+  formCk: FormGroup;
+  submittedCk = false;
+  formFds: FormGroup;
+  submittedFd = false;
+  formTemplate: FormGroup;
+  submittedTemplate = false;
   formAmbiguous: FormGroup;
+  submittedAmbiguous = false;
 
   newCk: Attribute[] = new Array();
   newFd: Attribute[] = new Array();
@@ -37,6 +51,8 @@ export class MetadataComponent implements OnChanges {
   newTemplate: string | undefined;
   newAttr1Ambiguous: Attribute | undefined;
   newAttr2Ambiguous: Attribute | undefined;
+
+  expandedTemplate: number = -1;
 
   //Spinner properties
   loadFindPk: boolean = false;
@@ -60,17 +76,23 @@ export class MetadataComponent implements OnChanges {
   }
 
   constructor(fb: FormBuilder, public http: HttpClient) {
-    this.form = fb.group({
+    this.formPk = fb.group({
       selectedPk: new FormArray([]),
+    });
+    this.formCk = fb.group({
       selectedCompositeKeys: new FormArray([]),
+    });
+    this.formFds = fb.group({
       selectedFds: new FormArray([]),
-      fdAttr: new FormControl(''),
-      queryTemplate: new FormControl(''),
-      typeTemplate: new FormControl(''),
+      fdAttr: new FormControl('', Validators.required),
+    });
+    this.formTemplate = fb.group({
+      queryTemplate: new FormControl('', Validators.required),
+      typeTemplate: new FormControl('', Validators.required),
       operatorsTemplate: new FormArray([]),
     });
     this.formAmbiguous = fb.group({
-      ambiguousLabel: new FormControl(''),
+      ambiguousLabel: new FormControl('', Validators.required),
     });
   }
 
@@ -92,7 +114,9 @@ export class MetadataComponent implements OnChanges {
   loadMetadata() {
     try {
       this.http
-        .get<string>(Constants.API_ENDPOINT + 'scenario/get/' + this.scenarioName)
+        .get<string>(
+          Constants.API_ENDPOINT + 'scenario/get/' + this.scenarioName
+        )
         .subscribe((val) => {
           this.scenario = <Scenario>JSON.parse(val);
         });
@@ -170,7 +194,9 @@ export class MetadataComponent implements OnChanges {
       this.loadFindAmbiguous = true;
       this.http
         .get<string>(
-          Constants.API_ENDPOINT + 'scenario/find/ambiguous/' + this.scenarioName
+          Constants.API_ENDPOINT +
+            'scenario/find/ambiguous/' +
+            this.scenarioName
         )
         .subscribe((val) => {
           this.scenario = <Scenario>JSON.parse(val);
@@ -234,7 +260,7 @@ export class MetadataComponent implements OnChanges {
   onPkChange(event: any) {
     event.preventDefault();
     if (this.scenario) {
-      const selectedPk = this.form.controls['selectedPk'] as FormArray;
+      const selectedPk = this.formPk.controls['selectedPk'] as FormArray;
       let pk: Attribute | undefined = this.scenario.attributes.find(
         (x) => x.normalizedName == event.target.value
       );
@@ -247,7 +273,7 @@ export class MetadataComponent implements OnChanges {
 
   onCkChange(event: any) {
     if (this.scenario) {
-      const compositeKeys = this.form.controls[
+      const compositeKeys = this.formCk.controls[
         'selectedCompositeKeys'
       ] as FormArray;
       let ck: Attribute | undefined = this.scenario.attributes.find(
@@ -271,7 +297,7 @@ export class MetadataComponent implements OnChanges {
 
   onFdChange(event: any) {
     if (this.scenario) {
-      const fds = this.form.controls['selectedFds'] as FormArray;
+      const fds = this.formFds.controls['selectedFds'] as FormArray;
       let fd: Attribute | undefined = this.scenario.attributes.find(
         (x) => x.normalizedName == event.target.value
       );
@@ -329,47 +355,86 @@ export class MetadataComponent implements OnChanges {
   }
 
   addCk() {
-    this.scenario?.compositeKeys.push(this.newCk);
-    this.saveScenario();
+    this.submittedCk = true;
+
+    if (this.isCkFormValid()) {
+      this.scenario?.compositeKeys.push(this.newCk);
+      this.saveScenario();
+    }
+  }
+
+  isCkFormValid(): boolean {
+    return this.newCk.length > 1;
   }
 
   addFd() {
+    this.submittedFd = true;
     const words: string[] = [];
-    words.push((this.form.controls['fdAttr'] as FormControl).value.split(','));
-    this.newFd.push(this.newFdDependency!);
-    this.scenario?.fds.push([this.newFd, words]);
-    this.saveScenario();
+    if (this.isFdFormValid()) {
+      words.push(
+        (this.formFds.controls['fdAttr'] as FormControl).value.split(',')
+      );
+      this.newFd.push(this.newFdDependency!);
+      this.scenario?.fds.push([this.newFd, words]);
+      this.saveScenario();
+    }
+  }
+
+  isFdFormValid(): boolean {
+    return (
+      this.newFd.length > 0 &&
+      !this.formFds?.invalid &&
+      this.newFdDependency != undefined
+    );
   }
 
   addTemplate() {
-    try {
-      this.http
-        .get<string>(
-          Constants.API_ENDPOINT + 'scenario/get/templates/structure/' + this.newTemplate
-        )
-        .subscribe((val) => {
-          let result: [string, string, string[], string] = <[string, string, string[], string]>(
-            JSON.parse(val)
-          );
-          console.log("*** new template: " + result[2])
-          this.templates?.push(result)
-        });
-    } catch (error) {
-      console.log(error);
+    this.submittedTemplate = true;
+    if (this.newTemplate) {
+      try {
+        this.http
+          .get<string>(
+            Constants.API_ENDPOINT +
+              'scenario/get/templates/structure/' +
+              this.newTemplate
+          )
+          .subscribe((val) => {
+            let result: [string, string, string[], string] = <
+              [string, string, string[], string]
+            >JSON.parse(val);
+            console.log('*** new template: ' + result[2]);
+            this.templates?.push(result);
+            this.expandedTemplate = this.templates?.length! - 1;
+            this.submittedTemplate = false;
+          });
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 
   addAmbiguous() {
-    if (!this.scenario?.ambiguousAttribute)
-      this.scenario!.ambiguousAttribute = [];
-    let label = (this.formAmbiguous.controls['ambiguousLabel'] as FormControl)
-      .value;
-    this.scenario!.ambiguousAttribute.push([
-      this.newAttr1Ambiguous!,
-      this.newAttr2Ambiguous!,
-      label,
-    ]);
-    this.saveScenario();
+    this.submittedAmbiguous = true;
+    if (this.isAmbiguousFormValid()) {
+      if (!this.scenario?.ambiguousAttribute)
+        this.scenario!.ambiguousAttribute = [];
+      let label = (this.formAmbiguous.controls['ambiguousLabel'] as FormControl)
+        .value;
+      this.scenario!.ambiguousAttribute.push([
+        this.newAttr1Ambiguous!,
+        this.newAttr2Ambiguous!,
+        label,
+      ]);
+      this.saveScenario();
+    }
+  }
+
+  isAmbiguousFormValid(): boolean {
+    return (
+      this.newAttr1Ambiguous != undefined &&
+      this.newAttr2Ambiguous != undefined &&
+      !this.formAmbiguous?.invalid
+    );
   }
 
   deleteCk(i: number) {
@@ -412,12 +477,15 @@ export class MetadataComponent implements OnChanges {
         .subscribe((val) => {
           this.scenario = <Scenario>JSON.parse(val);
           this.newCk = new Array();
+          this.submittedCk = false;
           this.newFd = new Array();
           this.newFdDependency = undefined;
-          this.form.controls['fdAttr'].reset();
+          this.formFds.controls['fdAttr'].reset();
+          this.submittedFd = false;
           this.newAttr1Ambiguous = undefined;
           this.newAttr2Ambiguous = undefined;
           this.formAmbiguous.controls['ambiguousLabel'].reset();
+          this.submittedAmbiguous = false;
         });
     } catch (error) {
       console.log(error);
@@ -430,18 +498,26 @@ export class MetadataComponent implements OnChanges {
       formData.append('templates', JSON.stringify(this.templates));
       this.http
         .post<string>(
-          Constants.API_ENDPOINT + 'scenario/save/templates/' + this.scenarioName,
+          Constants.API_ENDPOINT +
+            'scenario/save/templates/' +
+            this.scenarioName,
           formData
         )
         .subscribe((val) => {
           this.templates = <Array<[string, string, string[], string]>>(
             JSON.parse(val)
           );
+          this.expandedTemplate = -1;
+          this.submittedTemplate = false;
         });
     } catch (error) {
       console.log(error);
     }
   }
+
+  // isTemplateFormValid(t: Template): boolean {
+  //   return 
+  // }
 
   //*--- Prism methods ---*
 

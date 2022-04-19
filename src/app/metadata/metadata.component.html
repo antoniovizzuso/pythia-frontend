@@ -11,24 +11,27 @@
           find using profiling techniques.
         </h6>
       </div>
-      <form [formGroup]="form" novalidate>
-        <!-- Primary keys -->
-        <div class="row table-dataset">
-          <div class="d-flex align-items-end mb-2 mt-3">
-            <h5 class="panel-title mt-3 card-text">Primary Keys</h5>
-            <div class="d-grid gap-2 col-2 ms-auto">
-              <button
-                class="btn btn-outline-primary btn-sm btn-cust"
-                type="button"
-                (click)="findPks()"
-                [disabled]="loadFindPk"
-              >
-                Find
-                <i *ngIf="loadFindPk" class="fa fa-spinner-third fa-spin fast-spin px-1"></i>
-              </button>
-            </div>
+      <!-- Primary keys -->
+      <div class="row table-dataset">
+        <div class="d-flex align-items-end mb-2 mt-3">
+          <h5 class="panel-title mt-3 card-text">Primary Keys</h5>
+          <div class="d-grid gap-2 col-2 ms-auto">
+            <button
+              class="btn btn-outline-primary btn-sm btn-cust"
+              type="button"
+              (click)="findPks()"
+              [disabled]="loadFindPk"
+            >
+              Find
+              <i
+                *ngIf="loadFindPk"
+                class="fa fa-spinner-third fa-spin fast-spin px-1"
+              ></i>
+            </button>
           </div>
-          <div class="col-md-12 overflow-auto">
+        </div>
+        <div class="col-md-12 overflow-auto">
+          <form [formGroup]="formPk" novalidate>
             <table
               border="1"
               class="table table-sm table-striped table-bordered table-hover text-center table-ck"
@@ -67,26 +70,31 @@
                 </tr>
               </tbody>
             </table>
+          </form>
+        </div>
+      </div>
+
+      <!-- Composite Keys -->
+      <div class="row table-dataset">
+        <div class="d-flex align-items-end mb-2 mt-3">
+          <h5 class="panel-title mt-3 card-text">Composite Keys</h5>
+          <div class="d-grid gap-2 col-2 ms-auto">
+            <button
+              class="btn btn-outline-primary btn-sm btn-cust"
+              type="button"
+              (click)="findCks()"
+              [disabled]="loadFindCks"
+            >
+              Find
+              <i
+                *ngIf="loadFindCks"
+                class="fa fa-spinner-third fa-spin fast-spin px-1"
+              ></i>
+            </button>
           </div>
         </div>
-
-        <!-- Composite Keys -->
-        <div class="row table-dataset">
-          <div class="d-flex align-items-end mb-2 mt-3">
-            <h5 class="panel-title mt-3 card-text">Composite Keys</h5>
-            <div class="d-grid gap-2 col-2 ms-auto">
-              <button
-                class="btn btn-outline-primary btn-sm btn-cust"
-                type="button"
-                (click)="findCks()"
-                [disabled]="loadFindCks"
-              >
-                Find
-                <i *ngIf="loadFindCks" class="fa fa-spinner-third fa-spin fast-spin px-1"></i>
-              </button>
-            </div>
-          </div>
-          <div class="col-md-12 overflow-auto" style="max-height: 400px">
+        <div class="col-md-12 overflow-auto" style="max-height: 400px">
+          <form [formGroup]="formCk" (ngSubmit)="addCk()">
             <table
               border="1"
               class="table table-sm table-striped table-bordered table-hover text-center table-ck"
@@ -138,8 +146,7 @@
                   <td>
                     <button
                       class="btn btn-outline-secondary btn-sm"
-                      type="button"
-                      (click)="addCk()"
+                      type="submit"
                     >
                       Add
                     </button>
@@ -147,26 +154,32 @@
                 </tr>
               </tbody>
             </table>
+            <div class="invalid-feedback d-block" *ngIf="submittedCk && !isCkFormValid()">Fields required</div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Functional dependencies -->
+      <div class="row table-dataset">
+        <div class="d-flex align-items-end mb-2 mt-3">
+          <h5 class="panel-title mt-3 card-text">Functional dependencies</h5>
+          <div class="d-grid gap-2 col-2 ms-auto">
+            <button
+              class="btn btn-outline-primary btn-sm btn-cust"
+              type="button"
+              (click)="findFds()"
+              [disabled]="loadFindFds"
+            >
+              Find
+              <i
+                *ngIf="loadFindFds"
+                class="fa fa-spinner-third fa-spin fast-spin px-1"
+              ></i>
+            </button>
           </div>
         </div>
-
-        <!-- Functional dependencies -->
-        <div class="row table-dataset">
-          <div class="d-flex align-items-end mb-2 mt-3">
-            <h5 class="panel-title mt-3 card-text">Functional dependencies</h5>
-            <div class="d-grid gap-2 col-2 ms-auto">
-              <button
-                class="btn btn-outline-primary btn-sm btn-cust"
-                type="button"
-                (click)="findFds()"
-                [disabled]="loadFindFds"
-              >
-                Find
-                <i *ngIf="loadFindFds" class="fa fa-spinner-third fa-spin fast-spin px-1"></i>
-              </button>
-            </div>
-          </div>
-          <div class="col-md-12 overflow-auto" style="max-height: 400px">
+        <div class="col-md-12 overflow-auto" style="max-height: 400px">
+          <form [formGroup]="formFds" (ngSubmit)="addFd()">
             <table
               border="1"
               class="table table-sm table-striped table-bordered table-hover text-center table-fd"
@@ -259,8 +272,7 @@
                   <td class="col-btn">
                     <button
                       class="btn btn-outline-secondary btn-sm"
-                      type="button"
-                      (click)="addFd()"
+                      type="submit"
                     >
                       Add
                     </button>
@@ -268,9 +280,10 @@
                 </tr>
               </tbody>
             </table>
-          </div>
+            <div class="invalid-feedback d-block" *ngIf="submittedFd && !isFdFormValid()">Fields required</div>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 </div>
@@ -289,14 +302,14 @@
       learning modules to find attributes ambiguities with the corresponding
       ambiguous words.
     </p>
-    <form class="row g-3">
+    <form class="row g-3" [formGroup]="formTemplate" novalidate>
       <div class="input-group mb-3">
         <select
           class="form-select"
           id="select-templ"
           (change)="onTemplataTypeChange($event)"
         >
-          <option selected>Select a query template...</option>
+          <option value="" selected>Select a query template...</option>
           <option value="attribute">Attribute Ambiguity</option>
           <option value="row">Row Ambiguity</option>
           <option value="fd">FD Ambiguity</option>
@@ -312,108 +325,118 @@
           Add
         </button>
       </div>
-    </form>
-    <div
-      *ngFor="let t of templates; let indexOfelement = index"
-      class="code-editor"
-      id="card-t1"
-    >
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingOne">
-          <button
-            class="accordion-button collapsed"
-            type="button"
-            data-bs-toggle="collapse"
-            [attr.data-bs-target]="'#collapse' + indexOfelement"
-            aria-expanded="true"
-            [aria-controls]="'#collapse' + indexOfelement"
+      <div class="invalid-feedback d-block" *ngIf="submittedTemplate && !this.newTemplate">Select a query template</div>
+      <div
+        *ngFor="let t of templates; let indexOfelement = index"
+        class="code-editor"
+        id="card-t1"
+      >
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingOne">
+            <button
+              class="accordion-button"
+              [ngClass]="{'collapsed': expandedTemplate != indexOfelement}"
+              type="button"
+              data-bs-toggle="collapse"
+              [attr.data-bs-target]="'#collapse' + indexOfelement"
+              aria-expanded="true"
+              [aria-controls]="'#collapse' + indexOfelement"
+            >
+              {{ t[3] }}
+              <em style="margin-left: 10px">(Default Template)</em>
+            </button>
+          </h2>
+          <div
+            [attr.id]="'collapse' + indexOfelement"
+            class="accordion-collapse"
+            [ngClass]="{'collapse': expandedTemplate != indexOfelement}"
+            aria-labelledby="headingOne"
+            data-bs-parent="#accordionExample"
           >
-            {{ t[3] }}
-            <em style="margin-left: 10px">(Default Template)</em>
-          </button>
-        </h2>
-        <div
-          [attr.id]="'collapse' + indexOfelement"
-          class="accordion-collapse collapse"
-          aria-labelledby="headingOne"
-          data-bs-parent="#accordionExample"
-        >
-          <div class="accordion-body">
-            <div class="row">
-              <label class="col-sm-2 col-form-label">Template Name</label>
-              <div class="col-sm-10">
-                <input
-                  class="form-control"
-                  type="text"
-                  placeholder="Template Name"
-                  aria-label="default input example"
-                  [(ngModel)]="t[3]"
-                />
-              </div>
-            </div>
-            <div class="row g-3">
-              <div style="height: 150px" class="col-12">
-                <textarea
-                  placeholder="Insert template sql"
-                  id="editing"
-                  spellcheck="false"
-                  [(ngModel)]="t[0]"
-                  (input)="updateSqlText(indexOfelement)"
-                >
-                {{ t[0] }}</textarea
-                >
-                <pre id="highlighting" aria-hidden="true" class="language-sql">
-                  <code #highlightingContent class="language-sql" id="highlighting-content">{{ t[0] }}</code>
-                </pre>
-              </div>
-              <div *ngIf="getOperators(t[1]).length > 0" class="col-12">
-                <h6>Operators</h6>
-                <div
-                  class="row my-1"
-                  *ngFor="let o of getOperators(t[1]); let i = index"
-                >
-                  <label
-                    class="col-sm-1 col-form-label text-center font-weight-bold"
-                    >{{ o }}</label
-                  >
-                  <div class="col-sm-6">
-                    <input
-                      class="form-control"
-                      type="text"
-                      placeholder=""
-                      aria-label="default input example"
-                      [(ngModel)]="t[2][i]"
-                    />
-                  </div>
+            <div class="accordion-body">
+              <div class="row">
+                <label class="col-sm-2 col-form-label">Template Name</label>
+                <div class="col-sm-10">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Template Name"
+                    aria-label="default input example"
+                    [ngModelOptions]="{standalone: true}"
+                    [(ngModel)]="t[3]"
+                  />
                 </div>
               </div>
-              <div class="d-grid gap-2 col-2 ms-auto">
-                <button
-                  class="btn btn-outline-secondary btn-sm btn-cust"
-                  type="button"
-                  (click)="saveTemplates()"
-                >
-                  Save
-                </button>
-              </div>
-              <div class="d-grid gap-2 col-2">
-                <button
-                  class="btn btn-outline-danger btn-sm"
-                  type="button"
-                  (click)="deleteTemplate(indexOfelement)"
-                >
-                  Delete
-                </button>
+              <div class="row g-3">
+                <div style="height: 150px" class="col-12">
+                  <textarea
+                    placeholder="Insert template sql"
+                    id="editing"
+                    spellcheck="false"
+                    [(ngModel)]="t[0]"
+                    [ngModelOptions]="{standalone: true}"
+                    (input)="updateSqlText(indexOfelement)"
+                  >
+                {{ t[0] }}</textarea
+                  >
+                  <pre
+                    id="highlighting"
+                    aria-hidden="true"
+                    class="language-sql"
+                  >
+                  <code #highlightingContent class="language-sql" id="highlighting-content">{{ t[0] }}</code>
+                </pre>
+                </div>
+                <div *ngIf="getOperators(t[1]).length > 0" class="col-12">
+                  <h6>Operators</h6>
+                  <div
+                    class="row my-1"
+                    *ngFor="let o of getOperators(t[1]); let i = index"
+                  >
+                    <label
+                      class="col-sm-1 col-form-label text-center font-weight-bold"
+                      >{{ o }}</label
+                    >
+                    <div class="col-sm-6">
+                      <input
+                        class="form-control"
+                        type="text"
+                        placeholder=""
+                        aria-label="default input example"
+                        [(ngModel)]="t[2][i]"
+                        [ngModelOptions]="{standalone: true}"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="d-grid gap-2 col-2 ms-auto">
+                  <button
+                    class="btn btn-outline-secondary btn-sm btn-cust"
+                    type="button"
+                    (click)="saveTemplates()"
+                  >
+                    Save
+                  </button>
+                </div>
+                <div class="d-grid gap-2 col-2">
+                  <button
+                    class="btn btn-outline-danger btn-sm"
+                    type="button"
+                    (click)="deleteTemplate(indexOfelement)"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 
-<form [formGroup]="formAmbiguous" novalidate>
+<form [formGroup]="formAmbiguous" (ngSubmit)="addAmbiguous()">
   <div class="card mt-3 card-ambiguous">
     <div class="card-body">
       <h5 class="card-title">Ambiguous Attributes</h5>
@@ -437,7 +460,10 @@
             [disabled]="loadFindAmbiguous"
           >
             Find
-            <i *ngIf="loadFindAmbiguous" class="fa fa-spinner-third fa-spin fast-spin px-1"></i>
+            <i
+              *ngIf="loadFindAmbiguous"
+              class="fa fa-spinner-third fa-spin fast-spin px-1"
+            ></i>
           </button>
           <!-- <button class="col-12 btn btn-primary btn-sm btn-cust" type="button">
           Submit & Train
@@ -527,8 +553,7 @@
                   <td>
                     <button
                       class="btn btn-outline-secondary btn-sm"
-                      (click)="addAmbiguous()"
-                      type="button"
+                      type="submit"
                     >
                       Add
                     </button>
@@ -536,6 +561,7 @@
                 </tr>
               </tbody>
             </table>
+            <div class="invalid-feedback d-block" *ngIf="submittedAmbiguous && !isAmbiguousFormValid()">Fields required</div>
           </div>
         </div>
       </div>
