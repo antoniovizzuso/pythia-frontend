@@ -67,6 +67,7 @@
         <a
           type="button"
           class="btn btn-outline-secondary w-100"
+          (click)="exportFile()"
           [href]="downloadJsonHref"
           download="download.json"
           [class.disabled]="results.length > 0 ? null : true"
@@ -91,12 +92,34 @@
           class="panel panel-success table-a-query"
           *ngFor="let res of results; let i = index"
         >
-          <div border="1" class="row tr title mt-4">
-            <div class="col-12">{{ "A-Query " + (i + 1) }}</div>
+          <div border="1" class="row tr mt-4">
+            <div class="col-12 title">
+              <span class="d-flex align-items-center mb-2">
+                <h6 class="font-weight-bold">{{ "A-Query " + (res[0] + 1) }}</h6>
+                <button
+                  type="button"
+                  class="btn btn-primary ml-md-auto"
+                  [disabled]="loadGenerate"
+                  (click)="onClickDelete(i)"
+                >
+                  Delete
+                </button>
+              </span>
+              <h6 class="card-subtitle mb-2 text-muted">
+                A-Query (from template "{{ selectedStructure }}")
+              </h6>
+              <pre
+                id="highlighting"
+                class="m-2 language-sql"
+                aria-hidden="true"
+                style="position: relative"
+              >
+              <code class="language-sql" id="highlighting-content">{{res[1]!}}</code></pre>
+            </div>
           </div>
-          <div *ngFor="let row of res![2]!; let j = index" class="row tr r-1">
+          <div *ngFor="let row of res![3]!; let j = index" class="row tr r-1">
             <div class="col-8 td">
-              <span class="r-1-a">{{ row[0] }}</span>
+              <span class="r-1-a">{{ row[1] }}</span>
             </div>
             <div class="col-2 td">
               <button
@@ -126,26 +149,16 @@
                     Sentence Details for A-Query {{ i + 1 }}
                   </h6>
                   <h6 class="card-subtitle mb-2 text-muted">
-                    Selected: "{{ selectedResult[2][j][0] }}"
+                    Selected: "{{ selectedResult[3][j][0] }}"
                   </h6>
                   <div class="row">
                     <div class="cxol-md-8">
                       <div
-                        [innerHTML]="selectedResult[5][selectedRow]!"
+                        [innerHTML]="selectedResult[6][selectedRow]!"
                         class="panel panel-success"
                       ></div>
                     </div>
                   </div>
-                  <h6 class="card-subtitle mb-2 text-muted">
-                    A-Query (from template "{{ selectedStructure }}")
-                  </h6>
-                  <pre
-                    id="highlighting"
-                    class="m-2 language-sql"
-                    aria-hidden="true"
-                    style="position: relative"
-                  >
-                  <code class="language-sql" id="highlighting-content">{{selectedResult[0]!}}</code></pre>
                 </div>
               </div>
             </div>

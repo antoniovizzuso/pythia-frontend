@@ -16,6 +16,7 @@ import Prism from 'prismjs';
 import 'prismjs/components/prism-sql';
 import { Constants } from 'src/constants';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-output-view',
@@ -35,8 +36,8 @@ export class OutputViewComponent implements OnChanges {
   //results: [string[][], string[][], string] | null = null;
   results: Result[] = [];
   selectedResult: Result | null = null;
-  selectedAQuery: number = 0;
-  selectedRow: number = 0;
+  selectedAQuery: number = -1;
+  selectedRow: number = -1;
 
   closeResult = '';
 
@@ -126,11 +127,24 @@ export class OutputViewComponent implements OnChanges {
     console.log('*** strategy: ' + this.selectedStrategy);
   }
 
+  onClickDelete(i: number) {
+    this.results.splice(i, 1);
+    this.selectedAQuery = -1;
+    this.selectedRow = -1;
+    this.selectedResult = null;
+  }
+
   onClickView(i: number, j: number) {
     if (this.results) {
-      this.selectedAQuery = i;
-      this.selectedRow = j;
-      this.selectedResult = this.results[i];
+      if (this.selectedAQuery == i && this.selectedRow == j) {
+        this.selectedAQuery = -1;
+        this.selectedRow = -1;
+        this.selectedResult = null;
+      } else {
+        this.selectedAQuery = i;
+        this.selectedRow = j;
+        this.selectedResult = this.results[i];
+      }
     }
   }
 
@@ -180,7 +194,6 @@ export class OutputViewComponent implements OnChanges {
         .subscribe((val) => {
           this.results = val;
           this.loadGenerate = false;
-          this.exportFile();
         });
     } catch (error) {
       console.log(error);
@@ -198,10 +211,11 @@ export class OutputViewComponent implements OnChanges {
     return operators;
   }
 
-  private exportFile() {
+  exportFile() {
     let exportResults: string[] = [];
-    this.results.forEach(element => {
-      exportResults.push(element[6])
+    console.log('*** results number: ' + this.results.length);
+    this.results.forEach((element) => {
+      exportResults.push(element[7]);
     });
     var theJSON = JSON.stringify(exportResults, null, 2);
     var uri = this.sanitizer.bypassSecurityTrustUrl(
