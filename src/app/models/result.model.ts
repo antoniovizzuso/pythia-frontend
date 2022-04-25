@@ -1,3 +1,5 @@
+import { ExportResult } from "./exportresult.model";
+
 export type Result = [
     number,
     string,
@@ -6,5 +8,5 @@ export type Result = [
     [string, string, string[], string],
     any,
     string[],
-    string
+    ExportResult
   ]

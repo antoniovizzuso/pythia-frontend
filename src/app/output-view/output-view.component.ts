@@ -17,6 +17,7 @@ import 'prismjs/components/prism-sql';
 import { Constants } from 'src/constants';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { ExportResult } from '../models/exportresult.model';
 
 @Component({
   selector: 'app-output-view',
@@ -212,7 +213,7 @@ export class OutputViewComponent implements OnChanges {
   }
 
   exportFile() {
-    let exportResults: string[] = [];
+    let exportResults: ExportResult[] = [];
     console.log('*** results number: ' + this.results.length);
     this.results.forEach((element) => {
       exportResults.push(element[7]);
