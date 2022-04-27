@@ -26,6 +26,7 @@
           role="tab"
           aria-controls="profile"
           aria-selected="false"
+          (click)="loadOutputView()"
           [disabled]="!scenarioName"
         >
           <i class="fas fa-table"></i>
@@ -112,7 +113,7 @@
       aria-labelledby="profile-tab"
     >
       <div class="content" *ngIf="scenarioName">
-        <app-output-view [scenarioName]="scenarioName"></app-output-view>
+        <app-output-view #outputView [scenarioName]="scenarioName"></app-output-view>
       </div>
     </div>
   </div>

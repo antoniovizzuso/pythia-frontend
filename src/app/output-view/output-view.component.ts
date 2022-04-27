@@ -57,6 +57,10 @@ export class OutputViewComponent implements OnChanges {
   ) {}
 
   ngOnChanges(): void {
+    this.init();
+  }
+
+  init() {
     if (this.scenarioName) {
       this.loadTemplates();
     }

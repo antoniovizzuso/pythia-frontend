@@ -1,8 +1,9 @@
-import { Component, OnInit, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, EventEmitter, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { JwtService } from '../jwt.service';
 import { HttpClient } from '@angular/common/http';
 import { Constants } from '../../constants';
+import { OutputViewComponent } from '../output-view/output-view.component';
 
 @Component({
   selector: 'app-home',
@@ -10,6 +11,7 @@ import { Constants } from '../../constants';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
+  @ViewChild(OutputViewComponent) outputView:OutputViewComponent;
   idScenarioSelected: number = 0; //0: nessuno, 1: load scenario, 2: new scenario
   fileToUpload: File | null = null;
   scenarioSelected: string | null = null; 
@@ -79,5 +81,9 @@ export class HomeComponent implements OnInit {
 
   setAttrsNumber(value: number) {
     this.attrsCount = value;
+  }
+
+  loadOutputView() {
+    this.outputView.init();
   }
 }
