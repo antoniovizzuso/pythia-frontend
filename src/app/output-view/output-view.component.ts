@@ -183,8 +183,9 @@ export class OutputViewComponent implements OnChanges {
 
   generate() {
     this.results = new Array();
+    this.selectedAQuery = -1;
+    this.selectedRow = -1;
     this.selectedResult = null;
-    this.selectedAQuery = 0;
     try {
       this.loadGenerate = true;
       const formData = new FormData();
