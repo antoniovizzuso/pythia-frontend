@@ -35,7 +35,6 @@ export class LoadScenarioComponent implements OnChanges {
 
   loadScenario() {
     try {
-      console.log("*** " + this.rowsOffset + ", " + this.rowsLimit);
       this.http
         .get<string>(
           Constants.API_ENDPOINT + 'scenario/dataframe/' + this.scenarioName + "/" + this.rowsOffset + "/" + this.rowsLimit

@@ -45,6 +45,9 @@ export class MetadataComponent implements OnChanges {
   formAmbiguous: FormGroup;
   submittedAmbiguous = false;
 
+  fdEditable: number = -1;
+  ambiguousEditable: number = -1;
+
   newCk: Attribute[] = new Array();
   newFd: Attribute[] = new Array();
   newFdDependency: Attribute | undefined;
@@ -444,6 +447,14 @@ export class MetadataComponent implements OnChanges {
     this.saveScenario();
   }
 
+  editFd(i: number) {
+    this.fdEditable = i;
+  }
+
+  saveFd(i: number) {
+    this.saveScenario();
+  }
+
   deleteFd(i: number) {
     this.scenario?.fds.forEach((element, index) => {
       if (index == i) this.scenario?.fds.splice(index, 1);
@@ -456,6 +467,14 @@ export class MetadataComponent implements OnChanges {
       if (index == i) this.templates?.splice(index, 1);
     });
     this.saveTemplates();
+  }
+
+  editAmbiguous(i: number) {
+    this.ambiguousEditable = i;
+  }
+
+  saveAmbiguous(i: number) {
+    this.saveScenario();
   }
 
   deleteAmbiguous(i: number) {
@@ -478,10 +497,12 @@ export class MetadataComponent implements OnChanges {
           this.scenario = <Scenario>JSON.parse(val);
           this.newCk = new Array();
           this.submittedCk = false;
+          this.fdEditable = -1;
           this.newFd = new Array();
           this.newFdDependency = undefined;
           this.formFds.controls['fdAttr'].reset();
           this.submittedFd = false;
+          this.ambiguousEditable = -1;
           this.newAttr1Ambiguous = undefined;
           this.newAttr2Ambiguous = undefined;
           this.formAmbiguous.controls['ambiguousLabel'].reset();

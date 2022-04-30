@@ -154,7 +154,12 @@
                 </tr>
               </tbody>
             </table>
-            <div class="invalid-feedback d-block" *ngIf="submittedCk && !isCkFormValid()">Fields required</div>
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="submittedCk && !isCkFormValid()"
+            >
+              Fields required
+            </div>
           </form>
         </div>
       </div>
@@ -217,15 +222,37 @@
                     {{ getAttrDependency(i) }}
                   </td>
                   <td class="col-words">
-                    {{ this.scenario!.fds[i][1].toString() }}
+                    <input
+                      class="form-control"
+                      [ngModelOptions]="{ standalone: true }"
+                      [(ngModel)]="this.scenario!.fds[i][1]"
+                      [disabled]="fdEditable != i"
+                      [value]="this.scenario!.fds[i][1].toString()"
+                    />
                   </td>
-                  <td class="col-btn">
+                  <td *ngIf="fdEditable != i" class="col-btn">
                     <button
-                      class="btn btn-outline-danger btn-sm"
+                      class="btn btn-outline-secondary btn-sm"
+                      type="button"
+                      (click)="editFd(i)"
+                    >
+                      <i class="fas fa-pen"></i>
+                    </button>
+                    <button
+                      class="btn btn-outline-danger btn-sm ml-1"
                       type="button"
                       (click)="deleteFd(i)"
                     >
-                      Delete
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                  </td>
+                  <td *ngIf="fdEditable == i" class="col-btn">
+                    <button
+                      class="btn btn-outline-secondary btn-sm"
+                      type="button"
+                      (click)="saveFd(i)"
+                    >
+                      Save
                     </button>
                   </td>
                 </tr>
@@ -280,7 +307,12 @@
                 </tr>
               </tbody>
             </table>
-            <div class="invalid-feedback d-block" *ngIf="submittedFd && !isFdFormValid()">Fields required</div>
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="submittedFd && !isFdFormValid()"
+            >
+              Fields required
+            </div>
           </form>
         </div>
       </div>
@@ -325,7 +357,12 @@
           Add
         </button>
       </div>
-      <div class="invalid-feedback d-block" *ngIf="submittedTemplate && !this.newTemplate">Select a query template</div>
+      <div
+        class="invalid-feedback d-block"
+        *ngIf="submittedTemplate && !this.newTemplate"
+      >
+        Select a query template
+      </div>
       <div
         *ngFor="let t of templates; let indexOfelement = index"
         class="code-editor"
@@ -335,7 +372,7 @@
           <h2 class="accordion-header" id="headingOne">
             <button
               class="accordion-button"
-              [ngClass]="{'collapsed': expandedTemplate != indexOfelement}"
+              [ngClass]="{ collapsed: expandedTemplate != indexOfelement }"
               type="button"
               data-bs-toggle="collapse"
               [attr.data-bs-target]="'#collapse' + indexOfelement"
@@ -349,7 +386,7 @@
           <div
             [attr.id]="'collapse' + indexOfelement"
             class="accordion-collapse"
-            [ngClass]="{'collapse': expandedTemplate != indexOfelement}"
+            [ngClass]="{ collapse: expandedTemplate != indexOfelement }"
             aria-labelledby="headingOne"
             data-bs-parent="#accordionExample"
           >
@@ -362,7 +399,7 @@
                     type="text"
                     placeholder="Template Name"
                     aria-label="default input example"
-                    [ngModelOptions]="{standalone: true}"
+                    [ngModelOptions]="{ standalone: true }"
                     [(ngModel)]="t[3]"
                   />
                 </div>
@@ -374,7 +411,7 @@
                     id="editing"
                     spellcheck="false"
                     [(ngModel)]="t[0]"
-                    [ngModelOptions]="{standalone: true}"
+                    [ngModelOptions]="{ standalone: true }"
                     (input)="updateSqlText(indexOfelement)"
                   >
                 {{ t[0] }}</textarea
@@ -404,7 +441,7 @@
                         placeholder=""
                         aria-label="default input example"
                         [(ngModel)]="t[2][i]"
-                        [ngModelOptions]="{standalone: true}"
+                        [ngModelOptions]="{ standalone: true }"
                       />
                     </div>
                   </div>
@@ -492,14 +529,38 @@
                 >
                   <td>{{ a[0].name }}</td>
                   <td>{{ a[1].name }}</td>
-                  <td>{{ a[2] }}</td>
                   <td>
+                    <input
+                      class="form-control"
+                      [ngModelOptions]="{ standalone: true }"
+                      [(ngModel)]="a[2]"
+                      [disabled]="ambiguousEditable != i"
+                      [value]="a[2]"
+                    />
+                  </td>
+                  <td *ngIf="ambiguousEditable != i">
                     <button
-                      class="btn btn-outline-danger btn-sm"
+                      class="btn btn-outline-secondary btn-sm"
+                      type="button"
+                      (click)="editAmbiguous(i)"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      class="btn btn-outline-danger btn-sm ml-1"
                       type="button"
                       (click)="deleteAmbiguous(i)"
                     >
                       Delete
+                    </button>
+                  </td>
+                  <td *ngIf="ambiguousEditable == i">
+                    <button
+                      class="btn btn-outline-secondary btn-sm"
+                      type="button"
+                      (click)="saveAmbiguous(i)"
+                    >
+                      Save
                     </button>
                   </td>
                 </tr>
@@ -561,7 +622,12 @@
                 </tr>
               </tbody>
             </table>
-            <div class="invalid-feedback d-block" *ngIf="submittedAmbiguous && !isAmbiguousFormValid()">Fields required</div>
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="submittedAmbiguous && !isAmbiguousFormValid()"
+            >
+              Fields required
+            </div>
           </div>
         </div>
       </div>
