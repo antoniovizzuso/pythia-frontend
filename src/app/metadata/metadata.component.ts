@@ -57,6 +57,11 @@ export class MetadataComponent implements OnChanges {
 
   expandedTemplate: number = -1;
 
+  editableTemplate: number = -1;
+  editableOperator: string = "";
+  printFtoSave: string = "";
+
+
   //Spinner properties
   loadFindPk: boolean = false;
   loadFindCks: boolean = false;
@@ -348,13 +353,36 @@ export class MetadataComponent implements OnChanges {
 
   getOperators(type: string): string[] {
     let operators: string[] = [];
-    if (type == 'attribute' || type == 'row' || type == 'full') {
+    if (type != 'fd') {
       operators.push('=');
       operators.push('>');
       operators.push('<');
       operators.push('<>');
     }
     return operators;
+  }
+
+  selectOperator(idTemplate: number, operator: string) {
+    this.editableTemplate = idTemplate;
+    this.editableOperator = operator;
+  }
+
+  addOperator(idOperator: number) {
+    this.templates?.forEach((element, index) => {
+      if (index == this.editableTemplate) {
+        element[2][idOperator] = this.printFtoSave;
+      }
+    });
+    this.saveTemplates();
+  }
+
+  deleteOperator(idTemplate: number, idOperator: number) {
+    this.templates?.forEach((element, index) => {
+      if (index == idTemplate) {
+        element[2][idOperator] = "";
+      }
+    });
+    this.saveTemplates();
   }
 
   addCk() {
@@ -530,6 +558,7 @@ export class MetadataComponent implements OnChanges {
           );
           this.expandedTemplate = -1;
           this.submittedTemplate = false;
+          this.printFtoSave = "";
         });
     } catch (error) {
       console.log(error);

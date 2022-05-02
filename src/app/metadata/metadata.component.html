@@ -426,23 +426,63 @@
                 </div>
                 <div *ngIf="getOperators(t[1]).length > 0" class="col-12">
                   <h6>Operators</h6>
-                  <div
-                    class="row my-1"
-                    *ngFor="let o of getOperators(t[1]); let i = index"
-                  >
-                    <label
-                      class="col-sm-1 col-form-label text-center font-weight-bold"
-                      >{{ o }}</label
-                    >
-                    <div class="col-sm-6">
-                      <input
-                        class="form-control"
-                        type="text"
-                        placeholder=""
-                        aria-label="default input example"
-                        [(ngModel)]="t[2][i]"
-                        [ngModelOptions]="{ standalone: true }"
-                      />
+                  <div *ngFor="let o of getOperators(t[1]); let i = index">
+                    <div class="row my-1" *ngIf="t[2][i]">
+                      <label
+                        class="col-sm-1 col-form-label text-center font-weight-bold"
+                        >{{ o }}</label
+                      >
+                      <div class="col-sm-3">
+                        <input
+                          class="form-control"
+                          type="text"
+                          placeholder=""
+                          aria-label="default input example"
+                          [(ngModel)]="t[2][i]"
+                          [ngModelOptions]="{ standalone: true }"
+                        />
+                      </div>
+                      <div class="col-sm-1 my-auto">
+                        <button
+                          class="btn btn-outline-danger btn-sm my-auto"
+                          type="button"
+                          (click)="deleteOperator(indexOfelement, i)"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                    <div class="row my-1" *ngIf="!t[2][i]">
+                      <label
+                        class="col-sm-1 col-form-label text-center font-weight-bold text-muted"
+                        >{{ o }}</label
+                      >
+                      <div class="col-sm-3" *ngIf="(o == editableOperator)">
+                        <input
+                          class="form-control"
+                          type="text"
+                          placeholder=""
+                          aria-label="default input example"
+                          [(ngModel)]="printFtoSave"
+                          [ngModelOptions]="{ standalone: true }"
+                        />
+                      </div>
+                      <div class="col-sm-1 my-auto">
+                        <button *ngIf="(o != editableOperator)"
+                          class="btn btn-outline-secondary btn-sm my-auto"
+                          type="button"
+                          (click)="selectOperator(indexOfelement, o)"
+                        >
+                          Add
+                        </button>
+                        <button *ngIf="(o == editableOperator && this.editableTemplate == indexOfelement)"
+                          class="btn btn-outline-secondary btn-sm my-auto"
+                          type="button"
+                          (click)="addOperator(i)"
+                        >
+                          Add
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

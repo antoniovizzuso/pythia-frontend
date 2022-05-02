@@ -3,51 +3,57 @@
     <h5>Sentence generator</h5>
     <h6>Generate contraddicting sentences based on the follow configuration</h6>
     <div class="row my-1 align-items-center">
-      <div class="col-6 input-group">
-        <p class="col-sm-4 nowrap col-form-label">Structure Type</p>
-        <select
-          class="form-select"
-          (change)="onSelectStructure($event)"
-          aria-label="Default select example"
-          [disabled]="loadGenerate"
-        >
-          <option
-            *ngFor="let t of templates"
-            [value]="t[3]"
-            [selected]="t[3] === selectedStructure"
+      <div class="col-6">
+        <div class="input-group">
+          <p class="col-sm-4 nowrap col-form-label">Structure Type</p>
+          <select
+            class="form-select"
+            (change)="onSelectStructure($event)"
+            aria-label="Default select example"
+            [disabled]="loadGenerate"
           >
-            {{ t[3] }}
-          </option>
-        </select>
+            <option
+              *ngFor="let t of templates"
+              [value]="t[3]"
+              [selected]="t[3] === selectedStructure"
+            >
+              {{ t[3] }}
+            </option>
+          </select>
+        </div>
       </div>
-      <div class="col-6 input-group">
-        <p class="col-sm-6 nowrap col-form-label">Sentences per A-Query</p>
-        <input
-          class="form-control"
-          type="number"
-          placeholder="number of results"
-          [(ngModel)]="limitResults"
-          [disabled]="loadGenerate"
-        />
+      <div class="col-6">
+        <div class="input-group">
+          <p class="col-sm-6 nowrap col-form-label">Sentences per A-Query</p>
+          <input
+            class="form-control"
+            type="number"
+            placeholder="number of results"
+            [(ngModel)]="limitResults"
+            [disabled]="loadGenerate"
+          />
+        </div>
       </div>
     </div>
     <div class="row my-1 align-items-center">
-      <div class="col-6 input-group">
-        <p class="col-sm-4 nowrap col-form-label">Strategy</p>
-        <select
-          class="form-select"
-          (change)="onSelectStrategy($event)"
-          aria-label="Default select example"
-          [disabled]="loadGenerate"
-        >
-          <option
-            *ngFor="let s of strategies | keyvalue"
-            [value]="s.key"
-            [selected]="s.key === selectedStrategy"
+      <div class="col-6">
+        <div class="input-group">
+          <p class="col-sm-4 nowrap col-form-label">Strategy</p>
+          <select
+            class="form-select"
+            (change)="onSelectStrategy($event)"
+            aria-label="Default select example"
+            [disabled]="loadGenerate"
           >
-            {{ s.value }}
-          </option>
-        </select>
+            <option
+              *ngFor="let s of strategies | keyvalue"
+              [value]="s.key"
+              [selected]="s.key === selectedStrategy"
+            >
+              {{ s.value }}
+            </option>
+          </select>
+        </div>
       </div>
       <div class="col-md-2 ml-md-auto">
         <button
@@ -95,7 +101,9 @@
           <div border="1" class="row tr mt-4">
             <div class="col-12 title">
               <span class="d-flex align-items-center mb-2">
-                <h6 class="font-weight-bold">{{ "A-Query " + (res[0] + 1) }}</h6>
+                <h6 class="font-weight-bold">
+                  {{ "A-Query " + (res[0] + 1) }}
+                </h6>
                 <button
                   type="button"
                   class="btn btn-primary ml-md-auto"
