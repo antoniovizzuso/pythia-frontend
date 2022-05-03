@@ -49,6 +49,9 @@ export class OutputViewComponent implements OnChanges {
 
   private highlightingContents!: QueryList<ElementRef>;
 
+  @ViewChildren('highlightingContentAquery')
+  highlightingContentsAquery!: QueryList<ElementRef>;
+
   constructor(
     public http: HttpClient,
     public modalService: NgbModal,
@@ -75,6 +78,11 @@ export class OutputViewComponent implements OnChanges {
   ngAfterViewInit() {
     this.highlightingContents.changes.subscribe(() => {
       this.highlightingContents.toArray().forEach((element) => {
+        Prism.highlightElement(element.nativeElement);
+      });
+    });
+    this.highlightingContentsAquery.changes.subscribe(() => {
+      this.highlightingContentsAquery.toArray().forEach((element) => {
         Prism.highlightElement(element.nativeElement);
       });
     });
@@ -206,6 +214,33 @@ export class OutputViewComponent implements OnChanges {
     }
   }
 
+  generateSingle(index: number, aquery: string) {
+    try {
+      const formData = new FormData();
+      formData.append('aQuery', aquery);
+      formData.append('strategy', this.selectedStrategy);
+      formData.append('structure', this.selectedStructure);
+      formData.append('limitResults', this.limitResults.toString());
+      this.http
+        .post<Result>(
+          Constants.API_ENDPOINT +
+            'scenario/predict/single/' +
+            this.scenarioName +
+            '/' +
+            index,
+          formData
+        )
+        .subscribe((val) => {
+          this.results[index] = val;
+          this.selectedAQuery = -1;
+          this.selectedRow = -1;
+          this.selectedResult = null;
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   getOperators(type: string): string[] {
     let operators: string[] = [];
     if (type == 'attribute' || type == 'row' || type == 'full') {
@@ -231,6 +266,18 @@ export class OutputViewComponent implements OnChanges {
   }
 
   //*--- Prism methods ---*
+
+  updateAQuerySqlText(index: number) {
+    let test: string = '';
+    let contents = this.highlightingContentsAquery!.toArray();
+    if (contents[index]) {
+      // Update code
+      contents[index].nativeElement.textContent = this.results[index][1];
+
+      // Syntax Highlight
+      Prism.highlightElement(contents[index].nativeElement);
+    }
+  }
 
   updateSqlText(index: number) {
     let test: string = '';
