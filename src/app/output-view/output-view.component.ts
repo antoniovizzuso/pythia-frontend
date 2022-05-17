@@ -32,7 +32,7 @@ export class OutputViewComponent implements OnChanges {
 
   selectedStrategy: string = '';
   selectedStructure: string = '';
-  limitResults: number = 5;
+  limitResults: number = 0;
 
   //results: [string[][], string[][], string] | null = null;
   results: Result[] = [];
@@ -73,6 +73,9 @@ export class OutputViewComponent implements OnChanges {
     this.strategies.set('uniform_true', 'Uniform True');
     this.strategies.set('uniform_false', 'Uniform False');
     this.selectedStrategy = 'contradicting';
+
+    //Max A-Queries
+    this.getMaxAQueries();
   }
 
   ngAfterViewInit() {
@@ -99,6 +102,20 @@ export class OutputViewComponent implements OnChanges {
             JSON.parse(val)
           );
           this.selectedStructure = this.templates[0][3];
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  getMaxAQueries() {
+    try {
+      this.http
+        .get<number>(
+          Constants.API_ENDPOINT + 'scenario/maxaqueries'
+        )
+        .subscribe((val) => {
+          this.limitResults = val;
         });
     } catch (error) {
       console.log(error);
