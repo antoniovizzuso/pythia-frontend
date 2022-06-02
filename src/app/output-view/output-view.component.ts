@@ -47,6 +47,9 @@ export class OutputViewComponent implements OnChanges {
   //spinner
   loadGenerate: boolean = false;
 
+  errorMessage: string = '';
+  
+
   private highlightingContents!: QueryList<ElementRef>;
 
   @ViewChildren('highlightingContentAquery')
@@ -101,7 +104,7 @@ export class OutputViewComponent implements OnChanges {
           this.templates = <Array<[string, string, string[], string]>>(
             JSON.parse(val)
           );
-          this.selectedStructure = this.templates[0][3];
+          //this.selectedStructure = this.templates[0][3];
         });
     } catch (error) {
       console.log(error);
@@ -111,9 +114,7 @@ export class OutputViewComponent implements OnChanges {
   getMaxAQueries() {
     try {
       this.http
-        .get<number>(
-          Constants.API_ENDPOINT + 'scenario/maxaqueries'
-        )
+        .get<number>(Constants.API_ENDPOINT + 'scenario/maxaqueries')
         .subscribe((val) => {
           this.limitResults = val;
         });
@@ -207,27 +208,32 @@ export class OutputViewComponent implements OnChanges {
   }
 
   generate() {
-    this.results = new Array();
-    this.selectedAQuery = -1;
-    this.selectedRow = -1;
-    this.selectedResult = null;
-    try {
-      this.loadGenerate = true;
-      const formData = new FormData();
-      formData.append('strategy', this.selectedStrategy);
-      formData.append('structure', this.selectedStructure);
-      formData.append('limitResults', this.limitResults.toString());
-      this.http
-        .post<Result[]>(
-          Constants.API_ENDPOINT + 'scenario/predict/' + this.scenarioName,
-          formData
-        )
-        .subscribe((val) => {
-          this.results = val;
-          this.loadGenerate = false;
-        });
-    } catch (error) {
-      console.log(error);
+    if (this.selectedStructure) {
+      this.errorMessage = '';
+      this.results = new Array();
+      this.selectedAQuery = -1;
+      this.selectedRow = -1;
+      this.selectedResult = null;
+      try {
+        this.loadGenerate = true;
+        const formData = new FormData();
+        formData.append('strategy', this.selectedStrategy);
+        formData.append('structure', this.selectedStructure);
+        formData.append('limitResults', this.limitResults.toString());
+        this.http
+          .post<Result[]>(
+            Constants.API_ENDPOINT + 'scenario/predict/' + this.scenarioName,
+            formData
+          )
+          .subscribe((val) => {
+            this.results = val;
+            this.loadGenerate = false;
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      this.errorMessage = 'select a structure';
     }
   }
 

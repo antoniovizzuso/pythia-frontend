@@ -12,6 +12,9 @@
             aria-label="Default select example"
             [disabled]="loadGenerate"
           >
+            <option [value]="undefined" selected disabled>
+              Select a structure...
+            </option>
             <option
               *ngFor="let t of templates"
               [value]="t[3]"
@@ -20,6 +23,9 @@
               {{ t[3] }}
             </option>
           </select>
+        </div>
+        <div class="invalid-feedback d-block text-right" *ngIf="errorMessage">
+          {{ errorMessage }}
         </div>
       </div>
       <div class="col-6">

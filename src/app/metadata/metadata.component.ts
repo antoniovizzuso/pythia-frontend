@@ -480,6 +480,7 @@ export class MetadataComponent implements OnChanges {
   }
 
   saveFd(i: number) {
+    this.scenario!.fds[i][1] = this.scenario!.fds[i][1].toString().split(',') 
     this.saveScenario();
   }
 
