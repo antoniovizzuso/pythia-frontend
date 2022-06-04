@@ -288,6 +288,7 @@ export class OutputViewComponent implements OnChanges {
     this.downloadJsonHref = uri;
   }
 
+
   //*--- Prism methods ---*
 
   updateAQuerySqlText(index: number) {

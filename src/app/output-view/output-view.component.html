@@ -130,24 +130,27 @@
                 A-Query (from template "{{ selectedStructure }}")
               </h6>
 
-              <textarea
-                placeholder="Insert template sql"
-                id="editing"
-                spellcheck="false"
-                [(ngModel)]="res[1]"
-                [ngModelOptions]="{ standalone: true }"
-                (input)="updateAQuerySqlText(i)"
-              >
+              <div class="col-12">
+                <textarea
+                  placeholder="Insert template sql"
+                  id="editing"
+                  spellcheck="false"
+                  [(ngModel)]="res[1]"
+                  [ngModelOptions]="{ standalone: true }"
+                  (input)="updateAQuerySqlText(i)"
+                  style="background: #f5f2f0; color: black; position: relative; caret-color: black;"
+                >
                 {{ res[1]! }}</textarea
-              >
-              <pre
-                id="highlighting"
-                aria-hidden="true"
-                class="m-2 language-sql"
-                style="position: relative"
-              >
+                >
+                <!-- <pre
+                  id="highlighting"
+                  aria-hidden="true"
+                  class="m-2 language-sql"
+                  style="position: relative"
+                >
                   <code #highlightingContentAquery class="language-sql" id="highlighting-content">{{ res[1]! }}</code>
-                </pre>
+                </pre> -->
+              </div>
             </div>
             <div *ngFor="let row of res![3]!; let j = index" class="row tr r-1">
               <div class="col-8 td">
@@ -234,12 +237,13 @@
             spellcheck="false"
             [(ngModel)]="selectedTemplate![0]"
             (input)="updateSqlText(indexOfelement)"
+            style="background: #f5f2f0; color: black; position: relative; caret-color: black;"
           >
         {{ selectedTemplate![0] }}</textarea
           >
-          <pre id="highlighting" aria-hidden="true" class="language-sql">
+          <!-- <pre id="highlighting" aria-hidden="true" class="language-sql">
           <code #highlightingContent class="language-sql" id="highlighting-content">{{ selectedTemplate![0] }}</code>
-        </pre>
+        </pre> -->
         </div>
         <div
           *ngIf="getOperators(selectedTemplate![1]).length > 0"
