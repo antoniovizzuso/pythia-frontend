@@ -275,6 +275,28 @@ export class OutputViewComponent implements OnChanges {
     return operators;
   }
 
+  saveTemplates() {
+    try {
+      const formData = new FormData();
+      formData.append('templates', JSON.stringify(this.templates));
+      this.http
+        .post<string>(
+          Constants.API_ENDPOINT +
+            'scenario/save/templates/' +
+            this.scenarioName,
+          formData
+        )
+        .subscribe((val) => {
+          this.templates = <Array<[string, string, string[], string]>>(
+            JSON.parse(val)
+          );
+          this.generate();
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   exportFile() {
     let exportResults: ExportResult[] = [];
     console.log('*** results number: ' + this.results.length);

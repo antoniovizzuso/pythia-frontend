@@ -138,7 +138,12 @@
                   [(ngModel)]="res[1]"
                   [ngModelOptions]="{ standalone: true }"
                   (input)="updateAQuerySqlText(i)"
-                  style="background: #f5f2f0; color: black; position: relative; caret-color: black;"
+                  style="
+                    background: #f5f2f0;
+                    color: black;
+                    position: relative;
+                    caret-color: black;
+                  "
                 >
                 {{ res[1]! }}</textarea
                 >
@@ -237,7 +242,12 @@
             spellcheck="false"
             [(ngModel)]="selectedTemplate![0]"
             (input)="updateSqlText(indexOfelement)"
-            style="background: #f5f2f0; color: black; position: relative; caret-color: black;"
+            style="
+              background: #f5f2f0;
+              color: black;
+              position: relative;
+              caret-color: black;
+            "
           >
         {{ selectedTemplate![0] }}</textarea
           >
@@ -279,7 +289,12 @@
       >
         Close
       </button>
-      <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-bs-dismiss="modal"
+        (click)="modal.close('Cancel click');saveTemplates();"
+      >
         Edit
       </button>
     </div>
