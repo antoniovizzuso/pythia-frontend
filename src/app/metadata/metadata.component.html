@@ -413,16 +413,22 @@
                     [(ngModel)]="t[0]"
                     [ngModelOptions]="{ standalone: true }"
                     (input)="updateSqlText(indexOfelement)"
+                    style="
+                    background: #f5f2f0;
+                    color: black;
+                    position: relative;
+                    caret-color: black;
+                  "
                   >
                 {{ t[0] }}</textarea
                   >
-                  <pre
+                  <!-- <pre
                     id="highlighting"
                     aria-hidden="true"
                     class="language-sql"
                   >
                   <code #highlightingContent class="language-sql" id="highlighting-content">{{ t[0] }}</code>
-                </pre>
+                </pre> -->
                 </div>
                 <div *ngIf="getOperators(t[1]).length > 0" class="col-12">
                   <h6>Operators</h6>
