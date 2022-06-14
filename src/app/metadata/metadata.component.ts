@@ -58,9 +58,8 @@ export class MetadataComponent implements OnChanges {
   expandedTemplate: number = -1;
 
   editableTemplate: number = -1;
-  editableOperator: string = "";
-  printFtoSave: string = "";
-
+  editableOperator: string = '';
+  printFtoSave: string = '';
 
   //Spinner properties
   loadFindPk: boolean = false;
@@ -379,7 +378,7 @@ export class MetadataComponent implements OnChanges {
   deleteOperator(idTemplate: number, idOperator: number) {
     this.templates?.forEach((element, index) => {
       if (index == idTemplate) {
-        element[2][idOperator] = "";
+        element[2][idOperator] = '';
       }
     });
     this.saveTemplates();
@@ -480,7 +479,7 @@ export class MetadataComponent implements OnChanges {
   }
 
   saveFd(i: number) {
-    this.scenario!.fds[i][1] = this.scenario!.fds[i][1].toString().split(',') 
+    this.scenario!.fds[i][1] = this.scenario!.fds[i][1].toString().split(',');
     this.saveScenario();
   }
 
@@ -557,9 +556,9 @@ export class MetadataComponent implements OnChanges {
           this.templates = <Array<[string, string, string[], string]>>(
             JSON.parse(val)
           );
-          this.expandedTemplate = -1;
+          //this.expandedTemplate = -1;
           this.submittedTemplate = false;
-          this.printFtoSave = "";
+          this.printFtoSave = '';
         });
     } catch (error) {
       console.log(error);
@@ -567,7 +566,7 @@ export class MetadataComponent implements OnChanges {
   }
 
   // isTemplateFormValid(t: Template): boolean {
-  //   return 
+  //   return
   // }
 
   //*--- Prism methods ---*
